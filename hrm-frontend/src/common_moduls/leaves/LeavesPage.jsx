@@ -29,7 +29,7 @@ const Leaves = () => {
     else setIsRefreshing(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://https://hrm-backend-vvqg.onrender.com/api/leaves", {
+      const res = await axios.get("https://hrm-backend-vvqg.onrender.com/api/leaves", {
         headers: { "x-auth-token": token },
       });
       console.log(res)
@@ -54,7 +54,7 @@ const Leaves = () => {
     console.log(id)
 
     await axios.put(
-      `http://https://hrm-backend-vvqg.onrender.com/api/leaves/approve/${id}`,
+      `https://hrm-backend-vvqg.onrender.com/api/leaves/approve/${id}`,
       { status },
       {
         headers: { "x-auth-token": token },
@@ -73,7 +73,7 @@ const Leaves = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://https://hrm-backend-vvqg.onrender.com/api/leaves/apply",
+        "https://hrm-backend-vvqg.onrender.com/api/leaves/apply",
         { leave_type: leaveType, start_date: startDate, end_date: endDate, reason },
         { headers: { "x-auth-token": token } }
       );

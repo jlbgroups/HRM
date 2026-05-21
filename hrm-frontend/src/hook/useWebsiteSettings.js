@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 
-const API = import.meta.env.VITE_API_URL || "http://https://hrm-backend-vvqg.onrender.com";
+const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
 const cache = {};
 

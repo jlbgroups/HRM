@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 
-const API = import.meta.env.VITE_API_URL || "http://https://hrm-backend-vvqg.onrender.com";
+const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
 const CompaniesPage = () => {
   const [companies,     setCompanies]     = useState([]);

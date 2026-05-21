@@ -7,7 +7,7 @@ import {
   Clock, CheckCircle2, AlertCircle,
 } from "lucide-react";
 
-const API = import.meta.env.VITE_API_URL || "http://https://hrm-backend-vvqg.onrender.com";
+const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 const EMOJI_LIST = ["👍", "👎", "❤️", "😂", "😮", "😢", "🔥", "✅"];
 
 const fmtSz = (b) => {
