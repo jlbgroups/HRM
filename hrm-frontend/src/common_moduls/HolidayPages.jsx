@@ -32,7 +32,7 @@ function Holidays() {
   const fetchHolidays = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5001/api/holidays", {
+      const res = await axios.get("http://https://hrm-backend-vvqg.onrender.com/api/holidays", {
         headers: { "x-auth-token": token },
       });
       setHolidays(res.data.data.length === 0 ? demoHolidays : res.data.data);
@@ -50,7 +50,7 @@ function Holidays() {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://localhost:5001/api/holidays/add",
+        "http://https://hrm-backend-vvqg.onrender.com/api/holidays/add",
         { description, holiday_date: holidayDate },
         { headers: { "x-auth-token": token } }
       );

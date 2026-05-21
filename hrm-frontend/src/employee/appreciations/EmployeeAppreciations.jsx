@@ -3,7 +3,7 @@ import Sidebar from "../../layouts/sidebar";
 import axios from "axios";
 import { Star, Award, Search, Heart } from "lucide-react";
 
-const API = "http://localhost:5001/api/appreciations";
+const API = "http://https://hrm-backend-vvqg.onrender.com/api/appreciations";
 
 const typeColors = {
   general:          { bg: "#FFFBEB", color: "#F59E0B", label: "General"          },

@@ -7,7 +7,7 @@ import {
   Search, Bell, Eye, EyeOff, Globe, ChevronRight
 } from "lucide-react";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:5001";
+const API = import.meta.env.VITE_API_URL || "http://https://hrm-backend-vvqg.onrender.com";
 
 const DEFAULTS = {
   header: {

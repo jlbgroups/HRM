@@ -3,7 +3,7 @@ import axios from "axios";
 import Sidebar from "../../layouts/sidebar";
 import { Tag, Plus, Trash2, X, CheckCircle2 } from "lucide-react";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:5001";
+const API = import.meta.env.VITE_API_URL || "http://https://hrm-backend-vvqg.onrender.com";
 
 function PricingPage() {
   const [plans, setPlans]           = useState([]);

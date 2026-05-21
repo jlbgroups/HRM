@@ -3,7 +3,7 @@ import Sidebar from "../../layouts/sidebar";
 import axios from "axios";
 import { KeyRound, User, Mail, Phone, Building2 } from "lucide-react";
 
-const API = "http://localhost:5001/api/employee";
+const API = "http://https://hrm-backend-vvqg.onrender.com/api/employee";
 
 const Profile = () => {
   const [isOpen, setIsOpen] = useState(true);

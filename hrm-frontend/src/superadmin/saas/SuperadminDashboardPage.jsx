@@ -23,8 +23,8 @@ const SuperadminDashboardPage = () => {
         const token = localStorage.getItem("token");
         const headers = { "x-auth-token": token };
         const [companiesRes, statsRes] = await Promise.all([
-          axios.get("http://localhost:5001/api/saas/companies", { headers }),
-          axios.get("http://localhost:5001/api/saas/summary", { headers }),
+          axios.get("http://https://hrm-backend-vvqg.onrender.com/api/saas/companies", { headers }),
+          axios.get("http://https://hrm-backend-vvqg.onrender.com/api/saas/summary", { headers }),
         ]);
         if (companiesRes.data.success) setCompanies(companiesRes.data.data);
         if (statsRes.data.success) setGlobalStats(statsRes.data.data);

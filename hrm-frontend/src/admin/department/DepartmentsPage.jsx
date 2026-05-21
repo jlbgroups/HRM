@@ -3,7 +3,7 @@ import axios from "axios";
 import Sidebar from "../../layouts/sidebar";
 import { Search, Bell, Building2, Plus, Pencil, Trash2, Clock, X, Check } from "lucide-react";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:5001";
+const API = import.meta.env.VITE_API_URL || "http://https://hrm-backend-vvqg.onrender.com";
 
 export default function DepartmentsPage() {
   const [departments, setDepartments] = useState([]);

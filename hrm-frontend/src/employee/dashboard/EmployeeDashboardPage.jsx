@@ -4,7 +4,7 @@ import { Clock, Calendar, FileText, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:5001";
+const API = import.meta.env.VITE_API_URL || "http://https://hrm-backend-vvqg.onrender.com";
 
 const EmployeeDashboard = () => {
   const navigate = useNavigate();
