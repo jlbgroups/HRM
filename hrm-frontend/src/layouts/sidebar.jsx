@@ -1,10 +1,10 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, UserPlus, Clock, Palmtree, CalendarRange,
   Wallet, LogOut, Building2, CreditCard, HeadphonesIcon,
   UserCog, Globe, Menu, UserCircle, ChevronRight,
-  ClipboardList, Mail, ArrowLeftRight,
+  ClipboardList, Mail, ArrowLeftRight, X,
 } from "lucide-react";
 
 const ALL_MENU_ITEMS = [
@@ -22,7 +22,6 @@ const ALL_MENU_ITEMS = [
   { name: "Payroll",             path: "/payroll",                     icon: <Wallet size={17} />,          roles: ["company_admin"] },
   { name: "Departments",         path: "/departments",                 icon: <Building2 size={17} />,       roles: ["company_admin"] },
   { name: "Designations",        path: "/designations",                icon: <UserPlus size={17} />,        roles: ["company_admin"] },
-  { name: "Support",             path: "/support",                     icon: <HeadphonesIcon size={17} />,  roles: ["company_admin"] },
   { name: "Profile",             path: "/profile",                     icon: <UserCircle size={17} />,      roles: ["employee"] },
   { name: "Transactions",        path: "/transactions",                icon: <CreditCard size={17} />,      roles: ["super_admin", "software_owner"] },
   { name: "Companies",           path: "/superadmin/companiespage",    icon: <Building2 size={17} />,       roles: ["super_admin", "software_owner"] },
@@ -55,11 +54,33 @@ const SB_STYLES = `
   .preview-badge { animation: badgePulse 2.5s ease-in-out infinite; }
   .view-tab { transition: all 0.2s ease; }
   .view-tab:hover { opacity: 0.85; }
+  .sb-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 999;
+    backdrop-filter: blur(2px);
+  }
+  @media (max-width: 768px) {
+    .sb-overlay.active { display: block; }
+  }
 `;
+
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+  return isMobile;
+};
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
   const location = useLocation();
   const navigate  = useNavigate();
+  const isMobile  = useIsMobile();
 
   const trueRole = localStorage.getItem("true_role");
   const name     = localStorage.getItem("name") || "Administrator";
@@ -72,7 +93,6 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   );
 
   const trueRoleLabel = ROLE_LABELS[trueRole] || trueRole;
-
   const isAdminViewingAsEmployee = trueRole === "company_admin" && viewMode === "employee";
 
   const menuItems = useMemo(
@@ -80,12 +100,16 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     [viewMode]
   );
 
+  const sidebarVisible = isMobile ? isOpen : true;
+  const sidebarExpanded = isMobile ? true : isOpen;
+
   const handleViewSwitch = useCallback(() => {
     const next = viewMode === "company_admin" ? "employee" : "company_admin";
     localStorage.setItem("role", next);
     setViewMode(next);
     navigate(next === "employee" ? "/employee-dashboard" : "/dashboard");
-  }, [viewMode, navigate]);
+    if (isMobile) setIsOpen(false);
+  }, [viewMode, navigate, isMobile, setIsOpen]);
 
   const handleLogout = useCallback(() => {
     localStorage.clear();
@@ -96,30 +120,48 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     setIsOpen(prev => !prev);
   }, [setIsOpen]);
 
+  const handleNavClick = useCallback(() => {
+    if (isMobile) setIsOpen(false);
+  }, [isMobile, setIsOpen]);
+
   return (
     <>
       <style>{SB_STYLES}</style>
+      <div
+        className={`sb-overlay${isMobile && isOpen ? " active" : ""}`}
+        onClick={() => setIsOpen(false)}
+      />
 
       <div style={{
-        width: isOpen ? "255px" : "68px",
+        width: sidebarExpanded ? "255px" : "68px",
         height: "100vh",
-        position: "fixed", left: 0, top: 0, zIndex: 1000,
+        position: "fixed",
+        left: isMobile ? (isOpen ? "0" : "-280px") : "0",
+        top: 0,
+        zIndex: 1000,
         backgroundColor: "#fff",
         borderRight: "1px solid #F1F3F9",
-        boxShadow: "2px 0 16px rgba(15,23,42,0.06)",
-        display: "flex", flexDirection: "column",
-        transition: "width 0.25s cubic-bezier(0.4,0,0.2,1)",
+        boxShadow: isMobile && isOpen
+          ? "4px 0 24px rgba(15,23,42,0.15)"
+          : "2px 0 16px rgba(15,23,42,0.06)",
+        display: "flex",
+        flexDirection: "column",
+        transition: isMobile
+          ? "left 0.28s cubic-bezier(0.4,0,0.2,1)"
+          : "width 0.25s cubic-bezier(0.4,0,0.2,1)",
         overflow: "hidden",
         fontFamily: "'DM Sans', sans-serif",
       }}>
         <div style={{
-          padding: isOpen ? "18px 16px 14px" : "18px 0 14px",
+          padding: sidebarExpanded ? "18px 16px 14px" : "18px 0 14px",
           borderBottom: "1px solid #F1F3F9",
-          display: "flex", alignItems: "center",
-          justifyContent: isOpen ? "space-between" : "center",
-          gap: "10px", flexShrink: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: sidebarExpanded ? "space-between" : "center",
+          gap: "10px",
+          flexShrink: 0,
         }}>
-          {isOpen && (
+          {sidebarExpanded && (
             <div style={{ display: "flex", alignItems: "center", gap: "10px", overflow: "hidden" }}>
               <div style={{
                 width: "34px", height: "34px", borderRadius: "9px",
@@ -135,7 +177,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           )}
           <button
             className="sb-toggle"
-            onClick={handleToggle}
+            onClick={isMobile ? () => setIsOpen(false) : handleToggle}
             style={{
               width: "34px", height: "34px", borderRadius: "8px",
               border: "none", background: "transparent", cursor: "pointer",
@@ -143,15 +185,20 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               color: "#6B7280", flexShrink: 0,
             }}
           >
-            <Menu size={19} style={{ transform: isOpen ? "rotate(0deg)" : "rotate(180deg)", transition: "transform 0.25s" }} />
+            {isMobile
+              ? <X size={19} />
+              : <Menu size={19} style={{ transform: isOpen ? "rotate(0deg)" : "rotate(180deg)", transition: "transform 0.25s" }} />
+            }
           </button>
         </div>
         <div style={{
-          padding: isOpen ? "12px 14px" : "12px 0",
+          padding: sidebarExpanded ? "12px 14px" : "12px 0",
           borderBottom: "1px solid #F1F3F9",
-          display: "flex", alignItems: "center",
-          justifyContent: isOpen ? "flex-start" : "center",
-          gap: "10px", flexShrink: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: sidebarExpanded ? "flex-start" : "center",
+          gap: "10px",
+          flexShrink: 0,
         }}>
           <div style={{
             width: "36px", height: "36px", borderRadius: "50%",
@@ -169,7 +216,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               }} />
             )}
           </div>
-          {isOpen && (
+          {sidebarExpanded && (
             <div style={{ overflow: "hidden" }}>
               <div style={{ fontSize: "0.82rem", fontWeight: "600", color: "#111827", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                 {name}
@@ -182,11 +229,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         </div>
         {trueRole === "company_admin" && (
           <div style={{
-            padding: isOpen ? "10px 12px" : "10px 6px",
+            padding: sidebarExpanded ? "10px 12px" : "10px 6px",
             borderBottom: "1px solid #F1F3F9",
             flexShrink: 0,
           }}>
-            {isOpen ? (
+            {sidebarExpanded ? (
               <div>
                 {isAdminViewingAsEmployee && (
                   <div className="preview-badge" style={{
@@ -201,7 +248,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 )}
                 <div style={{ display: "flex", background: "#F3F4F6", borderRadius: "10px", padding: "3px", gap: "2px" }}>
                   {[
-                    { mode: "company_admin", label: "Admin"    },
+                    { mode: "company_admin", label: "Admin" },
                     { mode: "employee",      label: "Employee" },
                   ].map(({ mode, label }) => {
                     const active = viewMode === mode;
@@ -213,9 +260,9 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                         style={{
                           flex: 1, padding: "7px 6px", borderRadius: "8px", border: "none",
                           background: active ? (mode === "employee" ? "#4F46E5" : "#1E1B4B") : "transparent",
-                          color:      active ? "#fff" : "#6B7280",
-                          fontSize:   "0.75rem", fontWeight: "600",
-                          cursor:     active ? "default" : "pointer",
+                          color: active ? "#fff" : "#6B7280",
+                          fontSize: "0.75rem", fontWeight: "600",
+                          cursor: active ? "default" : "pointer",
                           fontFamily: "'DM Sans', sans-serif",
                           whiteSpace: "nowrap",
                         }}
@@ -235,7 +282,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   width: "100%", display: "flex", alignItems: "center", justifyContent: "center",
                   padding: "8px 0", borderRadius: "9px", border: "none",
                   background: isAdminViewingAsEmployee ? "rgba(79,70,229,0.10)" : "transparent",
-                  color:      isAdminViewingAsEmployee ? "#4F46E5" : "#9CA3AF",
+                  color: isAdminViewingAsEmployee ? "#4F46E5" : "#9CA3AF",
                   cursor: "pointer",
                 }}
               >
@@ -244,8 +291,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             )}
           </div>
         )}
-        <div className="sb-scroll" style={{ flex: 1, overflowY: "auto", padding: isOpen ? "10px" : "10px 6px" }}>
-          {isOpen && (
+        <div className="sb-scroll" style={{ flex: 1, overflowY: "auto", padding: sidebarExpanded ? "10px" : "10px 6px" }}>
+          {sidebarExpanded && (
             <div style={{ fontSize: "0.65rem", fontWeight: "600", color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.8px", padding: "4px 8px 8px" }}>
               Navigation
             </div>
@@ -258,14 +305,15 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   <Link
                     to={item.path}
                     className="sb-nav-link"
-                    title={!isOpen ? item.name : undefined}
+                    title={!sidebarExpanded ? item.name : undefined}
+                    onClick={handleNavClick}
                     style={{
                       display: "flex", alignItems: "center", gap: "10px",
-                      padding: isOpen ? "9px 10px" : "9px 0",
-                      justifyContent: isOpen ? "flex-start" : "center",
+                      padding: sidebarExpanded ? "9px 10px" : "9px 0",
+                      justifyContent: sidebarExpanded ? "flex-start" : "center",
                       borderRadius: "9px", textDecoration: "none",
                       background: isActive ? "linear-gradient(135deg,#EEF2FF,#E0E7FF)" : "transparent",
-                      color:      isActive ? "#4338CA" : "#4B5563",
+                      color: isActive ? "#4338CA" : "#4B5563",
                       fontWeight: isActive ? "600" : "400",
                       fontSize: "0.855rem", position: "relative",
                     }}
@@ -279,23 +327,23 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     <span className="sb-icon" style={{ color: isActive ? "#4F46E5" : "#9CA3AF", flexShrink: 0, display: "flex" }}>
                       {item.icon}
                     </span>
-                    {isOpen && <span style={{ whiteSpace: "nowrap" }}>{item.name}</span>}
-                    {isOpen && isActive && <ChevronRight size={13} style={{ marginLeft: "auto", color: "#4F46E5" }} />}
+                    {sidebarExpanded && <span style={{ whiteSpace: "nowrap" }}>{item.name}</span>}
+                    {sidebarExpanded && isActive && <ChevronRight size={13} style={{ marginLeft: "auto", color: "#4F46E5" }} />}
                   </Link>
                 </li>
               );
             })}
           </ul>
         </div>
-        <div style={{ padding: isOpen ? "12px 10px" : "12px 6px", borderTop: "1px solid #F1F3F9", flexShrink: 0 }}>
+        <div style={{ padding: sidebarExpanded ? "12px 10px" : "12px 6px", borderTop: "1px solid #F1F3F9", flexShrink: 0 }}>
           <button
             className="sb-logout"
             onClick={handleLogout}
-            title={!isOpen ? "Logout" : undefined}
+            title={!sidebarExpanded ? "Logout" : undefined}
             style={{
               width: "100%", display: "flex", alignItems: "center",
-              justifyContent: isOpen ? "flex-start" : "center",
-              gap: "10px", padding: isOpen ? "9px 10px" : "9px 0",
+              justifyContent: sidebarExpanded ? "flex-start" : "center",
+              gap: "10px", padding: sidebarExpanded ? "9px 10px" : "9px 0",
               borderRadius: "9px", border: "none",
               background: "transparent", color: "#9CA3AF",
               fontSize: "0.855rem", fontWeight: "500", cursor: "pointer",
@@ -304,10 +352,9 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             }}
           >
             <LogOut size={17} style={{ flexShrink: 0 }} />
-            {isOpen && <span>Logout</span>}
+            {sidebarExpanded && <span>Logout</span>}
           </button>
         </div>
-
       </div>
     </>
   );

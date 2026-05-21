@@ -235,8 +235,6 @@ function Login() {
             </div>
           </div>
         </div>
-
-        {/* Right / main form panel */}
         <div className="login-right">
           <div className="login-form-wrap">
             <div className="f1" style={s.formHeader}>
