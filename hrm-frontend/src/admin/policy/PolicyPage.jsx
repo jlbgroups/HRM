@@ -6,7 +6,7 @@ import {
   AlertTriangle, Download, RefreshCw, FileWarning,
   FolderOpen, Filter,
 } from "lucide-react";
-const BASE_URL = import.meta.env.VITE_API_URL || "http://https://hrm-backend-vvqg.onrender.com";
+const BASE_URL = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 const API = `${BASE_URL}/api/policies`;
 import Sidebar from "../../layouts/sidebar";
 

@@ -3,7 +3,7 @@ import axios from "axios";
 import Sidebar from "../../layouts/sidebar";
 import { UserPlus, Eye, EyeOff, Bell, Search, MoreHorizontal } from "lucide-react";
 
-const API = import.meta.env.VITE_API_URL || "http://https://hrm-backend-vvqg.onrender.com";
+const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
 export default function AddSuperadminPage() {
   const [form, setForm] = useState({ name: "", email: "", password: "", role: "super_admin", company_id: "" });

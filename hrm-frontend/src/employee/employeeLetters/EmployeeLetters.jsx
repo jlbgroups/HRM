@@ -3,7 +3,7 @@ import Sidebar from "../../layouts/sidebar";
 import axios from "axios";
 import { Mail, FileText, Eye, Search, BadgeCheck } from "lucide-react";
 
-const API = "http://https://hrm-backend-vvqg.onrender.com/api/letters";
+const API = "https://hrm-backend-vvqg.onrender.com/api/letters";
 
 const letterTypeLabel = {
   offer:      "Offer Letter",

@@ -3,7 +3,7 @@ import axios from "axios";
 import Sidebar from "../layouts/sidebar";
 import { CreditCard, CheckCircle2, Clock, XCircle, Plus, Search, Edit2, Trash2, X } from "lucide-react";
 
-const API = import.meta.env.VITE_API_URL || "http://https://hrm-backend-vvqg.onrender.com";
+const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
 const STATUS_COLORS = {
   paid:    { bg: "#ECFDF5", text: "#059669", dot: "#059669" },

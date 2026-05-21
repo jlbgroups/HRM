@@ -6,7 +6,7 @@ Briefcase, Lock, ArrowRight, Bell, Search,
 } from "lucide-react";
 import Sidebar from "../../layouts/sidebar";
 
-const API = import.meta.env.VITE_API_URL || "http://https://hrm-backend-vvqg.onrender.com";
+const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
 function AddEmployee() {
 const [isOpen, setIsOpen] = useState(true);

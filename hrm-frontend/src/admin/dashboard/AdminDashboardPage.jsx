@@ -29,8 +29,8 @@ const Dashboard = () => {
         const token = localStorage.getItem("token");
         const headers = { "x-auth-token": token };
         const [sumRes, empRes] = await Promise.all([
-          axios.get("http://https://hrm-backend-vvqg.onrender.com/api/dashboard/summary", { headers }),
-          axios.get("http://https://hrm-backend-vvqg.onrender.com/api/employees", { headers }),
+          axios.get("https://hrm-backend-vvqg.onrender.com/api/dashboard/summary", { headers }),
+          axios.get("https://hrm-backend-vvqg.onrender.com/api/employees", { headers }),
         ]);
         console.log(sumRes)
         setStatsData(sumRes.data.data);

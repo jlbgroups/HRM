@@ -3,8 +3,8 @@ import Sidebar from "../../layouts/sidebar";
 import axios from "axios";
 import { ShieldCheck, FileText, Download, Eye, Search } from "lucide-react";
 
-const API = "http://https://hrm-backend-vvqg.onrender.com/api/policies";
-const BASE_URL = "http://https://hrm-backend-vvqg.onrender.com";
+const API = "https://hrm-backend-vvqg.onrender.com/api/policies";
+const BASE_URL = "https://hrm-backend-vvqg.onrender.com";
 
 const EmployeePolicies = () => {
   const [isOpen, setIsOpen] = useState(true);
