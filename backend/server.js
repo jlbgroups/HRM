@@ -11,6 +11,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:4173",
+      "https://hrm-portal-frontend.onrender.com",
     ],
     credentials: true,
   })
