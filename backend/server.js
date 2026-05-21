@@ -45,7 +45,7 @@ const contactRoutes = require("./modules/contact/contactRoutes");
 const trialRoutes = require("./modules/saas/TrialRoutes");
 const policyRoutes = require("./modules/policies/policiesRoutes");
 const supportRoutes = require("./modules/support/supportTicketRoutes");
-const notificationRoutes = require("./modules/notifications/notifactionRoutes"); // check spelling file
+const notificationRoutes = require("./modules/notifications/notifactionRoutes");
 const messageActionRoutes = require("./modules/support/messageActionRoute");
 const websiteSettingsRoutes = require("./modules/websiteSettings/websiteSettingRoutes");
 const transactionRoutes = require("./modules/transactions/transctionsRoutes");
@@ -99,8 +99,11 @@ app.use((err, req, res, next) => {
     error: "Internal Server Error",
   });
 });
+
+
+
 const PORT = process.env.PORT || 5001;
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });
