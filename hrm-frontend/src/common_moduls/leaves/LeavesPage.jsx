@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Sidebar from "../../layouts/Sidebar";
+import Sidebar from "../../layouts/sidebar";
 import { Send, Loader2, Check, XCircle, AlertCircle, Bell, Search, Clock, FileText } from "lucide-react";
 import axios from "axios";
 
