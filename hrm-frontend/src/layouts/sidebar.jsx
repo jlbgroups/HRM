@@ -130,28 +130,33 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       <div
         className={`sb-overlay${isMobile && isOpen ? " active" : ""}`}
         onClick={() => setIsOpen(false)}
+        aria-hidden="true"
       />
 
-      <div style={{
-        width: sidebarExpanded ? "255px" : "68px",
-        height: "100vh",
-        position: "fixed",
-        left: isMobile ? (isOpen ? "0" : "-280px") : "0",
-        top: 0,
-        zIndex: 1000,
-        backgroundColor: "#fff",
-        borderRight: "1px solid #F1F3F9",
-        boxShadow: isMobile && isOpen
-          ? "4px 0 24px rgba(15,23,42,0.15)"
-          : "2px 0 16px rgba(15,23,42,0.06)",
-        display: "flex",
-        flexDirection: "column",
-        transition: isMobile
-          ? "left 0.28s cubic-bezier(0.4,0,0.2,1)"
-          : "width 0.25s cubic-bezier(0.4,0,0.2,1)",
-        overflow: "hidden",
-        fontFamily: "'DM Sans', sans-serif",
-      }}>
+      <nav
+        id="sidebar-nav"
+        aria-label="Main navigation"
+        style={{
+          width: sidebarExpanded ? "255px" : "68px",
+          height: "100vh",
+          position: "fixed",
+          left: isMobile ? (isOpen ? "0" : "-280px") : "0",
+          top: 0,
+          zIndex: 1000,
+          backgroundColor: "#fff",
+          borderRight: "1px solid #F1F3F9",
+          boxShadow: isMobile && isOpen
+            ? "4px 0 24px rgba(15,23,42,0.15)"
+            : "2px 0 16px rgba(15,23,42,0.06)",
+          display: "flex",
+          flexDirection: "column",
+          transition: isMobile
+            ? "left 0.28s cubic-bezier(0.4,0,0.2,1)"
+            : "width 0.25s cubic-bezier(0.4,0,0.2,1)",
+          overflow: "hidden",
+          fontFamily: "'DM Sans', sans-serif",
+        }}
+      >
         <div style={{
           padding: sidebarExpanded ? "18px 16px 14px" : "18px 0 14px",
           borderBottom: "1px solid #F1F3F9",
@@ -163,13 +168,16 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         }}>
           {sidebarExpanded && (
             <div style={{ display: "flex", alignItems: "center", gap: "10px", overflow: "hidden" }}>
-              <div style={{
-                width: "34px", height: "34px", borderRadius: "9px",
-                background: "linear-gradient(135deg, #1E1B4B, #4F46E5)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                color: "#fff", fontFamily: "'Playfair Display', serif",
-                fontSize: "1.1rem", fontWeight: "700", flexShrink: 0,
-              }}>S</div>
+              <div
+                aria-hidden="true"
+                style={{
+                  width: "34px", height: "34px", borderRadius: "9px",
+                  background: "linear-gradient(135deg, #1E1B4B, #4F46E5)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: "#fff", fontFamily: "'Playfair Display', serif",
+                  fontSize: "1.1rem", fontWeight: "700", flexShrink: 0,
+                }}
+              >S</div>
               <span style={{ fontSize: "1rem", fontWeight: "600", color: "#111827", letterSpacing: "-0.2px", whiteSpace: "nowrap" }}>
                 Shnoor
               </span>
@@ -177,6 +185,9 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           )}
           <button
             className="sb-toggle"
+            aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
+            aria-expanded={isOpen}
+            aria-controls="sidebar-nav"
             onClick={isMobile ? () => setIsOpen(false) : handleToggle}
             style={{
               width: "34px", height: "34px", borderRadius: "8px",
@@ -186,11 +197,12 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             }}
           >
             {isMobile
-              ? <X size={19} />
-              : <Menu size={19} style={{ transform: isOpen ? "rotate(0deg)" : "rotate(180deg)", transition: "transform 0.25s" }} />
+              ? <X size={19} aria-hidden="true" />
+              : <Menu size={19} aria-hidden="true" style={{ transform: isOpen ? "rotate(0deg)" : "rotate(180deg)", transition: "transform 0.25s" }} />
             }
           </button>
         </div>
+
         <div style={{
           padding: sidebarExpanded ? "12px 14px" : "12px 0",
           borderBottom: "1px solid #F1F3F9",
@@ -200,20 +212,26 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           gap: "10px",
           flexShrink: 0,
         }}>
-          <div style={{
-            width: "36px", height: "36px", borderRadius: "50%",
-            background: "linear-gradient(135deg, #4F46E5, #7C3AED)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            color: "#fff", fontSize: "0.8rem", fontWeight: "600",
-            flexShrink: 0, position: "relative",
-          }}>
+          <div
+            aria-hidden="true"
+            style={{
+              width: "36px", height: "36px", borderRadius: "50%",
+              background: "linear-gradient(135deg, #4F46E5, #7C3AED)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              color: "#fff", fontSize: "0.8rem", fontWeight: "600",
+              flexShrink: 0, position: "relative",
+            }}
+          >
             {initials}
             {isAdminViewingAsEmployee && (
-              <span style={{
-                position: "absolute", bottom: 0, right: 0,
-                width: "10px", height: "10px", borderRadius: "50%",
-                background: "#10B981", border: "2px solid #fff",
-              }} />
+              <span
+                aria-label="Viewing as employee"
+                style={{
+                  position: "absolute", bottom: 0, right: 0,
+                  width: "10px", height: "10px", borderRadius: "50%",
+                  background: "#10B981", border: "2px solid #fff",
+                }}
+              />
             )}
           </div>
           {sidebarExpanded && (
@@ -227,6 +245,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             </div>
           )}
         </div>
+
         {trueRole === "company_admin" && (
           <div style={{
             padding: sidebarExpanded ? "10px 12px" : "10px 6px",
@@ -236,17 +255,25 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             {sidebarExpanded ? (
               <div>
                 {isAdminViewingAsEmployee && (
-                  <div className="preview-badge" style={{
-                    fontSize: "0.64rem", fontWeight: "600", color: "#059669",
-                    textTransform: "uppercase", letterSpacing: "0.6px",
-                    marginBottom: "7px",
-                    display: "flex", alignItems: "center", gap: "5px",
-                  }}>
-                    <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10B981", display: "inline-block" }} />
+                  <div
+                    className="preview-badge"
+                    aria-live="polite"
+                    style={{
+                      fontSize: "0.64rem", fontWeight: "600", color: "#059669",
+                      textTransform: "uppercase", letterSpacing: "0.6px",
+                      marginBottom: "7px",
+                      display: "flex", alignItems: "center", gap: "5px",
+                    }}
+                  >
+                    <span aria-hidden="true" style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10B981", display: "inline-block" }} />
                     Viewing as Employee
                   </div>
                 )}
-                <div style={{ display: "flex", background: "#F3F4F6", borderRadius: "10px", padding: "3px", gap: "2px" }}>
+                <div
+                  role="group"
+                  aria-label="View mode switcher"
+                  style={{ display: "flex", background: "#F3F4F6", borderRadius: "10px", padding: "3px", gap: "2px" }}
+                >
                   {[
                     { mode: "company_admin", label: "Admin" },
                     { mode: "employee",      label: "Employee" },
@@ -256,6 +283,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                       <button
                         key={mode}
                         className="view-tab"
+                        aria-pressed={active}
                         onClick={() => { if (!active) handleViewSwitch(); }}
                         style={{
                           flex: 1, padding: "7px 6px", borderRadius: "8px", border: "none",
@@ -277,7 +305,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               <button
                 className="sb-toggle"
                 onClick={handleViewSwitch}
-                title={viewMode === "company_admin" ? "Switch to Employee View" : "Switch to Admin View"}
+                aria-label={viewMode === "company_admin" ? "Switch to Employee View" : "Switch to Admin View"}
                 style={{
                   width: "100%", display: "flex", alignItems: "center", justifyContent: "center",
                   padding: "8px 0", borderRadius: "9px", border: "none",
@@ -286,16 +314,17 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   cursor: "pointer",
                 }}
               >
-                <ArrowLeftRight size={17} />
+                <ArrowLeftRight size={17} aria-hidden="true" />
               </button>
             )}
           </div>
         )}
+
         <div className="sb-scroll" style={{ flex: 1, overflowY: "auto", padding: sidebarExpanded ? "10px" : "10px 6px" }}>
           {sidebarExpanded && (
-            <div style={{ fontSize: "0.65rem", fontWeight: "600", color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.8px", padding: "4px 8px 8px" }}>
+            <p style={{ fontSize: "0.65rem", fontWeight: "600", color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.8px", padding: "4px 8px 8px", margin: 0 }}>
               Navigation
-            </div>
+            </p>
           )}
           <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "2px" }}>
             {menuItems.map((item) => {
@@ -306,6 +335,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     to={item.path}
                     className="sb-nav-link"
                     title={!sidebarExpanded ? item.name : undefined}
+                    aria-current={isActive ? "page" : undefined}
                     onClick={handleNavClick}
                     style={{
                       display: "flex", alignItems: "center", gap: "10px",
@@ -313,49 +343,50 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                       justifyContent: sidebarExpanded ? "flex-start" : "center",
                       borderRadius: "9px", textDecoration: "none",
                       background: isActive ? "linear-gradient(135deg,#EEF2FF,#E0E7FF)" : "transparent",
-                      color: isActive ? "#4338CA" : "#4B5563",
+                      color: isActive ? "#4338CA" : "#374151",
                       fontWeight: isActive ? "600" : "400",
                       fontSize: "0.855rem", position: "relative",
                     }}
                   >
                     {isActive && (
-                      <span style={{
+                      <span aria-hidden="true" style={{
                         position: "absolute", left: 0, top: "20%", bottom: "20%",
                         width: "3px", borderRadius: "0 3px 3px 0", background: "#4F46E5",
                       }} />
                     )}
-                    <span className="sb-icon" style={{ color: isActive ? "#4F46E5" : "#9CA3AF", flexShrink: 0, display: "flex" }}>
+                    <span className="sb-icon" aria-hidden="true" style={{ color: isActive ? "#4F46E5" : "#6B7280", flexShrink: 0, display: "flex" }}>
                       {item.icon}
                     </span>
                     {sidebarExpanded && <span style={{ whiteSpace: "nowrap" }}>{item.name}</span>}
-                    {sidebarExpanded && isActive && <ChevronRight size={13} style={{ marginLeft: "auto", color: "#4F46E5" }} />}
+                    {sidebarExpanded && isActive && <ChevronRight size={13} aria-hidden="true" style={{ marginLeft: "auto", color: "#4F46E5" }} />}
                   </Link>
                 </li>
               );
             })}
           </ul>
         </div>
+
         <div style={{ padding: sidebarExpanded ? "12px 10px" : "12px 6px", borderTop: "1px solid #F1F3F9", flexShrink: 0 }}>
           <button
             className="sb-logout"
             onClick={handleLogout}
-            title={!sidebarExpanded ? "Logout" : undefined}
+            aria-label="Log out of your account"
             style={{
               width: "100%", display: "flex", alignItems: "center",
               justifyContent: sidebarExpanded ? "flex-start" : "center",
               gap: "10px", padding: sidebarExpanded ? "9px 10px" : "9px 0",
               borderRadius: "9px", border: "none",
-              background: "transparent", color: "#9CA3AF",
+              background: "transparent", color: "#6B7280",
               fontSize: "0.855rem", fontWeight: "500", cursor: "pointer",
               transition: "background 0.15s, color 0.15s",
               fontFamily: "'DM Sans', sans-serif",
             }}
           >
-            <LogOut size={17} style={{ flexShrink: 0 }} />
+            <LogOut size={17} aria-hidden="true" style={{ flexShrink: 0 }} />
             {sidebarExpanded && <span>Logout</span>}
           </button>
         </div>
-      </div>
+      </nav>
     </>
   );
 };

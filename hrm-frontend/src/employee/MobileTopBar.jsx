@@ -24,20 +24,26 @@ const MobileTopBar = ({ isOpen, setIsOpen }) => {
           .mobile-topbar { display: flex; }
         }
       `}</style>
-      <div className="mobile-topbar">
+      <header className="mobile-topbar" role="banner">
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <div style={{
-            width: "30px", height: "30px", borderRadius: "8px",
-            background: "linear-gradient(135deg, #1E1B4B, #4F46E5)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            color: "#fff", fontFamily: "'Playfair Display', serif",
-            fontSize: "1rem", fontWeight: "700",
-          }}>S</div>
+          <div
+            aria-hidden="true"
+            style={{
+              width: "30px", height: "30px", borderRadius: "8px",
+              background: "linear-gradient(135deg, #1E1B4B, #4F46E5)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              color: "#fff", fontFamily: "'Playfair Display', serif",
+              fontSize: "1rem", fontWeight: "700",
+            }}
+          >S</div>
           <span style={{ fontSize: "0.95rem", fontWeight: "600", color: "#111827", letterSpacing: "-0.2px" }}>
             Shnoor
           </span>
         </div>
         <button
+          aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={isOpen}
+          aria-controls="sidebar-nav"
           onClick={() => setIsOpen(prev => !prev)}
           style={{
             width: "36px", height: "36px", borderRadius: "9px",
@@ -46,9 +52,9 @@ const MobileTopBar = ({ isOpen, setIsOpen }) => {
             color: "#374151", cursor: "pointer",
           }}
         >
-          <Menu size={18} />
+          <Menu size={18} aria-hidden="true" />
         </button>
-      </div>
+      </header>
     </>
   );
 };
