@@ -1,0 +1,33 @@
+User-agent: *
+
+Allow: /
+Allow: /features
+Allow: /pricing
+Allow: /contact
+
+Disallow: /login
+Disallow: /register
+Disallow: /employee-dashboard
+Disallow: /attendance
+Disallow: /profile
+Disallow: /leaves
+Disallow: /holidays
+Disallow: /appreciations
+Disallow: /employeeLetters
+Disallow: /employeePolicies
+Disallow: /dashboard
+Disallow: /admin-attendance
+Disallow: /add-employee
+Disallow: /departments
+Disallow: /payroll
+Disallow: /designations
+Disallow: /support
+Disallow: /appreciation
+Disallow: /letter
+Disallow: /policy
+Disallow: /superadmin-dashboard
+Disallow: /superadmin/
+Disallow: /transactions
+Disallow: /add-superadmin
+
+Sitemap: https://hrm-portal-frontend.onrender.com/sitemap.xml
