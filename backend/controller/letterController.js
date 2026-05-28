@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const Letter = require("../models/Letter");
+
 const transporter = nodemailer.createTransport({
   host: process.env.MAIL_HOST || "smtp.gmail.com",
   port: Number(process.env.MAIL_PORT) || 587,
@@ -9,12 +10,14 @@ const transporter = nodemailer.createTransport({
     pass: process.env.MAIL_PASS,
   },
 });
+
 const subjects = {
-  offer: "Your Offer Letter — SHNOOR INTERNATIONAL LLC",
+  offer:      "Your Offer Letter — SHNOOR INTERNATIONAL LLC",
   experience: "Experience Certificate — SHNOOR INTERNATIONAL LLC",
-  salary: "Salary Slip — SHNOOR INTERNATIONAL LLC",
-  relieving: "Relieving Letter — SHNOOR INTERNATIONAL LLC",
+  salary:     "Salary Slip — SHNOOR INTERNATIONAL LLC",
+  relieving:  "Relieving Letter — SHNOOR INTERNATIONAL LLC",
 };
+
 const wrapEmail = (html) => `
 <!DOCTYPE html>
 <html>
@@ -35,6 +38,7 @@ body{margin:0;padding:0;background:#f8fafc;font-family:Arial}
 </body>
 </html>
 `;
+
 const sendLetter = async (req, res) => {
   try {
     const {
@@ -44,37 +48,52 @@ const sendLetter = async (req, res) => {
       letterType,
       htmlContent,
       notes,
+      customTitle,   
+      customSubject,  
     } = req.body;
 
     if (!employeeId || !employeeEmail || !letterType || !htmlContent) {
-      return res.status(400).json({ success: false, message: "Missing fields" });
+      return res.status(400).json({ success: false, message: "Missing required fields: employeeId, employeeEmail, letterType, htmlContent" });
     }
 
+    if (letterType === "custom") {
+      if (!customTitle || !customTitle.trim()) {
+        return res.status(400).json({ success: false, message: "customTitle is required for custom letters" });
+      }
+      if (!customSubject || !customSubject.trim()) {
+        return res.status(400).json({ success: false, message: "customSubject is required for custom letters" });
+      }
+    }
+
+    const emailSubject =
+      letterType === "custom"
+        ? customSubject
+        : subjects[letterType] || "Letter from SHNOOR INTERNATIONAL LLC";
     await transporter.sendMail({
-      from:
-        process.env.MAIL_FROM ||
-        `"SHNOOR INTERNATIONAL LLC" <${process.env.MAIL_USER}>`,
-      to: employeeEmail,
-      subject: subjects[letterType] || "Letter from SHNOOR INTERNATIONAL LLC",
-      html: wrapEmail(htmlContent),
+      from:    process.env.MAIL_FROM || `"SHNOOR INTERNATIONAL LLC" <${process.env.MAIL_USER}>`,
+      to:      employeeEmail,
+      subject: emailSubject,
+      html:    wrapEmail(htmlContent),
     });
 
     const data = await Letter.create({
-  employeeId,
-  employeeName,
-  employeeEmail,
-  letterType,
-  htmlContent,
-  notes: notes || "",
-  status: "sent",
-  sent_at: new Date(),
-  created_by: req.user?.id || null,
-});
+      employeeId,
+      employeeName,
+      employeeEmail,
+      letterType,
+      htmlContent,
+      notes:         notes        || "",
+      customTitle:   customTitle  || "",
+      customSubject: customSubject || "",
+      status:        "sent",
+      sent_at:       new Date(),
+      created_by:    req.user?.id || null,
+    });
 
     return res.status(201).json({
       success: true,
       message: `Letter sent to ${employeeEmail}`,
-      data: { id: data._id },
+      data:    { id: data._id },
     });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
@@ -90,47 +109,62 @@ const saveDraft = async (req, res) => {
       letterType,
       htmlContent,
       notes,
+      customTitle,    
+      customSubject,
     } = req.body;
 
     if (!employeeId || !letterType || !htmlContent) {
-      return res.status(400).json({ success: false, message: "Missing fields" });
+      return res.status(400).json({ success: false, message: "Missing required fields: employeeId, letterType, htmlContent" });
+    }
+
+    if (letterType === "custom") {
+      if (!customTitle || !customTitle.trim()) {
+        return res.status(400).json({ success: false, message: "customTitle is required for custom letters" });
+      }
+      if (!customSubject || !customSubject.trim()) {
+        return res.status(400).json({ success: false, message: "customSubject is required for custom letters" });
+      }
     }
 
     const existing = await Letter.findOne({
-      employee_id: employeeId,
-      letter_type: letterType,
+      employeeId,
+      letterType,
       status: "draft",
     });
 
     if (existing) {
-      existing.html_content = htmlContent;
-      existing.notes = notes || "";
-      existing.updated_at = new Date();
+      existing.htmlContent   = htmlContent;
+      existing.notes         = notes         || "";
+      existing.customTitle   = customTitle   || "";
+      existing.customSubject = customSubject || "";
+      existing.updated_at    = new Date();
       await existing.save();
 
       return res.json({
         success: true,
         message: "Draft updated",
-        data: { id: existing._id },
+        data:    { id: existing._id },
       });
     }
 
-const data = await Letter.create({
-  employeeId,
-  employeeName,
-  employeeEmail,
-  letterType,
-  htmlContent,
-  notes: notes || "",
-  status: "sent",
-  sent_at: new Date(),
-  created_by: req.user?.id || null,
-});
+
+    const data = await Letter.create({
+      employeeId,
+      employeeName,
+      employeeEmail,
+      letterType,
+      htmlContent,
+      notes:         notes         || "",
+      customTitle:   customTitle   || "",
+      customSubject: customSubject || "",
+      status:        "draft",
+      created_by:    req.user?.id || null,
+    });
 
     return res.status(201).json({
       success: true,
       message: "Draft saved",
-      data: { id: data._id },
+      data:    { id: data._id },
     });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
@@ -139,7 +173,7 @@ const data = await Letter.create({
 
 const getHistory = async (req, res) => {
   try {
-    const data = await Letter.find().sort({ created_at: -1 });
+    const data = await Letter.find().sort({ createdAt: -1 });
     return res.json({ success: true, data });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
@@ -149,11 +183,9 @@ const getHistory = async (req, res) => {
 const getLetterById = async (req, res) => {
   try {
     const data = await Letter.findById(req.params.id);
-
     if (!data) {
       return res.status(404).json({ success: false, message: "Letter not found" });
     }
-
     return res.json({ success: true, data });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
@@ -162,9 +194,8 @@ const getLetterById = async (req, res) => {
 
 const getMyLetters = async (req, res) => {
   try {
-    console.log(req.user)
     const userEmail = req.user?.email;
-    const userId = req.user?.id;
+    const userId    = req.user?.id;
 
     if (!userEmail && !userId) {
       return res.status(400).json({ success: false, message: "User not identified" });
@@ -176,7 +207,7 @@ const getMyLetters = async (req, res) => {
         { employeeEmail: userEmail },
         { employeeId: String(userId) },
       ],
-    }).sort({ created_at: -1 });
+    }).sort({ createdAt: -1 });
 
     return res.json({ success: true, data });
   } catch (err) {

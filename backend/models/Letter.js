@@ -1,62 +1,69 @@
 const mongoose = require("mongoose");
-const LetterSchema = new mongoose.Schema(
+
+const letterSchema = new mongoose.Schema(
   {
     employeeId: {
       type: String,
       required: true,
       trim: true,
     },
-
     employeeName: {
       type: String,
-      required: true,
+      default: "",
       trim: true,
     },
-
     employeeEmail: {
       type: String,
-      required: true,
+      default: "",
       trim: true,
       lowercase: true,
     },
-
     letterType: {
       type: String,
-      enum: ["offer", "experience", "salary", "relieving"],
       required: true,
+      enum: ["offer", "experience", "salary", "relieving", "custom"],
+      default: "offer",
     },
-
     htmlContent: {
       type: String,
       required: true,
     },
-
     notes: {
       type: String,
       default: "",
     },
-
+    customTitle: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    customSubject: {
+      type: String,
+      default: "",
+      trim: true,
+    },
     status: {
       type: String,
-      enum: ["draft", "sent"],
+      enum: ["sent", "draft"],
       default: "draft",
     },
-
-    sentAt: {
+    sent_at: {
       type: Date,
       default: null,
     },
-
-    createdBy: {
+    updated_at: {
+      type: Date,
+      default: null,
+    },
+    created_by: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Admin",
+      ref: "User",
       default: null,
     },
   },
   {
-    timestamps: true,
+    timestamps: true, 
   }
 );
 
-module.exports = mongoose.model("Letter", LetterSchema);
-
+module.exports = mongoose.model("Letter", letterSchema);
