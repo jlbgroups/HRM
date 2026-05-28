@@ -4,7 +4,8 @@ import MobileTopBar from "../employee/MobileTopBar";
 import { Plus, CalendarDays, Bell, Search, Clock, Pencil, Trash2, X, Check } from "lucide-react";
 import axios from "axios";
 
-const API = "http://localhost:5001/api/holidays";
+const API = "https://hrm-backend-vvqg.onrender.com/api/holidays";
+
 
 function Holidays() {
   const [isOpen, setIsOpen]           = useState(window.innerWidth > 768);

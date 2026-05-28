@@ -11,11 +11,9 @@ import {
 import Sidebar from "../../layouts/sidebar";
 import MobileTopBar from "../../employee/MobileTopBar";
 
-// const API = "https://hrm-backend-vvqg.onrender.com/api/letters";
-// const EMP_API = "https://hrm-backend-vvqg.onrender.com/api/employees";
+const API = "https://hrm-backend-vvqg.onrender.com/api/letters";
+const EMP_API = "https://hrm-backend-vvqg.onrender.com/api/employees";
 
-const API = "http://localhost:5001/api/letters";
-const EMP_API = "http://localhost:5001/api/employees";
 
 const letterTypes = [
   { value: "offer",      label: "Offer Letter",     color: "#4F46E5", bg: "#EEF2FF", icon: FileCheck },
