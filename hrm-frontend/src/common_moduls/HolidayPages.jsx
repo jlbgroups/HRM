@@ -10,26 +10,20 @@ function Holidays() {
   const [isOpen, setIsOpen]           = useState(window.innerWidth > 768);
   const [holidays, setHolidays]       = useState([]);
   const [loading, setLoading]         = useState(true);
-
-  // Add modal
   const [showModal, setShowModal]     = useState(false);
   const [description, setDescription] = useState("");
   const [holidayDate, setHolidayDate] = useState("");
-
-  // Edit modal
   const [editModal, setEditModal]         = useState(false);
   const [editId, setEditId]               = useState(null);
   const [editDescription, setEditDescription] = useState("");
   const [editDate, setEditDate]           = useState("");
-
-  // Delete confirm
   const [deleteId, setDeleteId]       = useState(null);
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteName, setDeleteName]   = useState("");
 
   const [search, setSearch]           = useState("");
   const [actionLoading, setActionLoading] = useState(false);
-  const [toast, setToast]             = useState(null); // { msg, type }
+  const [toast, setToast]             = useState(null); 
 
   const role    = localStorage.getItem("role");
   const name    = localStorage.getItem("name") || "Admin";
@@ -71,8 +65,6 @@ function Holidays() {
   };
 
   useEffect(() => { fetchHolidays(); }, []);
-
-  // ── ADD ──────────────────────────────────────────────────────────────────────
   const handleAddHoliday = async (e) => {
     e.preventDefault();
     setActionLoading(true);
@@ -93,8 +85,6 @@ function Holidays() {
       setActionLoading(false);
     }
   };
-
-  // ── EDIT ─────────────────────────────────────────────────────────────────────
   const openEditModal = (holiday) => {
     setEditId(holiday._id);
     setEditDescription(holiday.description);
@@ -120,8 +110,6 @@ function Holidays() {
       setActionLoading(false);
     }
   };
-
-  // ── DELETE ────────────────────────────────────────────────────────────────────
   const openDeleteModal = (holiday) => {
     setDeleteId(holiday._id);
     setDeleteName(holiday.description);
@@ -193,8 +181,6 @@ function Holidays() {
           .hol-grid { grid-template-columns:repeat(2,1fr) !important; }
         }
       `}</style>
-
-      {/* ── Toast ── */}
       {toast && (
         <div className="toast" style={{
           backgroundColor: toast.type === "error" ? "#FEF2F2" : "#ECFDF5",
@@ -217,7 +203,6 @@ function Holidays() {
         transition: "margin-left .25s cubic-bezier(.4,0,.2,1)",
         display: "flex", flexDirection: "column", minHeight: "100vh", minWidth: 0,
       }}>
-        {/* ── Topbar ── */}
         <div className="hol-topbar" style={{
           height: "64px", backgroundColor: "#fff", borderBottom: "1px solid #F1F3F9",
           display: "flex", alignItems: "center", padding: "0 28px", gap: "16px",
@@ -246,11 +231,7 @@ function Holidays() {
             </div>
           </div>
         </div>
-
-        {/* ── Main ── */}
         <div className="hol-main" style={{ padding: "28px 28px 40px", flex: 1 }}>
-
-          {/* Heading row */}
           <div className="hol-heading-row" style={{ marginBottom: "24px", display: "flex", alignItems: "flex-start", justifyContent: "space-between", animation: "fadeUp .4s ease both .05s", gap: "16px" }}>
             <div>
               <p style={{ color: "#6B7280", fontSize: ".875rem", margin: "0 0 4px" }}>
@@ -269,8 +250,6 @@ function Holidays() {
               </button>
             )}
           </div>
-
-          {/* Stats */}
           <div className="hol-stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: "16px", marginBottom: "24px" }}>
             {[
               { title: "Total Holidays",   count: holidays.length, icon: <CalendarDays size={20} />, color: "#4F46E5", bg: "#EEF2FF", trend: "This year" },
@@ -291,8 +270,6 @@ function Holidays() {
               </div>
             ))}
           </div>
-
-          {/* Next holiday banner */}
           {nextHoliday && (
             <div className="hol-next-row" style={{ backgroundColor: "#fff", borderRadius: "14px", padding: "20px 24px", border: "1px solid #F1F3F9", boxShadow: "0 2px 8px rgba(15,23,42,.05)", marginBottom: "24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", animation: "fadeUp .4s ease both .28s" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "16px", flex: 1, minWidth: 0 }}>
@@ -313,8 +290,6 @@ function Holidays() {
               </div>
             </div>
           )}
-
-          {/* Holiday list */}
           <div style={{ backgroundColor: "#fff", borderRadius: "14px", border: "1px solid #F1F3F9", boxShadow: "0 2px 8px rgba(15,23,42,.05)", overflow: "hidden", animation: "fadeUp .4s ease both .35s" }}>
             <div className="hol-section-header" style={{ padding: "18px 22px", borderBottom: "1px solid #F1F3F9" }}>
               <h2 style={{ fontSize: "1rem", fontWeight: "600", color: "#111827", margin: "0 0 2px" }}>All Holidays</h2>
@@ -341,8 +316,6 @@ function Holidays() {
                               {new Date(holiday.holiday_date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
                             </div>
                           </div>
-
-                          {/* Status badge */}
                           {isPast
                             ? <span style={{ fontSize: ".68rem", fontWeight: "600", color: "#9CA3AF", backgroundColor: "#F3F4F6", padding: "2px 8px", borderRadius: "20px", flexShrink: 0 }}>Past</span>
                             : <span style={{ fontSize: ".68rem", fontWeight: "600", color: "#059669", backgroundColor: "#ECFDF5", padding: "2px 8px", borderRadius: "20px", flexShrink: 0, display: "flex", alignItems: "center", gap: "4px" }}>
@@ -350,8 +323,6 @@ function Holidays() {
                                 Upcoming
                               </span>
                           }
-
-                          {/* Edit / Delete — admin only */}
                           {isAdmin && (
                             <div style={{ display: "flex", gap: "4px", flexShrink: 0 }}>
                               <button className="icon-btn icon-btn-edit" onClick={() => openEditModal(holiday)} title="Edit">
@@ -376,8 +347,6 @@ function Holidays() {
               </div>
             </div>
           </div>
-
-          {/* Footer note */}
           <div style={{ backgroundColor: "#fff", borderRadius: "14px", padding: "16px 20px", border: "1px solid #F1F3F9", boxShadow: "0 2px 8px rgba(15,23,42,.05)", marginTop: "20px", display: "flex", alignItems: "flex-start", gap: "12px", animation: "fadeUp .4s ease both .4s" }}>
             <div style={{ width: "36px", height: "36px", borderRadius: "9px", backgroundColor: "#ECFDF5", display: "flex", alignItems: "center", justifyContent: "center", color: "#059669", flexShrink: 0 }}>
               <CalendarDays size={18} />
@@ -389,8 +358,6 @@ function Holidays() {
           </div>
         </div>
       </div>
-
-      {/* ── ADD Modal ── */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
@@ -420,8 +387,6 @@ function Holidays() {
           </div>
         </div>
       )}
-
-      {/* ── EDIT Modal ── */}
       {editModal && (
         <div className="modal-overlay" onClick={() => setEditModal(false)}>
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
@@ -451,8 +416,6 @@ function Holidays() {
           </div>
         </div>
       )}
-
-      {/* ── DELETE Confirm Modal ── */}
       {deleteModal && (
         <div className="modal-overlay" onClick={() => setDeleteModal(false)}>
           <div className="modal-box" onClick={(e) => e.stopPropagation()} style={{ maxWidth: "380px" }}>
