@@ -177,7 +177,7 @@ const AppreciationPage = () => {
             <input className="search-inp" placeholder="Search anything..." style={{ width:"100%", padding:"8px 12px 8px 36px", border:"1.5px solid #E5E7EB", borderRadius:"10px", fontSize:"0.875rem", color:"#374151", background:"#F9FAFB", fontFamily:"'DM Sans',sans-serif", outline:"none" }}/>
           </div>
           <div style={{ marginLeft:"auto", display:"flex", alignItems:"center", gap:"8px" }}>
-            <button style={{ width:"38px", height:"38px", borderRadius:"10px", border:"1.5px solid #E5E7EB", background:"#fff", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", color:"#6B7280", position:"relative" }}>
+            <button  aria-label="Notifications" type="button" style={{ width:"38px", height:"38px", borderRadius:"10px", border:"1.5px solid #E5E7EB", background:"#fff", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", color:"#6B7280", position:"relative" }}>
               <Bell size={17}/>
               <span style={{ position:"absolute", top:"8px", right:"8px", width:"7px", height:"7px", borderRadius:"50%", background:"#EF4444", border:"1.5px solid #fff" }}/>
             </button>
@@ -188,7 +188,7 @@ const AppreciationPage = () => {
           </div>
         </div>
 
-        <div className="appr-main" style={{ padding:"28px 28px 48px" }}>
+        <main className="appr-main" style={{ padding:"28px 28px 48px" }}>
           <div className="appr-page-head" style={{ marginBottom:"24px", animation:"fadeUp .4s ease both .05s" }}>
             <p style={{ color:"#6B7280", fontSize:"0.875rem", margin:"0 0 4px" }}>Recognize your team's hard work</p>
             <h1 className="appr-h1" style={{ fontFamily:"'Playfair Display',serif", fontSize:"1.85rem", fontWeight:"700", color:"#111827", margin:0, lineHeight:1.2 }}>Employee Appreciation</h1>
@@ -233,7 +233,7 @@ const AppreciationPage = () => {
                       const Icon = t.icon;
                       const active = formData.appreciationType === t.value;
                       return (
-                        <button key={t.value} className="type-chip" onClick={() => setFormData({...formData, appreciationType:t.value})}
+                        <button  type="button"   aria-label={`Select ${t.label} appreciation type`} key={t.value} className="type-chip" onClick={() => setFormData({...formData, appreciationType:t.value})}
                           style={{ background:active?t.bg:"#F9FAFB", color:active?t.color:"#6B7280", borderColor:active?t.color:"transparent" }}>
                           <Icon size={13}/>{t.label}
                         </button>
@@ -355,7 +355,7 @@ const AppreciationPage = () => {
               )}
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );

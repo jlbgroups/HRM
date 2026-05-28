@@ -122,11 +122,11 @@ const Dashboard = () => {
         }}>
           <div style={{ position: "relative", flex: 1, maxWidth: "380px" }}>
             <Search size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF" }} />
-            <input className="search-input" placeholder="Search anything..."
+            <input  aria-label="Search dashboard" className="search-input" placeholder="Search anything..."
               style={{ width: "100%", padding: "8px 12px 8px 36px", border: "1.5px solid #E5E7EB", borderRadius: "10px", fontSize: "0.875rem", color: "#374151", backgroundColor: "#F9FAFB" }} />
           </div>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px" }}>
-            <button className="topbar-btn" style={{ width: "38px", height: "38px", borderRadius: "10px", border: "1.5px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280", position: "relative" }}>
+            <button   aria-label="View notifications"   title="Notifications" className="topbar-btn" style={{ width: "38px", height: "38px", borderRadius: "10px", border: "1.5px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280", position: "relative" }}>
               <Bell size={17} />
               <span style={{ position: "absolute", top: "8px", right: "8px", width: "7px", height: "7px", borderRadius: "50%", background: "#EF4444", border: "1.5px solid #fff" }} />
             </button>
@@ -138,7 +138,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <div className="dash-main" style={{ padding: "28px 28px 40px", flex: 1 }}>
+        <main className="dash-main" style={{ padding: "28px 28px 40px", flex: 1 }}>
           <div style={{ marginBottom: "24px", animation: "fadeUp 0.4s ease both 0.05s" }}>
             <p style={{ color: "#6B7280", fontSize: "0.875rem", margin: "0 0 4px" }}>
               {greeting}, <strong style={{ color: "#4F46E5" }}>{name}</strong> 👋
@@ -157,7 +157,7 @@ const Dashboard = () => {
                   <div style={{ width: "40px", height: "40px", borderRadius: "10px", backgroundColor: stat.bg, display: "flex", alignItems: "center", justifyContent: "center", color: stat.color }}>
                     {stat.icon}
                   </div>
-                  <button style={{ background: "none", border: "none", cursor: "pointer", color: "#D1D5DB", padding: "2px" }}>
+                  <button  aria-label={`More options for ${stat.title}`}  title={`More options for ${stat.title}`} style={{ background: "none", border: "none", cursor: "pointer", color: "#D1D5DB", padding: "2px" }}>
                     <MoreHorizontal size={15} />
                   </button>
                 </div>
@@ -264,7 +264,7 @@ const Dashboard = () => {
               </div>
             )}
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );

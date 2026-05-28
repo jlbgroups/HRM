@@ -135,6 +135,7 @@ export default function DepartmentsPage() {
           .dept-main { padding: 24px 20px 32px !important; }
         }
       `}</style>
+
       {toast && (
         <div style={{ position: "fixed", top: "20px", right: "20px", background: toast.type === "error" ? "#EF4444" : "#059669", color: "#fff", padding: "12px 20px", borderRadius: "12px", fontWeight: "500", fontSize: "0.875rem", zIndex: 9999, boxShadow: "0 8px 24px rgba(0,0,0,0.15)", display: "flex", alignItems: "center", gap: "8px", animation: "slideIn 0.2s ease both" }}>
           {toast.type === "error" ? <X size={15} /> : <Check size={15} />}
@@ -148,7 +149,7 @@ export default function DepartmentsPage() {
       <div style={{ marginLeft: `${sidebarWidth}px`, flex: 1, transition: "margin-left 0.25s cubic-bezier(0.4,0,0.2,1)", display: "flex", flexDirection: "column", minHeight: "100vh", minWidth: 0 }}>
         <div className="dept-topbar" style={{ height: "64px", backgroundColor: "#fff", borderBottom: "1px solid #F1F3F9", display: "flex", alignItems: "center", padding: "0 28px", gap: "16px", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 1px 4px rgba(15,23,42,0.04)" }}>
           <div style={{ position: "relative", flex: 1, maxWidth: "380px" }}>
-            <Search size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF" }} />
+            <Search size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#6B7280" }} />
             <input className="search-input" placeholder="Search anything..." style={{ width: "100%", padding: "8px 12px 8px 36px", border: "1.5px solid #E5E7EB", borderRadius: "10px", fontSize: "0.875rem", color: "#374151", backgroundColor: "#F9FAFB" }} />
           </div>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px" }}>
@@ -164,6 +165,7 @@ export default function DepartmentsPage() {
             </div>
           </div>
         </div>
+
         <div className="dept-main" style={{ padding: "28px 28px 40px", flex: 1 }}>
           <div className="dept-page-head" style={{ marginBottom: "24px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "16px", animation: "fadeUp 0.4s ease both 0.05s" }}>
             <div>
@@ -173,7 +175,7 @@ export default function DepartmentsPage() {
               <h1 className="dept-h1" style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.85rem", fontWeight: "700", color: "#111827", margin: 0, lineHeight: 1.2 }}>
                 Departments
               </h1>
-              <p style={{ color: "#9CA3AF", fontSize: "0.85rem", margin: "5px 0 0" }}>
+              <p style={{ color: "#6B7280", fontSize: "0.85rem", margin: "5px 0 0" }}>
                 {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
               </p>
             </div>
@@ -184,25 +186,27 @@ export default function DepartmentsPage() {
               <Plus size={15} /> Add Department
             </button>
           </div>
+
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "14px", marginBottom: "24px" }}>
             <div style={{ backgroundColor: "#fff", borderRadius: "14px", padding: "18px", border: "1px solid #F1F3F9", boxShadow: "0 2px 8px rgba(15,23,42,0.05)", animation: "fadeUp 0.4s ease both 0.1s" }}>
               <div style={{ width: "40px", height: "40px", borderRadius: "10px", backgroundColor: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center", color: "#4F46E5", marginBottom: "12px" }}>
                 <Building2 size={19} />
               </div>
-              <div style={{ fontSize: "0.75rem", color: "#9CA3AF", fontWeight: "500", marginBottom: "3px", textTransform: "uppercase", letterSpacing: "0.4px" }}>Total Departments</div>
+              <div style={{ fontSize: "0.75rem", color: "#6B7280", fontWeight: "500", marginBottom: "3px", textTransform: "uppercase", letterSpacing: "0.4px" }}>Total Departments</div>
               <div style={{ fontSize: "2rem", fontWeight: "700", color: "#111827", lineHeight: 1, fontFamily: "'Playfair Display', serif" }}>
                 {loading ? <span style={{ display: "inline-block", width: "50px", height: "28px", background: "#F3F4F6", borderRadius: "5px" }} /> : departments.length}
               </div>
             </div>
           </div>
+
           <div style={{ backgroundColor: "#fff", borderRadius: "14px", border: "1px solid #F1F3F9", boxShadow: "0 2px 8px rgba(15,23,42,0.05)", overflow: "hidden", animation: "fadeUp 0.4s ease both 0.2s" }}>
             <div className="dept-table-header" style={{ padding: "16px 20px", borderBottom: "1px solid #F1F3F9", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
               <div>
                 <h2 style={{ fontSize: "0.95rem", fontWeight: "600", color: "#111827", margin: "0 0 2px" }}>Department Directory</h2>
-                <p style={{ fontSize: "0.75rem", color: "#9CA3AF", margin: 0 }}>{filtered.length} {filtered.length === 1 ? "record" : "records"} found</p>
+                <p style={{ fontSize: "0.75rem", color: "#6B7280", margin: 0 }}>{filtered.length} {filtered.length === 1 ? "record" : "records"} found</p>
               </div>
               <div style={{ position: "relative", flex: isMobile ? "1 1 100%" : "0 0 auto" }}>
-                <Search size={13} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF" }} />
+                <Search size={13} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "#6B7280" }} />
                 <input className="search-input dept-search-inp" placeholder="Search departments..." value={search} onChange={(e) => setSearch(e.target.value)}
                   style={{ padding: "8px 12px 8px 30px", border: "1.5px solid #E5E7EB", borderRadius: "9px", fontSize: "0.82rem", color: "#374151", backgroundColor: "#F9FAFB", width: isMobile ? "100%" : "220px" }} />
               </div>
@@ -213,7 +217,7 @@ export default function DepartmentsPage() {
                 <thead>
                   <tr style={{ backgroundColor: "#FAFBFF" }}>
                     {["#", "Department", "Actions"].map((h, i) => (
-                      <th key={i} style={{ padding: "10px 18px", textAlign: i === 2 ? "right" : "left", fontSize: "0.68rem", fontWeight: "600", color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "1px solid #F1F3F9", whiteSpace: "nowrap" }}>
+                      <th key={i} style={{ padding: "10px 18px", textAlign: i === 2 ? "right" : "left", fontSize: "0.68rem", fontWeight: "600", color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "1px solid #F1F3F9", whiteSpace: "nowrap" }}>
                         {h}
                       </th>
                     ))}
@@ -232,7 +236,7 @@ export default function DepartmentsPage() {
                     ))
                   ) : filtered.length === 0 ? (
                     <tr>
-                      <td colSpan="3" style={{ padding: "44px", textAlign: "center", color: "#9CA3AF", fontSize: "0.875rem" }}>
+                      <td colSpan="3" style={{ padding: "44px", textAlign: "center", color: "#6B7280", fontSize: "0.875rem" }}>
                         {search ? "No departments match your search." : "No departments yet. Add one!"}
                       </td>
                     </tr>
@@ -241,7 +245,7 @@ export default function DepartmentsPage() {
                       const color = getDeptColor(dept.department_name);
                       return (
                         <tr key={dept.department_id || dept._id} className="dept-row" style={{ borderBottom: "1px solid #F9FAFB" }}>
-                          <td style={{ padding: "12px 18px", fontSize: "0.8rem", color: "#9CA3AF", fontWeight: "500" }}>
+                          <td style={{ padding: "12px 18px", fontSize: "0.8rem", color: "#6B7280", fontWeight: "500" }}>
                             {String(i + 1).padStart(2, "0")}
                           </td>
                           <td style={{ padding: "12px 18px" }}>
@@ -272,16 +276,17 @@ export default function DepartmentsPage() {
 
             {!loading && filtered.length > 0 && (
               <div style={{ padding: "10px 20px", borderTop: "1px solid #F1F3F9", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "6px" }}>
-                <span style={{ fontSize: "0.75rem", color: "#9CA3AF" }}>Showing {filtered.length} of {departments.length} departments</span>
+                <span style={{ fontSize: "0.75rem", color: "#6B7280" }}>Showing {filtered.length} of {departments.length} departments</span>
                 <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                  <Clock size={11} style={{ color: "#9CA3AF" }} />
-                  <span style={{ fontSize: "0.7rem", color: "#9CA3AF" }}>Updated just now</span>
+                  <Clock size={11} style={{ color: "#6B7280" }} />
+                  <span style={{ fontSize: "0.7rem", color: "#6B7280" }}>Updated just now</span>
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
+
       {modalOpen && (
         <div className="dept-modal-bg" onClick={closeModal}>
           <div className="dept-modal-sheet" onClick={(e) => e.stopPropagation()}>

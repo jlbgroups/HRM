@@ -187,11 +187,11 @@ export default function PolicyPage() {
       <MobileTopBar isOpen={isOpen} setIsOpen={setIsOpen} />
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
 
-      <div style={{ marginLeft:`${sidebarWidth}px`, flex:1, transition:"margin-left 0.25s cubic-bezier(0.4,0,0.2,1)", display:"flex", flexDirection:"column", minHeight:"100vh", minWidth:0 }}>
+      <main style={{ marginLeft:`${sidebarWidth}px`, flex:1, transition:"margin-left 0.25s cubic-bezier(0.4,0,0.2,1)", display:"flex", flexDirection:"column", minHeight:"100vh", minWidth:0 }}>
         <div className="pol-topbar" style={{ height:"64px", background:"#fff", borderBottom:"1px solid #F1F3F9", alignItems:"center", padding:"0 28px", gap:"16px", position:"sticky", top:0, zIndex:100, boxShadow:"0 1px 4px rgba(15,23,42,.04)" }}>
           <div style={{ position:"relative", flex:1, maxWidth:"380px" }}>
             <Search size={15} style={{ position:"absolute", left:"12px", top:"50%", transform:"translateY(-50%)", color:"#9CA3AF" }}/>
-            <input className="search-inp" placeholder="Search anything…" style={{ width:"100%", padding:"8px 12px 8px 36px", border:"1.5px solid #E5E7EB", borderRadius:"10px", fontSize:"0.875rem", color:"#374151", background:"#F9FAFB", fontFamily:"'DM Sans',sans-serif", outline:"none" }}/>
+            <input   aria-label="Search dashboard" className="search-inp" placeholder="Search anything…" style={{ width:"100%", padding:"8px 12px 8px 36px", border:"1.5px solid #E5E7EB", borderRadius:"10px", fontSize:"0.875rem", color:"#374151", background:"#F9FAFB", fontFamily:"'DM Sans',sans-serif", outline:"none" }}/>
           </div>
           <div style={{ marginLeft:"auto", display:"flex", alignItems:"center", gap:"8px" }}>
             <button style={{ width:"38px", height:"38px", borderRadius:"10px", border:"1.5px solid #E5E7EB", background:"#fff", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", color:"#6B7280", position:"relative" }}>
@@ -246,7 +246,7 @@ export default function PolicyPage() {
               </div>
               <div style={{ padding:"20px 22px", display:"flex", flexDirection:"column", gap:"14px" }}>
                 <div>
-                  <input type="text" placeholder="Policy Title" value={title} onChange={e => { setTitle(e.target.value); setErrors(er=>({...er,title:""})); }} className={`form-input${errors.title?" err":""}`}/>
+                  <input  aria-label="Policy title" type="text" placeholder="Policy Title" value={title} onChange={e => { setTitle(e.target.value); setErrors(er=>({...er,title:""})); }} className={`form-input${errors.title?" err":""}`}/>
                   {errors.title && <p style={{ color:"#EF4444", fontSize:"0.72rem", margin:"4px 0 0 2px" }}>{errors.title}</p>}
                 </div>
                 <div>
@@ -266,7 +266,7 @@ export default function PolicyPage() {
                       </div>
                     )}
                   </div>
-                  <input ref={fileRef} type="file" accept=".pdf,.doc,.docx" style={{ display:"none" }} onChange={e=>{const f=e.target.files[0];if(f){setFile(f);setErrors(er=>({...er,file:""}));}}}/>
+                  <input  aria-label="Upload policy document" ref={fileRef} type="file" accept=".pdf,.doc,.docx" style={{ display:"none" }} onChange={e=>{const f=e.target.files[0];if(f){setFile(f);setErrors(er=>({...er,file:""}));}}}/>
                   {errors.file && <p style={{ color:"#EF4444", fontSize:"0.72rem", margin:"4px 0 0 2px" }}>{errors.file}</p>}
                 </div>
                 <button className="btn-blue" onClick={handleUpload} disabled={uploading}>
@@ -293,7 +293,7 @@ export default function PolicyPage() {
                 <div className="pol-filters-row" style={{ display:"flex", gap:"8px", alignItems:"center", flexWrap:"wrap" }}>
                   <div style={{ position:"relative" }}>
                     <Filter size={12} style={{ position:"absolute", left:"9px", top:"50%", transform:"translateY(-50%)", color:"#9CA3AF", pointerEvents:"none" }}/>
-                    <select value={filterExt} onChange={e=>setFilterExt(e.target.value)} className="pol-filter-sel" style={{ padding:"7px 12px 7px 26px", border:"1.5px solid #E5E7EB", borderRadius:"9px", fontSize:"0.78rem", color:"#374151", background:"#F9FAFB", fontFamily:"'DM Sans',sans-serif", outline:"none", cursor:"pointer", appearance:"none" }}>
+                    <select  aria-label="Filter policy file type" value={filterExt} onChange={e=>setFilterExt(e.target.value)} className="pol-filter-sel" style={{ padding:"7px 12px 7px 26px", border:"1.5px solid #E5E7EB", borderRadius:"9px", fontSize:"0.78rem", color:"#374151", background:"#F9FAFB", fontFamily:"'DM Sans',sans-serif", outline:"none", cursor:"pointer", appearance:"none" }}>
                       <option value="all">All Types</option>
                       <option value="pdf">PDF Only</option>
                       <option value="doc">Word Only</option>
@@ -301,7 +301,7 @@ export default function PolicyPage() {
                   </div>
                   <div style={{ position:"relative" }}>
                     <Search size={13} style={{ position:"absolute", left:"9px", top:"50%", transform:"translateY(-50%)", color:"#9CA3AF" }}/>
-                    <input className="search-inp pol-table-search" placeholder="Search policies…" value={search} onChange={e=>setSearch(e.target.value)} style={{ padding:"7px 12px 7px 28px", border:"1.5px solid #E5E7EB", borderRadius:"9px", fontSize:"0.78rem", color:"#374151", background:"#F9FAFB", fontFamily:"'DM Sans',sans-serif", width:"180px", outline:"none" }}/>
+                    <input aria-label="Search policies" className="search-inp pol-table-search" placeholder="Search policies…" value={search} onChange={e=>setSearch(e.target.value)} style={{ padding:"7px 12px 7px 28px", border:"1.5px solid #E5E7EB", borderRadius:"9px", fontSize:"0.78rem", color:"#374151", background:"#F9FAFB", fontFamily:"'DM Sans',sans-serif", width:"180px", outline:"none" }}/>
                   </div>
                   <button onClick={fetchPolicies} title="Refresh" style={{ width:"34px", height:"34px", border:"1.5px solid #E5E7EB", borderRadius:"9px", background:"#fff", display:"flex", alignItems:"center", justifyContent:"center", color:"#6B7280", cursor:"pointer" }}><RefreshCw size={14}/></button>
                 </div>
@@ -390,7 +390,7 @@ export default function PolicyPage() {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

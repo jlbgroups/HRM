@@ -279,7 +279,7 @@ export default function LetterPage() {
         </div>
       )}
 
-      <div style={{ marginLeft:`${sidebarWidth}px`, transition:"margin-left 0.25s cubic-bezier(0.4,0,0.2,1)", display:"flex", flexDirection:"column", minHeight:"100vh", minWidth:0 }}>
+      <main style={{ marginLeft:`${sidebarWidth}px`, transition:"margin-left 0.25s cubic-bezier(0.4,0,0.2,1)", display:"flex", flexDirection:"column", minHeight:"100vh", minWidth:0 }}>
         <div className="letter-topbar" style={{ height:"64px", background:"#fff", borderBottom:"1px solid #F1F3F9", alignItems:"center", padding:"0 28px", gap:"16px", position:"sticky", top:0, zIndex:100, boxShadow:"0 1px 4px rgba(15,23,42,.04)" }}>
           <div style={{ position:"relative", flex:1, maxWidth:"380px" }}>
             <Search size={15} style={{ position:"absolute", left:"12px", top:"50%", transform:"translateY(-50%)", color:"#9CA3AF" }}/>
@@ -400,12 +400,12 @@ export default function LetterPage() {
                 <div className="letter-hist-filters" style={{ display:"flex", gap:"8px", flexWrap:"wrap", alignItems:"center" }}>
                   <div style={{ position:"relative" }}>
                     <Filter size={12} style={{ position:"absolute", left:"9px", top:"50%", transform:"translateY(-50%)", color:"#9CA3AF", pointerEvents:"none" }}/>
-                    <select value={filterType} onChange={e => setFilterType(e.target.value)} className="letter-hist-select" style={{ padding:"7px 12px 7px 26px", border:"1.5px solid #E5E7EB", borderRadius:"9px", fontSize:"0.78rem", color:"#374151", background:"#F9FAFB", fontFamily:"'DM Sans',sans-serif", outline:"none", cursor:"pointer", appearance:"none" }}>
+                    <select value={filterType}   aria-label="Filter letters by type" onChange={e => setFilterType(e.target.value)} className="letter-hist-select" style={{ padding:"7px 12px 7px 26px", border:"1.5px solid #E5E7EB", borderRadius:"9px", fontSize:"0.78rem", color:"#374151", background:"#F9FAFB", fontFamily:"'DM Sans',sans-serif", outline:"none", cursor:"pointer", appearance:"none" }}>
                       <option value="all">All Types</option>
                       {letterTypes.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                     </select>
                   </div>
-                  <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="letter-hist-select" style={{ padding:"7px 12px", border:"1.5px solid #E5E7EB", borderRadius:"9px", fontSize:"0.78rem", color:"#374151", background:"#F9FAFB", fontFamily:"'DM Sans',sans-serif", outline:"none", cursor:"pointer", appearance:"none" }}>
+                  <select  aria-label="Filter letters by status" value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="letter-hist-select" style={{ padding:"7px 12px", border:"1.5px solid #E5E7EB", borderRadius:"9px", fontSize:"0.78rem", color:"#374151", background:"#F9FAFB", fontFamily:"'DM Sans',sans-serif", outline:"none", cursor:"pointer", appearance:"none" }}>
                     <option value="all">All Status</option>
                     <option value="sent">Sent</option>
                     <option value="draft">Draft</option>
@@ -475,7 +475,7 @@ export default function LetterPage() {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

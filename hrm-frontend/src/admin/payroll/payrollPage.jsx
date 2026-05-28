@@ -141,7 +141,6 @@ This is a computer-generated document.
           .modal-bg    { align-items:center; padding:16px; }
           .modal-sheet { border-radius:16px; max-width:480px; padding:28px; animation:fadeUp .2s ease both; }
         }
-
         @media (max-width: 768px) {
           .pay-topbar       { display: none !important; }
           .pay-main         { padding: 72px 14px 32px !important; }
@@ -157,7 +156,6 @@ This is a computer-generated document.
           .pay-table-wrap table { min-width: 580px; }
           .pay-modal-grid   { grid-template-columns: 1fr !important; }
         }
-
         @media (min-width: 769px) and (max-width: 1024px) {
           .pay-main       { padding: 24px 20px 32px !important; }
           .pay-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -178,12 +176,12 @@ This is a computer-generated document.
           position: "sticky", top: 0, zIndex: 100, boxShadow: "0 1px 4px rgba(15,23,42,0.04)",
         }}>
           <div style={{ position: "relative", flex: 1, maxWidth: "380px" }}>
-            <Search size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF" }} />
+            <Search size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#6B7280" }} />
             <input className="search-input" placeholder="Search employees..." value={search} onChange={(e) => setSearch(e.target.value)}
               style={{ width: "100%", padding: "8px 12px 8px 36px", border: "1.5px solid #E5E7EB", borderRadius: "10px", fontSize: "0.875rem", color: "#374151", backgroundColor: "#F9FAFB" }} />
           </div>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px" }}>
-            <button className="topbar-btn" style={{ width: "38px", height: "38px", borderRadius: "10px", border: "1.5px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280", position: "relative" }}>
+            <button   aria-label="View notifications"   title="Notifications" className="topbar-btn" style={{ width: "38px", height: "38px", borderRadius: "10px", border: "1.5px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280", position: "relative" }}>
               <Bell size={17} />
               <span style={{ position: "absolute", top: "8px", right: "8px", width: "7px", height: "7px", borderRadius: "50%", background: "#EF4444", border: "1.5px solid #fff" }} />
             </button>
@@ -195,7 +193,8 @@ This is a computer-generated document.
             </div>
           </div>
         </div>
-        <div className="pay-main" style={{ padding: "28px 28px 40px", flex: 1 }}>
+
+        <main className="pay-main" style={{ padding: "28px 28px 40px", flex: 1 }}>
           <div className="pay-page-head" style={{ marginBottom: "24px", display: "flex", alignItems: "flex-start", justifyContent: "space-between", animation: "fadeUp 0.4s ease both 0.05s" }}>
             <div>
               <p style={{ color: "#6B7280", fontSize: "0.875rem", margin: "0 0 4px" }}>
@@ -204,7 +203,7 @@ This is a computer-generated document.
               <h1 className="pay-h1" style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.85rem", fontWeight: "700", color: "#111827", margin: 0, lineHeight: 1.2 }}>
                 Payroll Management
               </h1>
-              <p style={{ color: "#9CA3AF", fontSize: "0.85rem", margin: "5px 0 0" }}>
+              <p style={{ color: "#6B7280", fontSize: "0.85rem", margin: "5px 0 0" }}>
                 {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
               </p>
             </div>
@@ -218,6 +217,7 @@ This is a computer-generated document.
               <DollarSign size={15} /> Process Payment
             </button>
           </div>
+
           <div className="pay-stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "14px", marginBottom: "24px" }}>
             {[
               { title: "Total Payout",     count: `₹${totalPayout.toLocaleString()}`, icon: <TrendingUp size={19} />,    color: "#4F46E5", bg: "#EEF2FF", trend: "Current cycle",    trendUp: true },
@@ -229,7 +229,7 @@ This is a computer-generated document.
                 <div style={{ width: "40px", height: "40px", borderRadius: "10px", backgroundColor: stat.bg, display: "flex", alignItems: "center", justifyContent: "center", color: stat.color, marginBottom: "12px" }}>
                   {stat.icon}
                 </div>
-                <div style={{ fontSize: "0.75rem", color: "#9CA3AF", fontWeight: "500", marginBottom: "3px", textTransform: "uppercase", letterSpacing: "0.4px" }}>{stat.title}</div>
+                <div style={{ fontSize: "0.75rem", color: "#6B7280", fontWeight: "500", marginBottom: "3px", textTransform: "uppercase", letterSpacing: "0.4px" }}>{stat.title}</div>
                 <div className="pay-stat-val" style={{ fontSize: typeof stat.count === "string" && stat.count.startsWith("₹") ? "1.4rem" : "2rem", fontWeight: "700", color: "#111827", lineHeight: 1, fontFamily: "'Playfair Display', serif", marginBottom: "6px" }}>
                   {loading ? <span style={{ display: "inline-block", width: "50px", height: "28px", background: "#F3F4F6", borderRadius: "5px" }} /> : stat.count}
                 </div>
@@ -237,16 +237,17 @@ This is a computer-generated document.
               </div>
             ))}
           </div>
+
           <div style={{ backgroundColor: "#fff", borderRadius: "14px", border: "1px solid #F1F3F9", boxShadow: "0 2px 8px rgba(15,23,42,0.05)", overflow: "hidden", animation: "fadeUp 0.4s ease both 0.35s" }}>
             <div className="pay-table-header" style={{ padding: "16px 20px", borderBottom: "1px solid #F1F3F9", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
               <div>
                 <h2 style={{ fontSize: "0.95rem", fontWeight: "600", color: "#111827", margin: "0 0 2px" }}>Payroll Records</h2>
-                <p style={{ fontSize: "0.75rem", color: "#9CA3AF", margin: 0 }}>{filtered.length} {filtered.length === 1 ? "employee" : "employees"} found</p>
+                <p style={{ fontSize: "0.75rem", color: "#6B7280", margin: 0 }}>{filtered.length} {filtered.length === 1 ? "employee" : "employees"} found</p>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", flex: isMobile ? "1 1 100%" : "0 0 auto", flexWrap: "wrap" }}>
                 {isMobile && (
                   <div style={{ position: "relative", flex: "1 1 100%" }}>
-                    <Search size={13} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF" }} />
+                    <Search size={13} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "#6B7280" }} />
                     <input className="search-input pay-search-inp" placeholder="Search employees..." value={search} onChange={(e) => setSearch(e.target.value)}
                       style={{ padding: "8px 12px 8px 30px", border: "1.5px solid #E5E7EB", borderRadius: "9px", fontSize: "0.82rem", color: "#374151", backgroundColor: "#F9FAFB", width: "100%" }} />
                   </div>
@@ -262,7 +263,7 @@ This is a computer-generated document.
                 <thead>
                   <tr style={{ backgroundColor: "#FAFBFF" }}>
                     {["#", "Employee", "Net Salary", "Status", "Payment Date", "Payslip"].map((h, i) => (
-                      <th key={i} style={{ padding: "10px 18px", textAlign: i === 5 ? "right" : "left", fontSize: "0.68rem", fontWeight: "600", color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "1px solid #F1F3F9", whiteSpace: "nowrap" }}>
+                      <th key={i} style={{ padding: "10px 18px", textAlign: i === 5 ? "right" : "left", fontSize: "0.68rem", fontWeight: "600", color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "1px solid #F1F3F9", whiteSpace: "nowrap" }}>
                         {h}
                       </th>
                     ))}
@@ -281,14 +282,14 @@ This is a computer-generated document.
                     ))
                   ) : filtered.length === 0 ? (
                     <tr>
-                      <td colSpan="6" style={{ padding: "44px", textAlign: "center", color: "#9CA3AF", fontSize: "0.875rem" }}>
+                      <td colSpan="6" style={{ padding: "44px", textAlign: "center", color: "#6B7280", fontSize: "0.875rem" }}>
                         No payroll records found
                       </td>
                     </tr>
                   ) : (
                     filtered.map((pay, i) => (
                       <tr key={pay.employee_id} className="pay-row" style={{ borderBottom: "1px solid #F9FAFB" }}>
-                        <td style={{ padding: "12px 18px", fontSize: "0.8rem", color: "#9CA3AF", fontWeight: "500" }}>{String(i + 1).padStart(2, "0")}</td>
+                        <td style={{ padding: "12px 18px", fontSize: "0.8rem", color: "#6B7280", fontWeight: "500" }}>{String(i + 1).padStart(2, "0")}</td>
                         <td style={{ padding: "12px 18px" }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "9px" }}>
                             <div style={{ width: "30px", height: "30px", borderRadius: "50%", background: `hsl(${(pay.name?.charCodeAt(0) || 65) * 5 % 360}, 55%, 55%)`, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "0.72rem", fontWeight: "600", flexShrink: 0 }}>
@@ -308,11 +309,11 @@ This is a computer-generated document.
                             {pay.pay_date ? "Paid" : "Pending"}
                           </span>
                         </td>
-                        <td style={{ padding: "12px 18px", fontSize: "0.84rem", color: "#6B7280", whiteSpace: "nowrap" }}>
+                        <td style={{ padding: "12px 18px", fontSize: "0.84rem", color: "#374151", whiteSpace: "nowrap" }}>
                           {pay.pay_date ? new Date(pay.pay_date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—"}
                         </td>
                         <td style={{ padding: "12px 18px", textAlign: "right" }}>
-                          <button onClick={() => handleDownload(pay.payroll_id, pay.name)} disabled={!pay.pay_date}
+                          <button aria-label={`Download payslip for ${pay.name}`}   title={`Download payslip for ${pay.name}`} onClick={() => handleDownload(pay.payroll_id, pay.name)} disabled={!pay.pay_date}
                             style={{ width: "32px", height: "32px", borderRadius: "8px", border: "1.5px solid", borderColor: pay.pay_date ? "#E0E7FF" : "#F1F3F9", backgroundColor: pay.pay_date ? "#EEF2FF" : "#F9FAFB", color: pay.pay_date ? "#4F46E5" : "#D1D5DB", display: "inline-flex", alignItems: "center", justifyContent: "center", cursor: pay.pay_date ? "pointer" : "not-allowed" }}>
                             <Download size={13} />
                           </button>
@@ -326,25 +327,26 @@ This is a computer-generated document.
 
             {!loading && filtered.length > 0 && (
               <div style={{ padding: "10px 20px", borderTop: "1px solid #F1F3F9", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "6px" }}>
-                <span style={{ fontSize: "0.75rem", color: "#9CA3AF" }}>Showing {filtered.length} of {payrollData.length} records</span>
+                <span style={{ fontSize: "0.75rem", color: "#6B7280" }}>Showing {filtered.length} of {payrollData.length} records</span>
                 <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                  <Clock size={11} style={{ color: "#9CA3AF" }} />
-                  <span style={{ fontSize: "0.7rem", color: "#9CA3AF" }}>Updated just now</span>
+                  <Clock size={11} style={{ color: "#6B7280" }} />
+                  <span style={{ fontSize: "0.7rem", color: "#6B7280" }}>Updated just now</span>
                 </div>
               </div>
             )}
           </div>
-        </div>
+        </main>
       </div>
+
       {showModal && (
         <div className="modal-bg" onClick={() => setShowModal(false)}>
           <div className="modal-sheet" onClick={(e) => e.stopPropagation()}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
               <div>
                 <h2 style={{ fontSize: "1.05rem", fontWeight: "700", color: "#111827", margin: "0 0 2px", fontFamily: "'Playfair Display', serif" }}>Process Payment</h2>
-                <p style={{ fontSize: "0.77rem", color: "#9CA3AF", margin: 0 }}>Generate payroll for a staff member</p>
+                <p style={{ fontSize: "0.77rem", color: "#6B7280", margin: 0 }}>Generate payroll for a staff member</p>
               </div>
-              <button onClick={() => setShowModal(false)} style={{ width: "32px", height: "32px", borderRadius: "8px", border: "1.5px solid #E5E7EB", background: "#F9FAFB", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280" }}>
+              <button   aria-label="Close payroll modal"  title="Close" type="button" onClick={() => setShowModal(false)} style={{ width: "32px", height: "32px", borderRadius: "8px", border: "1.5px solid #E5E7EB", background: "#F9FAFB", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280" }}>
                 <X size={15} />
               </button>
             </div>

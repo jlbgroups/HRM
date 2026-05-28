@@ -163,7 +163,7 @@ function Holidays() {
             />
           </div>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px" }}>
-            <button className="topbar-btn" style={{
+            <button className="topbar-btn"   aria-label="Open menu" style={{
               width: "38px", height: "38px", borderRadius: "10px",
               border: "1.5px solid #E5E7EB", background: "#fff",
               display: "flex", alignItems: "center", justifyContent: "center",

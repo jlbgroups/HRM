@@ -196,7 +196,7 @@ const Profile = () => {
       <MobileTopBar isOpen={isOpen} setIsOpen={setIsOpen} />
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
 
-      <div
+      <main
         className="prof-main"
         style={{
           marginLeft: `${sidebarWidth}px`,
@@ -310,10 +310,12 @@ const Profile = () => {
                     { label: "Department",    name: "department", icon: <Building2 size={13} />, type: "text"  },
                   ].map((field) => (
                     <div key={field.name}>
-                      <label style={labelStyle}>
+                      <label  htmlFor={field.name} style={labelStyle}>
                         {field.icon} {field.label}
                       </label>
-                      <input
+                      <input 
+                        id={field.name}
+                        aria-label={field.label}
                         className="profile-input"
                         type={field.type}
                         name={field.name}
@@ -325,10 +327,10 @@ const Profile = () => {
                   ))}
 
                   <div>
-                    <label style={labelStyle}>
+                    <label htmlFor="role"  style={labelStyle}>
                       <User size={13} /> Role
                     </label>
-                    <input
+                    <input id="role" aria-label="Role"
                       style={{ ...inputStyle, backgroundColor: "#F3F4F6", color: "#9CA3AF", cursor: "not-allowed" }}
                       value={profile.role}
                       readOnly
@@ -337,6 +339,7 @@ const Profile = () => {
 
                   <div style={{ gridColumn: "1 / -1" }}>
                     <button
+                       aria-label="Update Password"
                       className="profile-btn"
                       onClick={updateProfile}
                       disabled={saving}
@@ -384,8 +387,10 @@ const Profile = () => {
                   }}
                 >
                   <div>
-                    <label style={labelStyle}>Current Password</label>
+                    <label htmlFor="current_password"  style={labelStyle}>Current Password</label>
                     <input
+                      id="current_password"
+                      aria-label="Current Password"
                       className="profile-input"
                       type="password"
                       placeholder="Enter current password"
@@ -396,8 +401,10 @@ const Profile = () => {
                   </div>
 
                   <div>
-                    <label style={labelStyle}>New Password</label>
+                    <label htmlFor="new_password" style={labelStyle}>New Password</label>
                     <input
+                      id="new_password"
+                      aria-label="New Password"
                       className="profile-input"
                       type="password"
                       placeholder="Enter new password"
@@ -426,7 +433,7 @@ const Profile = () => {
             </div>
           </>
         )}
-      </div>
+      </main>
     </div>
   );
 };

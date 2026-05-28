@@ -10,7 +10,7 @@ background: #F9FAFB;
 color: #111827;
 font-family: 'DM Sans', sans-serif;
 min-height: 100vh;
-padding-top: 64px; /* navbar height */
+padding-top: 64px; 
 }
 
 .shn-container {
@@ -162,7 +162,7 @@ margin: 0 0 4px;
 
 .shn-feature-desc {
 font-size: 0.78rem;
-color: #9CA3AF;
+color: #6B7280;
 margin: 0;
 line-height: 1.5;
 }
@@ -201,7 +201,7 @@ line-height: 1;
 .shn-stat-label {
 font-size: 0.72rem;
 font-weight: 600;
-color: #9CA3AF;
+color: #6B7280;
 text-transform: uppercase;
 letter-spacing: 0.5px;
 }
@@ -298,7 +298,7 @@ margin: 0 0 4px;
 
 .shn-testimonial-role {
 font-size: 0.8rem;
-color: #9CA3AF;
+color: #6B7280;
 margin: 0;
 }
 

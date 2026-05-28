@@ -168,12 +168,12 @@ const Designations = () => {
           position: "sticky", top: 0, zIndex: 100, boxShadow: "0 1px 4px rgba(15,23,42,0.04)",
         }}>
           <div style={{ position: "relative", flex: 1, maxWidth: "380px" }}>
-            <Search size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF" }} />
+            <Search size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#6B7280" }} />
             <input className="search-input" placeholder="Search designations..." value={search} onChange={(e) => setSearch(e.target.value)}
               style={{ width: "100%", padding: "8px 12px 8px 36px", border: "1.5px solid #E5E7EB", borderRadius: "10px", fontSize: "0.875rem", color: "#374151", backgroundColor: "#F9FAFB", transition: "border-color 0.18s, box-shadow 0.18s" }} />
           </div>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px" }}>
-            <button className="topbar-btn" style={{ width: "38px", height: "38px", borderRadius: "10px", border: "1.5px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280", position: "relative" }}>
+            <button type="button"  aria-label="Notifications" className="topbar-btn" style={{ width: "38px", height: "38px", borderRadius: "10px", border: "1.5px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280", position: "relative" }}>
               <Bell size={17} />
               <span style={{ position: "absolute", top: "8px", right: "8px", width: "7px", height: "7px", borderRadius: "50%", background: "#EF4444", border: "1.5px solid #fff" }} />
             </button>
@@ -185,6 +185,7 @@ const Designations = () => {
             </div>
           </div>
         </div>
+
         <div className="des-main" style={{ padding: "28px 28px 40px", flex: 1 }}>
           <div className="des-page-head" style={{ marginBottom: "28px", display: "flex", alignItems: "flex-start", justifyContent: "space-between", animation: "fadeUp 0.4s ease both 0.05s" }}>
             <div>
@@ -194,7 +195,7 @@ const Designations = () => {
               <h1 className="des-h1" style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.85rem", fontWeight: "700", color: "#111827", margin: 0, lineHeight: 1.2 }}>
                 Designations
               </h1>
-              <p style={{ color: "#9CA3AF", fontSize: "0.85rem", margin: "5px 0 0" }}>
+              <p style={{ color: "#6B7280", fontSize: "0.85rem", margin: "5px 0 0" }}>
                 {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
               </p>
             </div>
@@ -205,6 +206,7 @@ const Designations = () => {
               <Plus size={16} /> Add Designation
             </button>
           </div>
+
           <div className="des-stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px", marginBottom: "28px" }}>
             {[
               { title: "Total Designations", count: designations.length, icon: <Briefcase size={20} />, color: "#4F46E5", bg: "#EEF2FF", trend: "All roles" },
@@ -221,7 +223,7 @@ const Designations = () => {
                   {stat.icon}
                 </div>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: "0.72rem", color: "#9CA3AF", fontWeight: "500", marginBottom: "2px", textTransform: "uppercase", letterSpacing: "0.4px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{stat.title}</div>
+                  <div style={{ fontSize: "0.72rem", color: "#6B7280", fontWeight: "500", marginBottom: "2px", textTransform: "uppercase", letterSpacing: "0.4px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{stat.title}</div>
                   <div style={{ fontSize: "1.7rem", fontWeight: "700", color: "#111827", lineHeight: 1, fontFamily: "'Playfair Display', serif" }}>
                     {loading ? <span style={{ display: "inline-block", width: "50px", height: "28px", background: "#F3F4F6", borderRadius: "6px" }} /> : stat.count}
                   </div>
@@ -230,14 +232,15 @@ const Designations = () => {
               </div>
             ))}
           </div>
+
           <div style={{ backgroundColor: "#fff", borderRadius: "14px", border: "1px solid #F1F3F9", boxShadow: "0 2px 8px rgba(15,23,42,0.05)", overflow: "hidden", animation: "fadeUp 0.4s ease both 0.35s" }}>
             <div className="des-table-header" style={{ padding: "18px 22px", borderBottom: "1px solid #F1F3F9", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
               <div>
                 <h2 style={{ fontSize: "1rem", fontWeight: "600", color: "#111827", margin: "0 0 2px" }}>Designation List</h2>
-                <p style={{ fontSize: "0.78rem", color: "#9CA3AF", margin: 0 }}>{filtered.length} {filtered.length === 1 ? "designation" : "designations"} found</p>
+                <p style={{ fontSize: "0.78rem", color: "#6B7280", margin: 0 }}>{filtered.length} {filtered.length === 1 ? "designation" : "designations"} found</p>
               </div>
               <div style={{ position: "relative", flex: isMobile ? "1 1 100%" : "0 0 auto" }}>
-                <Search size={14} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF" }} />
+                <Search size={14} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "#6B7280" }} />
                 <input className="search-input des-table-search" placeholder="Search by name or company..." value={search} onChange={(e) => setSearch(e.target.value)}
                   style={{ padding: "8px 12px 8px 32px", border: "1.5px solid #E5E7EB", borderRadius: "9px", fontSize: "0.82rem", color: "#374151", backgroundColor: "#F9FAFB", width: isMobile ? "100%" : "240px", transition: "border-color 0.18s, box-shadow 0.18s" }} />
               </div>
@@ -248,7 +251,7 @@ const Designations = () => {
                 <thead>
                   <tr style={{ backgroundColor: "#FAFBFF" }}>
                     {["#", "Designation", "Company", "Action"].map((h, i) => (
-                      <th key={i} style={{ padding: "11px 22px", textAlign: i === 3 ? "right" : "left", fontSize: "0.72rem", fontWeight: "600", color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "1px solid #F1F3F9", whiteSpace: "nowrap" }}>{h}</th>
+                      <th key={i} style={{ padding: "11px 22px", textAlign: i === 3 ? "right" : "left", fontSize: "0.72rem", fontWeight: "600", color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "1px solid #F1F3F9", whiteSpace: "nowrap" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -265,14 +268,14 @@ const Designations = () => {
                     ))
                   ) : filtered.length === 0 ? (
                     <tr>
-                      <td colSpan="4" style={{ padding: "40px", textAlign: "center", color: "#9CA3AF", fontSize: "0.875rem" }}>
+                      <td colSpan="4" style={{ padding: "40px", textAlign: "center", color: "#6B7280", fontSize: "0.875rem" }}>
                         No designations found
                       </td>
                     </tr>
                   ) : (
                     filtered.map((d, i) => (
                       <tr key={d._id} className="des-row" style={{ borderBottom: "1px solid #F9FAFB" }}>
-                        <td style={{ padding: "13px 22px", fontSize: "0.82rem", color: "#9CA3AF", fontWeight: "500" }}>
+                        <td style={{ padding: "13px 22px", fontSize: "0.82rem", color: "#6B7280", fontWeight: "500" }}>
                           {String(i + 1).padStart(2, "0")}
                         </td>
                         <td style={{ padding: "13px 22px" }}>
@@ -282,7 +285,7 @@ const Designations = () => {
                             </div>
                             <div>
                               <div style={{ fontSize: "0.875rem", fontWeight: "500", color: "#111827", whiteSpace: "nowrap" }}>{d.designation_name}</div>
-                              <div style={{ fontSize: "0.72rem", color: "#9CA3AF" }}>ID: {d._id?.slice(-6)}</div>
+                              <div style={{ fontSize: "0.72rem", color: "#6B7280" }}>ID: {d._id?.slice(-6)}</div>
                             </div>
                           </div>
                         </td>
@@ -295,7 +298,7 @@ const Designations = () => {
                               <span style={{ fontSize: "0.855rem", color: "#374151", whiteSpace: "nowrap" }}>{d.company_id.company_name}</span>
                             </div>
                           ) : (
-                            <span style={{ fontSize: "0.855rem", color: "#9CA3AF" }}>—</span>
+                            <span style={{ fontSize: "0.855rem", color: "#6B7280" }}>—</span>
                           )}
                         </td>
                         <td style={{ padding: "13px 22px", textAlign: "right" }}>
@@ -306,7 +309,7 @@ const Designations = () => {
                               <button onClick={() => setDeleteConfirm(null)} style={{ padding: "4px 10px", background: "#F9FAFB", color: "#374151", border: "1.5px solid #E5E7EB", borderRadius: "7px", fontSize: "0.75rem", cursor: "pointer", fontFamily: "inherit" }}>No</button>
                             </div>
                           ) : (
-                            <button className="del-btn" onClick={() => setDeleteConfirm(d._id)}
+                            <button   type="button"  aria-label={`Delete ${d.designation_name}`} className="del-btn" onClick={() => setDeleteConfirm(d._id)}
                               style={{ width: "32px", height: "32px", borderRadius: "8px", border: "1.5px solid #FECDD3", backgroundColor: "#FFF1F2", color: "#DC2626", display: "inline-flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
                               <Trash2 size={14} />
                             </button>
@@ -321,25 +324,26 @@ const Designations = () => {
 
             {!loading && filtered.length > 0 && (
               <div style={{ padding: "12px 22px", borderTop: "1px solid #F1F3F9", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "6px" }}>
-                <span style={{ fontSize: "0.78rem", color: "#9CA3AF" }}>Showing {filtered.length} of {designations.length} designations</span>
+                <span style={{ fontSize: "0.78rem", color: "#6B7280" }}>Showing {filtered.length} of {designations.length} designations</span>
                 <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                  <Clock size={12} style={{ color: "#9CA3AF" }} />
-                  <span style={{ fontSize: "0.72rem", color: "#9CA3AF" }}>Updated just now</span>
+                  <Clock size={12} style={{ color: "#6B7280" }} />
+                  <span style={{ fontSize: "0.72rem", color: "#6B7280" }}>Updated just now</span>
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
+
       {showModal && (
         <div className="modal-bg" onClick={() => setShowModal(false)}>
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
               <div>
                 <h2 style={{ fontSize: "1.1rem", fontWeight: "700", color: "#111827", margin: "0 0 2px", fontFamily: "'Playfair Display', serif" }}>Add Designation</h2>
-                <p style={{ fontSize: "0.78rem", color: "#9CA3AF", margin: 0 }}>Enter the designation details below</p>
+                <p style={{ fontSize: "0.78rem", color: "#6B7280", margin: 0 }}>Enter the designation details below</p>
               </div>
-              <button onClick={() => setShowModal(false)} style={{ width: "32px", height: "32px", borderRadius: "8px", border: "1.5px solid #E5E7EB", background: "#F9FAFB", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280" }}>
+              <button  type="button"   aria-label="Close modal" onClick={() => setShowModal(false)} style={{ width: "32px", height: "32px", borderRadius: "8px", border: "1.5px solid #E5E7EB", background: "#F9FAFB", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280" }}>
                 <X size={16} />
               </button>
             </div>
@@ -351,7 +355,7 @@ const Designations = () => {
               <div style={{ marginBottom: "24px" }}>
                 <label style={{ display: "block", fontSize: "0.82rem", fontWeight: "500", color: "#374151", marginBottom: "6px" }}>Company Object ID</label>
                 <input className="form-input" placeholder="MongoDB ObjectId" value={companyId} onChange={(e) => setCompanyId(e.target.value)} required />
-                <p style={{ fontSize: "0.75rem", color: "#9CA3AF", margin: "5px 0 0" }}>Enter the company's MongoDB ObjectId</p>
+                <p style={{ fontSize: "0.75rem", color: "#6B7280", margin: "5px 0 0" }}>Enter the company's MongoDB ObjectId</p>
               </div>
               <div style={{ display: "flex", gap: "10px" }}>
                 <button type="button" onClick={() => setShowModal(false)} style={{ flex: 1, padding: "11px", border: "1.5px solid #E5E7EB", borderRadius: "10px", background: "#fff", fontSize: "0.875rem", fontWeight: "500", color: "#374151", cursor: "pointer", fontFamily: "inherit" }}>Cancel</button>
