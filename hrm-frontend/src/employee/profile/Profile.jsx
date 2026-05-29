@@ -148,60 +148,7 @@ const Profile = () => {
     }
   };
 
-  const handleAvatarChange = async (e) => {
-    const file = e.target.files?.[0];
-    e.target.value = ""; 
 
-    if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      showToast("Only image files are allowed", "error");
-      return;
-    }
-    if (file.size > 3 * 1024 * 1024) {
-      showToast("Image must be under 3 MB", "error");
-      return;
-    }
-
-    const preview = URL.createObjectURL(file);
-    setAvatarPreview(preview);
-
-    try {
-      setUploadingAvatar(true);
-
-      const cur = profileRef.current;
-      const formData = new FormData();
-      formData.append("name",       cur.name);
-      formData.append("email",      cur.email);
-      formData.append("phone",      cur.phone       || "");
-      formData.append("department", cur.department  || "General");
-      formData.append("avatar",     file); 
-
-      const res = await axios.put(`${API}/profile`, formData, {
-        headers: { "x-auth-token": token },
-      });
-
-      const newAvatar = res.data?.avatar || null;
-
-      if (newAvatar) {
-        setProfile((prev) => ({ ...prev, avatar: newAvatar }));
-        persistAvatarToStorage(newAvatar);
-        setAvatarPreview(null); 
-      } else {
-        await loadProfile(); 
-      }
-
-      localStorage.setItem("name", cur.name);
-      window.dispatchEvent(new Event("storage"));
-      showToast("Profile photo updated!");
-    } catch (err) {
-      console.error("Avatar upload error:", err.response?.data || err.message);
-      setAvatarPreview(null);
-      showToast(err.response?.data?.message || "Failed to upload photo", "error");
-    } finally {
-      setUploadingAvatar(false);
-    }
-  };
 
   const updateProfile = async () => {
     try {
