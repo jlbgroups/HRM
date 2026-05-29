@@ -77,6 +77,73 @@ const useIsMobile = () => {
   return isMobile;
 };
 
+const UserAvatar = ({ size = 36, initials, avatarUrl, showBadge = false }) => {
+  const [imgError, setImgError] = useState(false);
+  useEffect(() => { setImgError(false); }, [avatarUrl]);
+
+  const showImage = avatarUrl && !imgError;
+
+  return (
+    <div
+      aria-hidden="true"
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        borderRadius: "50%",
+        flexShrink: 0,
+        position: "relative",
+        overflow: "hidden",
+        border: showImage ? "2px solid #E0E7FF" : "none",
+      }}
+    >
+      {showImage ? (
+        <img
+          src={avatarUrl}
+          alt={initials}
+          onError={() => setImgError(true)}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+            borderRadius: "50%",
+          }}
+        />
+      ) : (
+        <div style={{
+          width: "100%",
+          height: "100%",
+          background: "linear-gradient(135deg, #4F46E5, #7C3AED)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#fff",
+          fontSize: size <= 36 ? "0.8rem" : "1rem",
+          fontWeight: "600",
+          borderRadius: "50%",
+        }}>
+          {initials}
+        </div>
+      )}
+      {showBadge && (
+        <span
+          aria-label="Viewing as employee"
+          style={{
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            width: "10px",
+            height: "10px",
+            borderRadius: "50%",
+            background: "#10B981",
+            border: "2px solid #fff",
+          }}
+        />
+      )}
+    </div>
+  );
+};
+
 const Sidebar = ({ isOpen, setIsOpen }) => {
   const location = useLocation();
   const navigate  = useNavigate();
@@ -84,6 +151,15 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
   const trueRole = localStorage.getItem("true_role");
   const name     = localStorage.getItem("name") || "Administrator";
+  const [avatarUrl, setAvatarUrl] = useState(() => localStorage.getItem("avatar") || "");
+
+  useEffect(() => {
+    const syncAvatar = () => {
+      setAvatarUrl(localStorage.getItem("avatar") || "");
+    };
+    window.addEventListener("storage", syncAvatar);
+    return () => window.removeEventListener("storage", syncAvatar);
+  }, []);
 
   const [viewMode, setViewMode] = useState(() => localStorage.getItem("role"));
 
@@ -100,8 +176,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     [viewMode]
   );
 
-  const sidebarVisible = isMobile ? isOpen : true;
-  const sidebarExpanded = isMobile ? true : isOpen;
+  const sidebarVisible  = isMobile ? isOpen : true;
+  const sidebarExpanded = isMobile ? true   : isOpen;
 
   const handleViewSwitch = useCallback(() => {
     const next = viewMode === "company_admin" ? "employee" : "company_admin";
@@ -202,7 +278,6 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             }
           </button>
         </div>
-
         <div style={{
           padding: sidebarExpanded ? "12px 14px" : "12px 0",
           borderBottom: "1px solid #F1F3F9",
@@ -212,28 +287,13 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           gap: "10px",
           flexShrink: 0,
         }}>
-          <div
-            aria-hidden="true"
-            style={{
-              width: "36px", height: "36px", borderRadius: "50%",
-              background: "linear-gradient(135deg, #4F46E5, #7C3AED)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              color: "#fff", fontSize: "0.8rem", fontWeight: "600",
-              flexShrink: 0, position: "relative",
-            }}
-          >
-            {initials}
-            {isAdminViewingAsEmployee && (
-              <span
-                aria-label="Viewing as employee"
-                style={{
-                  position: "absolute", bottom: 0, right: 0,
-                  width: "10px", height: "10px", borderRadius: "50%",
-                  background: "#10B981", border: "2px solid #fff",
-                }}
-              />
-            )}
-          </div>
+          <UserAvatar
+            size={36}
+            initials={initials}
+            avatarUrl={avatarUrl}
+            showBadge={isAdminViewingAsEmployee}
+          />
+
           {sidebarExpanded && (
             <div style={{ overflow: "hidden" }}>
               <div style={{ fontSize: "0.82rem", fontWeight: "600", color: "#111827", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -245,7 +305,6 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             </div>
           )}
         </div>
-
         {trueRole === "company_admin" && (
           <div style={{
             padding: sidebarExpanded ? "10px 12px" : "10px 6px",
@@ -319,7 +378,6 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             )}
           </div>
         )}
-
         <div className="sb-scroll" style={{ flex: 1, overflowY: "auto", padding: sidebarExpanded ? "10px" : "10px 6px" }}>
           {sidebarExpanded && (
             <p style={{ fontSize: "0.65rem", fontWeight: "600", color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.8px", padding: "4px 8px 8px", margin: 0 }}>
@@ -365,7 +423,6 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             })}
           </ul>
         </div>
-
         <div style={{ padding: sidebarExpanded ? "12px 10px" : "12px 6px", borderTop: "1px solid #F1F3F9", flexShrink: 0 }}>
           <button
             className="sb-logout"
