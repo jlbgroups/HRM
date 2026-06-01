@@ -8,6 +8,7 @@ const AdminDashboardPage   = lazy(() => import("./admin/dashboard/AdminDashboard
 const EmployeeDashboard    = lazy(() => import("./employee/dashboard/EmployeeDashboardPage"));
 const AdminAttendancePage  = lazy(() => import("./admin/attendence/AdminAttendancePage"));
 const AddEmployee          = lazy(() => import("./admin/employees/AddEmployeePage"));
+const UpdateEmployee       =lazy(()=>import("./admin/employees/UpdateEmployee"))
 const DepartmentsPage      = lazy(() => import("./admin/department/DepartmentsPage"));
 const Leaves               = lazy(() => import("./common_moduls/leaves/LeavesPage"));
 const Payroll              = lazy(() => import("./admin/payroll/payrollPage"));
@@ -31,6 +32,10 @@ const Home                 = lazy(() => import("./pages/Home"));
 const Features             = lazy(() => import("./pages/Features"));
 const Pricing              = lazy(() => import("./pages/Pricing"));
 const Contact              = lazy(() => import("./pages/Contact"));
+const AssignTask =lazy(()=>import("./employee/task/AssignTask"))
+const MyTasks =lazy(()=>import("./employee/mytask/MyTasks"))
+
+
 
 const PageLoader = () => (
   <div style={{
@@ -122,6 +127,12 @@ function App() {
             </ProtectedRoute>
           } />
 
+          <Route path="/update-employee" element={
+            <ProtectedRoute allowedRoles={["company_admin"]}>
+              <UpdateEmployee />
+            </ProtectedRoute>
+          } />
+
           <Route path="/departments" element={
             <ProtectedRoute allowedRoles={["company_admin"]}>
               <DepartmentsPage />
@@ -205,6 +216,19 @@ function App() {
               <Appreciations />
             </ProtectedRoute>
           } />
+
+          <Route path="/assign-task" element={
+            <ProtectedRoute allowedRoles={["employee"]}>
+              <AssignTask />
+            </ProtectedRoute>
+          } />
+
+
+
+          <Route path="/my-tasks" element=
+          {<ProtectedRoute allowedRoles={["employee"]}>
+            <MyTasks />
+            </ProtectedRoute>} />
 
           <Route path="/superadmin-dashboard" element={
             <ProtectedRoute allowedRoles={["super_admin", "software_owner"]}>

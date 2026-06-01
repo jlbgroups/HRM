@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   UserPlus, Mail, Phone, Calendar,
-  Briefcase, Lock, ArrowRight, Bell, Search,
+  Briefcase, Lock, ArrowRight, Bell, Search, Users,
 } from "lucide-react";
 import Sidebar from "../../layouts/sidebar";
 import MobileTopBar from "../../employee/MobileTopBar";
@@ -15,10 +15,13 @@ function AddEmployee() {
   const [formData, setFormData] = useState({
     name: "", email: "", password: "", phone: "",
     department_id: "",
+    manager_id: "",
     joining_date: new Date().toISOString().split("T")[0],
   });
   const [departments, setDepartments] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const [deptLoading, setDeptLoading] = useState(true);
+  const [empLoading, setEmpLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
 
@@ -58,11 +61,26 @@ function AddEmployee() {
     fetchDepartments();
   }, []);
 
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        setEmpLoading(true);
+        const res = await axios.get(`${API}/api/employees`, { headers });
+        setEmployees(res.data.data || res.data || []);
+      } catch (err) {
+        showToast("Could not load employees", "error");
+        setEmployees([]);
+      } finally { setEmpLoading(false); }
+    };
+    fetchEmployees();
+  }, []);
+
   const handleChange = (field) => (e) => setFormData((prev) => ({ ...prev, [field]: e.target.value }));
 
   const resetForm = () => setFormData({
     name: "", email: "", password: "", phone: "",
-    department_id: "", joining_date: new Date().toISOString().split("T")[0],
+    department_id: "", manager_id: "",
+    joining_date: new Date().toISOString().split("T")[0],
   });
 
   const handleSubmit = async (e) => {
@@ -72,7 +90,9 @@ function AddEmployee() {
     try {
       await axios.post(`${API}/api/employees/add`, {
         name: formData.name, email: formData.email, password: formData.password,
-        phone: formData.phone, department_id: formData.department_id || undefined,
+        phone: formData.phone,
+        department_id: formData.department_id || undefined,
+        manager_id: formData.manager_id || undefined,
         joining_date: formData.joining_date,
       }, { headers });
       showToast("Employee onboarded successfully!");
@@ -104,6 +124,9 @@ function AddEmployee() {
     { label: "Contact Number",   id: "field-phone",        field: "phone",        type: "tel",      icon: <Phone size={16} aria-hidden="true" style={iconBase} />,   placeholder: "+91 98765 43210" },
     { label: "Joining Date",     id: "field-joining-date", field: "joining_date", type: "date",     icon: <Calendar size={16} aria-hidden="true" style={iconBase} />, placeholder: "" },
   ];
+
+  const managers = employees.filter((emp) => emp.position === "manager");
+  const selectedManager = managers.find((emp) => emp._id === formData.manager_id);
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", backgroundColor: "#F9FAFB", fontFamily: "'DM Sans', sans-serif" }}>
@@ -270,6 +293,39 @@ function AddEmployee() {
                     {formData.department_id && (
                       <p style={{ margin: "6px 0 0", fontSize: "0.75rem", color: "#4F46E5", fontWeight: "500" }}>
                         ✓ {departments.find((d) => d._id === formData.department_id)?.department_name}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label htmlFor="field-manager" style={labelBase}>
+                      Reporting Manager
+                      <span style={{ position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}>(optional)</span>
+                    </label>
+                    <div style={{ position: "relative" }}>
+                      <Users size={16} aria-hidden="true" style={iconBase} />
+                      <select
+                        id="field-manager"
+                        className="field-input"
+                        value={formData.manager_id}
+                        onChange={handleChange("manager_id")}
+                        disabled={empLoading}
+                        style={{ ...inputBase, appearance: "none", cursor: empLoading ? "not-allowed" : "pointer", color: formData.manager_id ? "#111827" : "#6B7280", opacity: empLoading ? 0.6 : 1 }}
+                      >
+                        <option value="">
+                          {empLoading ? "Loading..." : managers.length === 0 ? "No managers assigned yet" : "Select Manager"}
+                        </option>
+                        {managers.map((emp) => (
+                          <option key={emp._id} value={emp._id}>{emp.name}</option>
+                        ))}
+                      </select>
+                      <svg aria-hidden="true" style={{ position: "absolute", right: "13px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#9CA3AF" }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </div>
+                    {selectedManager && (
+                      <p style={{ margin: "6px 0 0", fontSize: "0.75rem", color: "#4F46E5", fontWeight: "500" }}>
+                        ✓ {selectedManager.name}{selectedManager.department_id?.department_name ? ` · ${selectedManager.department_id.department_name}` : ""}
                       </p>
                     )}
                   </div>

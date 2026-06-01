@@ -27,19 +27,23 @@ function Login() {
 
       if (res.data.success && res.data.user) {
         const { token } = res.data;
-        const { role, name, id, company_id, employee_id } = res.data.user;
+        const { role, name, id, company_id, employee_id, position } = res.data.user;
+
         localStorage.setItem("token",      token);
         localStorage.setItem("name",       name);
         localStorage.setItem("user_id",    id);
         localStorage.setItem("company_id", company_id || "");
         localStorage.setItem("role",       role);
         localStorage.setItem("true_role",  role);
+        localStorage.setItem("position", position || "");
+
         if (employee_id) {
           localStorage.setItem("employee_id", employee_id);
         }
+
         switch (role) {
-          case "employee":        navigate("/employee-dashboard"); break;
-          case "company_admin":   navigate("/dashboard");          break;
+          case "employee":        navigate("/employee-dashboard");   break;
+          case "company_admin":   navigate("/dashboard");            break;
           case "super_admin":
           case "software_owner":  navigate("/superadmin-dashboard"); break;
           default:                navigate("/dashboard");
@@ -92,7 +96,6 @@ function Login() {
         ::placeholder { color: #CBD5E1; font-size: 0.9rem; }
         input, select { font-family: 'DM Sans', sans-serif; }
 
-  
         .login-root {
           display: flex;
           width: 100vw;
@@ -235,6 +238,7 @@ function Login() {
             </div>
           </div>
         </div>
+
         <div className="login-right">
           <div className="login-form-wrap">
             <div className="f1" style={s.formHeader}>
