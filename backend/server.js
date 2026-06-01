@@ -51,6 +51,7 @@ const messageActionRoutes = require("./modules/support/messageActionRoute");
 const websiteSettingsRoutes = require("./modules/websiteSettings/websiteSettingRoutes");
 const transactionRoutes = require("./modules/transactions/transctionsRoutes");
 const EmployeeRoutes     = require("./routes/employeeProfileRoutes");
+const taskRoutes = require("./modules/task/taskRoutes");
 const safeUse = (path, route, name) => {
   if (!route || typeof route !== "function") {
     console.error(`❌ ${name} is NOT a valid Express router`);
@@ -93,6 +94,8 @@ safeUse("/api/letters", letterRoutes, "letterRoutes");
 safeUse("/api/contact", contactRoutes, "contactRoutes");
 safeUse("/api/policies", policyRoutes, "policyRoutes");
 safeUse("/api/employee", EmployeeRoutes, "EmployeeRoutes");
+safeUse("/api/tasks", taskRoutes, "taskRoutes");
+
 app.use((err, req, res, next) => {
   console.error("GLOBAL ERROR:", err);
   res.status(500).json({

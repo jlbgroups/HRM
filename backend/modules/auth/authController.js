@@ -65,6 +65,8 @@ exports.register = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -86,10 +88,13 @@ exports.login = async (req, res) => {
     }
 
     let employee_id = null;
-    if (user.role === "company_admin") {
+    let position = null;
+
+    if (user.role === "employee" || user.role === "company_admin") {
       const empRecord = await Employee.findOne({ user_id: user._id });
       if (empRecord) {
         employee_id = empRecord._id;
+        position = empRecord.position;
       }
     }
 
@@ -113,10 +118,11 @@ exports.login = async (req, res) => {
         role: user.role,
         company_id: user.company_id,
         employee_id,
+        position,
       },
     });
   } catch (err) {
     console.error("Login Error:", err);
     res.status(500).json({ error: err.message });
   }
-};
+}

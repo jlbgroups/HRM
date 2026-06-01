@@ -12,15 +12,28 @@ const employeeSchema = new mongoose.Schema(
     name: String,
     email: String,
     phone: String,
-department_id: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "Department",
-  required: true
-},
+
+    position: {
+      type: String,
+      enum: ["employee", "manager"],
+      default: "employee",
+    },
+
+    department_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Department",
+      required: true,
+    },
 
     designation_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Designation",
+    },
+
+    manager_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Employee",
+      default: null,
     },
 
     company_id: {
