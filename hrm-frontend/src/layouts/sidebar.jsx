@@ -5,6 +5,7 @@ import {
   Wallet, LogOut, Building2, CreditCard, HeadphonesIcon,
   UserCog, Globe, Menu, UserCircle, ChevronRight,
   ClipboardList, Mail, ArrowLeftRight, X,
+  UserPen,
 } from "lucide-react";
 
 const ALL_MENU_ITEMS = [
@@ -12,10 +13,13 @@ const ALL_MENU_ITEMS = [
   { name: "Super Control Panel", path: "/superadmin-dashboard",        icon: <LayoutDashboard size={17} />, roles: ["super_admin", "software_owner"] },
   { name: "My Dashboard",        path: "/employee-dashboard",          icon: <LayoutDashboard size={17} />, roles: ["employee"] },
   { name: "Add Employee",        path: "/add-employee",                icon: <UserPlus size={17} />,        roles: ["company_admin"] },
+    { name: "Update Employee",        path: "/update-employee",                icon: <UserPen size={17} />,        roles: ["company_admin"] },
   { name: "Employee Attendance", path: "/admin-attendance",            icon: <Clock size={17} />,           roles: ["company_admin"] },
   { name: "My Attendance",       path: "/attendance",                  icon: <Clock size={17} />,           roles: ["employee"] },
   { name: "Holidays",            path: "/holidays",                    icon: <Palmtree size={17} />,        roles: ["company_admin", "employee"] },
   { name: "Leaves",              path: "/leaves",                      icon: <CalendarRange size={17} />,   roles: ["company_admin", "employee"] },
+  { name: "Assign Task", path: "/assign-task", icon: <ClipboardList size={17} />, roles: ["employee"], positions: ["manager"] },
+  { name: "My Tasks", path: "/my-tasks", icon: <ClipboardList size={17} />, roles: ["employee"], positions: ["employee"] },
   { name: "Appreciations",       path: "/appreciations",               icon: <LayoutDashboard size={17} />, roles: ["employee"] },
   { name: "Employee Policies",   path: "/employeePolicies",            icon: <ClipboardList size={17} />,   roles: ["employee"] },
   { name: "Employee Letters",    path: "/employeeLetters",             icon: <Mail size={17} />,            roles: ["employee"] },
@@ -171,10 +175,19 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const trueRoleLabel = ROLE_LABELS[trueRole] || trueRole;
   const isAdminViewingAsEmployee = trueRole === "company_admin" && viewMode === "employee";
 
-  const menuItems = useMemo(
-    () => ALL_MENU_ITEMS.filter(item => item.roles.includes(viewMode)),
-    [viewMode]
-  );
+
+
+  const position = localStorage.getItem("position");
+
+const menuItems = useMemo(
+  () =>
+    ALL_MENU_ITEMS.filter((item) => {
+      if (!item.roles.includes(viewMode)) return false;
+      if (item.positions && !item.positions.includes(position)) return false;
+      return true;
+    }),
+  [viewMode, position]
+);
 
   const sidebarVisible  = isMobile ? isOpen : true;
   const sidebarExpanded = isMobile ? true   : isOpen;
