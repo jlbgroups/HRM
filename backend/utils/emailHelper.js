@@ -33,7 +33,7 @@ const sendWelcomeEmail = async ({ name, email, password, role }) => {
   <div style="max-width:560px;margin:auto;font-family:Segoe UI;background:#f1f5f9;padding:20px">
     <div style="background:#fff;border-radius:12px;overflow:hidden">
       <div style="background:linear-gradient(135deg,#4f46e5,#7c3aed);padding:25px;text-align:center;color:#fff">
-        <h2>Welcome to Shnoor</h2>
+        <h2>Welcome to Levroxen</h2>
         <p>${roleLabel} Account Created</p>
       </div>
       <div style="padding:25px">
@@ -54,9 +54,9 @@ const sendWelcomeEmail = async ({ name, email, password, role }) => {
   </div>`;
 
   return transporter.sendMail({
-    from: `"Shnoor" <${process.env.EMAIL_USER}>`,
+    from: `"Levroxen" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: `Welcome to Shnoor - ${roleLabel}`,
+    subject: `Welcome to Levroxen - ${roleLabel}`,
     html,
   });
 };
@@ -85,7 +85,7 @@ const sendTrialEmail = async ({ name, email, companyName, trialEnd }) => {
   </div>`;
 
   return transporter.sendMail({
-    from: `"Shnoor" <${process.env.EMAIL_USER}>`,
+    from: `"Levroxen" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: `Trial Activated - ${companyName}`,
     html,
@@ -258,7 +258,7 @@ const sendHolidayNotificationEmail = async ({ emails, action, holiday }) => {
       <div style="background:linear-gradient(135deg,#4f46e5,#7c3aed);padding:25px;text-align:center;color:#fff">
         <div style="font-size:2.2rem;margin-bottom:8px">${emoji}</div>
         <h2 style="margin:0;font-size:1.2rem">${label}</h2>
-        <p style="margin:6px 0 0;opacity:0.85;font-size:0.875rem">SHNOOR INTERNATIONAL LLC</p>
+        <p style="margin:6px 0 0;opacity:0.85;font-size:0.875rem">LEVROXEN SOFTWARE INNOVATIONS</p>
       </div>
 
       <div style="padding:28px">
@@ -293,7 +293,7 @@ const sendHolidayNotificationEmail = async ({ emails, action, holiday }) => {
   </div>`;
 
   return transporter.sendMail({
-    from: process.env.MAIL_FROM || `"Shnoor HRM" <${process.env.EMAIL_USER}>`,
+    from: process.env.MAIL_FROM || `"Levroxen HRM" <${process.env.EMAIL_USER}>`,
     to: emails.join(","),
     subject: subjects[action] || subjects.added,
     html,

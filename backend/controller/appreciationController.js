@@ -28,7 +28,7 @@ const buildHTML = (name, email, title, message, type) => {
   <div style="max-width:600px;margin:auto;font-family:Arial">
     <div style="border-top:6px solid ${c.color};padding:20px">
 
-      <h2 style="color:${c.color}">SHNOOR INTERNATIONAL LLC</h2>
+      <h2 style="color:${c.color}">LEVROXEN SOFTWARE INNOVATIONS</h2>
       <p>${today}</p>
 
       <p><b>To:</b> ${name} (${email})</p>

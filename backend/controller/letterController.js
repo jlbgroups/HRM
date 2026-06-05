@@ -23,10 +23,10 @@ transporter.verify((error) => {
 });
 
 const subjects = {
-  offer:      "Your Offer Letter — SHNOOR INTERNATIONAL LLC",
-  experience: "Experience Certificate — SHNOOR INTERNATIONAL LLC",
-  salary:     "Salary Slip — SHNOOR INTERNATIONAL LLC",
-  relieving:  "Relieving Letter — SHNOOR INTERNATIONAL LLC",
+  offer:      "Your Offer Letter — LEVROXEN SOFTWARE INNOVATIONS",
+  experience: "Experience Certificate — LEVROXEN SOFTWARE INNOVATIONS",
+  salary:     "Salary Slip — LEVROXEN SOFTWARE INNOVATIONS",
+  relieving:  "Relieving Letter — LEVROXEN SOFTWARE INNOVATIONS",
 };
 
 const wrapEmail = (html) => `
@@ -44,7 +44,7 @@ body{margin:0;padding:0;background:#f8fafc;font-family:Arial}
 <body>
 <div class="shell">
 <div class="body">${html}</div>
-<div class="footer">Official document from SHNOOR INTERNATIONAL LLC</div>
+<div class="footer">Official document from LEVROXEN SOFTWARE INNOVATIONS</div>
 </div>
 </body>
 </html>
@@ -74,10 +74,10 @@ const sendLetter = async (req, res) => {
     const emailSubject =
       letterType === "custom"
         ? customSubject
-        : subjects[letterType] || "Letter from SHNOOR INTERNATIONAL LLC";
+        : subjects[letterType] || "Letter from LEVROXEN SOFTWARE INNOVATIONS";
 
     await transporter.sendMail({
-      from:    process.env.MAIL_FROM || `"SHNOOR INTERNATIONAL LLC" <${process.env.MAIL_USER}>`,
+      from:    process.env.MAIL_FROM || `"LEVROXEN SOFTWARE INNOVATIONS" <${process.env.MAIL_USER}>`,
       to:      employeeEmail,
       subject: emailSubject,
       html:    wrapEmail(htmlContent),
