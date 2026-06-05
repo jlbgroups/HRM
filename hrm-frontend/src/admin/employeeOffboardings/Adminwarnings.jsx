@@ -5,7 +5,7 @@ import MobileTopBar from "../../employee/MobileTopBar";
 import { Bell, Search, X, Check, AlertTriangle } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 
-const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com/api";
+const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
 const severityColors = {
   low: { bg: "#ECFDF5", text: "#059669", border: "#6EE7B7" },
@@ -77,7 +77,7 @@ export default function AdminWarnings() {
 
   const fetchWarnings = async () => {
     try {
-      const res = await axios.get(`${API}/warnings`, { headers });
+      const res = await axios.get(`${API}/api/warnings`, { headers });
       setWarnings(res.data.data || []);
     } catch (err) {
       console.error(err);
@@ -88,7 +88,7 @@ export default function AdminWarnings() {
 
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get(`${API}/employees`, { headers });
+      const res = await axios.get(`${API}/api/employees`, { headers });
       setEmployees(res.data.data || []);
     } catch (err) {
       console.error(err);
@@ -103,7 +103,7 @@ export default function AdminWarnings() {
     setSubmitting(true);
     setError("");
     try {
-      await axios.post(`${API}/warnings`, form, { headers });
+      await axios.post(`${API}/api/warnings`, form, { headers });
       setShowModal(false);
       setForm({ employee_id: "", subject: "", description: "", severity: "medium", warning_date: new Date().toISOString().split("T")[0] });
       fetchWarnings();
@@ -117,7 +117,7 @@ export default function AdminWarnings() {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this warning?")) return;
     try {
-      await axios.delete(`${API}/warnings/${id}`, { headers });
+      await axios.delete(`${API}/api/warnings/${id}`, { headers });
       setWarnings((prev) => prev.filter((w) => w._id !== id));
     } catch (err) {
       alert(err.response?.data?.error || "Failed to delete.");
@@ -126,7 +126,7 @@ export default function AdminWarnings() {
 
   const handleStatusChange = async (id, status) => {
     try {
-      const res = await axios.patch(`${API}/warnings/${id}/status`, { status }, { headers });
+      const res = await axios.patch(`${API}/api/warnings/${id}/status`, { status }, { headers });
       setWarnings((prev) => prev.map((w) => (w._id === id ? res.data.data : w)));
     } catch (err) {
       alert(err.response?.data?.error || "Failed to update status.");

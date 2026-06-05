@@ -5,7 +5,7 @@ import MobileTopBar from "../../employee/MobileTopBar";
 import { Bell, Search, X, Check } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 
-const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com/api";
+const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
 const statusConfig = {
   pending: { bg: "#FFFBEB", text: "#D97706", label: "Pending" },
@@ -66,7 +66,7 @@ export default function AdminResignations() {
 
   const fetchResignations = async () => {
     try {
-      const res = await axios.get(`${API}/resignations`, { headers });
+      const res = await axios.get(`${API}/api/resignations`, { headers });
       setResignations(res.data.data || []);
     } catch (err) {
       console.error(err);
@@ -78,7 +78,7 @@ export default function AdminResignations() {
   const handleReview = async () => {
     setSubmitting(true);
     try {
-      await axios.patch(`${API}/resignations/${selected._id}/review`, reviewForm, { headers });
+      await axios.patch(`${API}/api/resignations/${selected._id}/review`, reviewForm, { headers });
       setSelected(null);
       fetchResignations();
     } catch (err) {
