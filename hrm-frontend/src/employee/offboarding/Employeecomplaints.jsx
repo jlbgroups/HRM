@@ -4,7 +4,7 @@ import Sidebar from "../../layouts/sidebar";
 import MobileTopBar from "../MobileTopBar";
 import { useTheme } from "../../context/ThemeContext";
 
-const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com/api";
+const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
 const statusConfig = {
   open: { bg: "#EEF2FF", text: "#4F46E5", label: "Open", darkBg: "#1E1B4B", darkText: "#818CF8" },
@@ -80,7 +80,7 @@ export default function EmployeeComplaints() {
 
   const fetchMyComplaints = async () => {
     try {
-      const res = await axios.get(`${API}/complaints/my`, { headers });
+      const res = await axios.get(`${API}/api/complaints/my`, { headers });
       setData(res.data.data || { raisedByMe: [], raisedAgainstMe: [] });
     } catch (err) {
       console.error(err);
@@ -91,7 +91,7 @@ export default function EmployeeComplaints() {
 
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get(`${API}/employees`, { headers });
+      const res = await axios.get(`${API}/api/employees`, { headers });
       setEmployees(res.data.data || []);
     } catch (err) {
       console.error(err);
@@ -106,7 +106,7 @@ export default function EmployeeComplaints() {
     setSubmitting(true);
     setError("");
     try {
-      await axios.post(`${API}/complaints`, form, { headers });
+      await axios.post(`${API}/api/complaints`, form, { headers });
       setShowModal(false);
       setForm({ against_employee_id: "", subject: "", description: "", priority: "medium" });
       fetchMyComplaints();

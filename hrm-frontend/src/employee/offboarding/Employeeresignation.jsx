@@ -4,7 +4,7 @@ import Sidebar from "../../layouts/sidebar";
 import MobileTopBar from "../MobileTopBar";
 import { useTheme } from "../../context/ThemeContext";
 
-const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com/api";
+const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
 const statusConfig = {
   pending: { bg: "#FFFBEB", text: "#D97706", label: "Pending Review", darkBg: "#451A03", darkText: "#FCD34D" },
@@ -76,7 +76,7 @@ export default function EmployeeResignation() {
 
   const fetchMyResignations = async () => {
     try {
-      const res = await axios.get(`${API}/resignations/my`, { headers });
+      const res = await axios.get(`${API}/api/resignations/my`, { headers });
       setResignations(res.data.data || []);
     } catch (err) {
       console.error(err);
@@ -103,7 +103,7 @@ export default function EmployeeResignation() {
     setSubmitting(true);
     setError("");
     try {
-      await axios.post(`${API}/resignations`, form, { headers });
+      await axios.post(`${API}/api/resignations`, form, { headers });
       setShowForm(false);
       setForm({ last_working_day: "", reason: "", notice_date: new Date().toISOString().split("T")[0] });
       fetchMyResignations();
@@ -117,7 +117,7 @@ export default function EmployeeResignation() {
   const handleWithdraw = async (id) => {
     if (!window.confirm("Withdraw this resignation request?")) return;
     try {
-      await axios.patch(`${API}/resignations/${id}/withdraw`, {}, { headers });
+      await axios.patch(`${API}/api/resignations/${id}/withdraw`, {}, { headers });
       fetchMyResignations();
     } catch (err) {
       alert(err.response?.data?.error || "Failed to withdraw.");

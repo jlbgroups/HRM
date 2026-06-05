@@ -4,7 +4,7 @@ import Sidebar from "../../layouts/sidebar";
 import MobileTopBar from "../MobileTopBar";
 import { useTheme } from "../../context/ThemeContext";
 
-const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com/api";
+const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
 const severityColors = {
   low: { bg: "#ECFDF5", text: "#059669", border: "#6EE7B7", darkBg: "#064E3B", darkText: "#6EE7B7", darkBorder: "#6EE7B7" },
@@ -61,7 +61,7 @@ export default function EmployeeWarnings() {
 
   const fetchMyWarnings = async () => {
     try {
-      const res = await axios.get(`${API}/warnings/my`, { headers });
+      const res = await axios.get(`${API}/api/warnings/my`, { headers });
       setWarnings(res.data.data || []);
     } catch (err) {
       console.error(err);
@@ -72,7 +72,7 @@ export default function EmployeeWarnings() {
 
   const handleAcknowledge = async (id) => {
     try {
-      const res = await axios.patch(`${API}/warnings/${id}/acknowledge`, {}, { headers });
+      const res = await axios.patch(`${API}/api/warnings/${id}/acknowledge`, {}, { headers });
       setWarnings((prev) => prev.map((w) => (w._id === id ? res.data.data : w)));
     } catch (err) {
       alert(err.response?.data?.error || "Failed to acknowledge.");
