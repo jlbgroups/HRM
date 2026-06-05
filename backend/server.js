@@ -26,6 +26,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 const authRoutes = require("./modules/auth/authrouting");
 const dashboardRoutes = require("./modules/dashboard/dashboardRoutes");
 const employeeRoutes = require("./modules/employees/employeeRoutes");
@@ -50,8 +51,14 @@ const notificationRoutes = require("./modules/notifications/notifactionRoutes");
 const messageActionRoutes = require("./modules/support/messageActionRoute");
 const websiteSettingsRoutes = require("./modules/websiteSettings/websiteSettingRoutes");
 const transactionRoutes = require("./modules/transactions/transctionsRoutes");
-const EmployeeRoutes     = require("./routes/employeeProfileRoutes");
+const EmployeeRoutes = require("./routes/employeeProfileRoutes");
 const taskRoutes = require("./modules/task/taskRoutes");
+const salaryAdvanceRoutes = require("./modules/prepayment/salaryAdvanceRoutes");
+const incrementRoutes = require("./modules/increment/incrementRoutes");
+const warningRoutes = require("./modules/warning/Warningroutes");
+const resignationRoutes = require("./modules/resignation/Resignationroutes");
+const complaintRoutes = require("./modules/complaint/Complaintroutes");
+
 const safeUse = (path, route, name) => {
   if (!route || typeof route !== "function") {
     console.error(`❌ ${name} is NOT a valid Express router`);
@@ -60,6 +67,7 @@ const safeUse = (path, route, name) => {
   console.log(`✅ ${name} loaded`);
   app.use(path, route);
 };
+
 safeUse("/api/auth", authRoutes, "authRoutes");
 safeUse("/api/dashboard", dashboardRoutes, "dashboardRoutes");
 
@@ -96,6 +104,13 @@ safeUse("/api/policies", policyRoutes, "policyRoutes");
 safeUse("/api/employee", EmployeeRoutes, "EmployeeRoutes");
 safeUse("/api/tasks", taskRoutes, "taskRoutes");
 
+safeUse("/api/salary-advance", salaryAdvanceRoutes, "salaryAdvanceRoutes");
+safeUse("/api/increment", incrementRoutes, "incrementRoutes");
+
+safeUse("/api/warnings", warningRoutes, "warningRoutes");
+safeUse("/api/resignations", resignationRoutes, "resignationRoutes");
+safeUse("/api/complaints", complaintRoutes, "complaintRoutes");
+
 app.use((err, req, res, next) => {
   console.error("GLOBAL ERROR:", err);
   res.status(500).json({
@@ -103,8 +118,6 @@ app.use((err, req, res, next) => {
     error: "Internal Server Error",
   });
 });
-
-
 
 const PORT = process.env.PORT || 5001;
 

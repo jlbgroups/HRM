@@ -2,6 +2,7 @@ const Payroll = require("../../models/Payroll");
 const Employee = require("../../models/Employee");
 const Company = require("../../models/Company");
 const Department = require("../../models/Department");
+const SalaryAdvance = require("../../models/SalaryAdvance");
 
 const { sendPayslipEmail } = require("../../utils/emailHelper");
 
@@ -44,7 +45,12 @@ exports.getPayrollList = async (req, res) => {
         bonus: latestPayroll?.bonus || 0,
         allowances: latestPayroll?.allowances || 0,
         deductions: latestPayroll?.deductions || 0,
-        tax: latestPayroll?.tax || 0,
+        tax: 0,
+        pf: 0,
+        pt: 0,
+        esi: 0,
+        advance_deduction: latestPayroll?.advance_deduction || 0,
+        total_deductions: latestPayroll?.total_deductions || 0,
         last_net_salary: latestPayroll?.net_salary || 0,
 
         pay_date: latestPayroll?.pay_date || null,
@@ -76,19 +82,34 @@ exports.processPayment = async (req, res) => {
       allowance_reason,
       deductions,
       deduction_reason,
-      tax,
-      tax_reason,
       notes,
     } = req.body;
+
+    const activeAdvances = await SalaryAdvance.find({
+      employee_id: employee_id,
+      status: "approved",
+      remaining_amount: { $gt: 0 }
+    });
+
+    const totalAdvanceDeduction = activeAdvances.reduce(
+      (sum, advance) => sum + (advance.monthly_deduction || 0),
+      0
+    );
+
+    for (const advance of activeAdvances) {
+      const newRemaining = advance.remaining_amount - (advance.monthly_deduction || 0);
+      advance.remaining_amount = Math.max(0, newRemaining);
+      await advance.save();
+    }
 
     const base = parseFloat(salary || 0);
     const bonusAmt = parseFloat(bonus || 0);
     const allowanceAmt = parseFloat(allowances || 0);
-    const deductionAmt = parseFloat(deductions || 0);
-    const taxAmt = parseFloat(tax || 0);
+    const customDeductionAmt = parseFloat(deductions || 0);
 
-    const netSalary =
-      base + bonusAmt + allowanceAmt - deductionAmt - taxAmt;
+    const grossSalary = base + bonusAmt + allowanceAmt;
+    const totalDeductions = customDeductionAmt + totalAdvanceDeduction;
+    const netSalary = grossSalary - totalDeductions;
 
     const payroll = await Payroll.create({
       employee_id,
@@ -97,10 +118,14 @@ exports.processPayment = async (req, res) => {
       bonus_reason,
       allowances: allowanceAmt,
       allowance_reason,
-      deductions: deductionAmt,
+      deductions: customDeductionAmt,
       deduction_reason,
-      tax: taxAmt,
-      tax_reason,
+      pf: 0,
+      pt: 0,
+      tax: 0,
+      esi: 0,
+      advance_deduction: totalAdvanceDeduction,
+      total_deductions: totalDeductions,
       net_salary: netSalary,
       pay_date: pay_date || new Date(),
       pay_period,
@@ -122,10 +147,15 @@ exports.processPayment = async (req, res) => {
         bonusReason: bonus_reason,
         allowances: allowanceAmt,
         allowanceReason: allowance_reason,
-        deductions: deductionAmt,
-        deductionReason: deduction_reason,
-        tax: taxAmt,
-        taxReason: tax_reason,
+        pf: 0,
+        pt: 0,
+        tds: 0,
+        esi: 0,
+        customDeductions: customDeductionAmt,
+        customDeductionReason: deduction_reason,
+        advanceDeduction: totalAdvanceDeduction,
+        totalDeductions: totalDeductions,
+        grossSalary: grossSalary,
         netSalary,
         payDate: payroll.pay_date,
         payPeriod: pay_period || "",
@@ -137,8 +167,16 @@ exports.processPayment = async (req, res) => {
 
     res.json({
       success: true,
-      msg: "Payment processed and email sent",
-      data: payroll,
+      msg: "Payment processed successfully",
+      data: {
+        ...payroll._doc,
+        gross_salary: grossSalary,
+        statutory_deductions: 0,
+        pf: 0,
+        pt: 0,
+        tds: 0,
+        esi: 0,
+      },
     });
 
   } catch (err) {
@@ -164,7 +202,10 @@ exports.getMyPayslips = async (req, res) => {
       employee_id: employee._id,
     })
       .sort({ pay_date: -1 })
-      .populate("employee_id");
+      .populate({
+        path: "employee_id",
+        populate: { path: "department_id" }
+      });
 
     res.json({
       success: true,
@@ -179,12 +220,9 @@ exports.getMyPayslips = async (req, res) => {
   }
 };
 
-
-
 exports.downloadPayslip = async (req, res) => {
   try {
     const { id } = req.params;
-    const companyId = req.user.company_id;
 
     const payroll = await Payroll.findById(id)
       .populate({
@@ -192,10 +230,7 @@ exports.downloadPayslip = async (req, res) => {
         populate: { path: "department_id" },
       });
 
-    if (
-      !payroll ||
-      payroll.employee_id.company_id.toString() !== companyId.toString()
-    ) {
+    if (!payroll) {
       return res.status(404).json({
         error: "Payslip not found",
       });
@@ -213,6 +248,7 @@ exports.downloadPayslip = async (req, res) => {
     });
   }
 };
+
 exports.deletePayroll = async (req, res) => {
   try {
     const { id } = req.params;
@@ -222,7 +258,7 @@ exports.deletePayroll = async (req, res) => {
 
     if (
       !payroll ||
-      payroll.employee_id.company_id !== companyId
+      payroll.employee_id.company_id.toString() !== companyId.toString()
     ) {
       return res.status(404).json({
         error: "Record not found",
@@ -249,7 +285,6 @@ exports.getAllPayrollHistory = async (req, res) => {
     const companyId = req.user.company_id;
 
     const employees = await Employee.find({ company_id: companyId }).select("_id");
-
     const empIds = employees.map(e => e._id);
 
     const history = await Payroll.find({
@@ -273,5 +308,36 @@ exports.getAllPayrollHistory = async (req, res) => {
     res.status(500).json({
       error: "Failed to load history",
     });
+  }
+};
+
+exports.getAdvanceDeductions = async (req, res) => {
+  try {
+    const { employee_id } = req.params;
+    const companyId = req.user.company_id;
+
+    const employee = await Employee.findOne({
+      _id: employee_id,
+      company_id: companyId
+    });
+
+    if (!employee) {
+      return res.status(404).json({ error: "Employee not found" });
+    }
+
+    const activeAdvances = await SalaryAdvance.find({
+      employee_id: employee_id,
+      status: "approved",
+      remaining_amount: { $gt: 0 }
+    });
+
+    res.json({
+      success: true,
+      data: activeAdvances,
+      total_deduction: activeAdvances.reduce((sum, a) => sum + (a.monthly_deduction || 0), 0)
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch advance deductions" });
   }
 };
