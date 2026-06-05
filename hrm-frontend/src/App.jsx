@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider } from './context/ThemeContext';
 
 const Login                = lazy(() => import("./auth/Login"));
 const Register             = lazy(() => import("./auth/Register"));
@@ -8,7 +9,7 @@ const AdminDashboardPage   = lazy(() => import("./admin/dashboard/AdminDashboard
 const EmployeeDashboard    = lazy(() => import("./employee/dashboard/EmployeeDashboardPage"));
 const AdminAttendancePage  = lazy(() => import("./admin/attendence/AdminAttendancePage"));
 const AddEmployee          = lazy(() => import("./admin/employees/AddEmployeePage"));
-const UpdateEmployee       =lazy(()=>import("./admin/employees/UpdateEmployee"))
+const UpdateEmployee       = lazy(() => import("./admin/employees/UpdateEmployee"));
 const DepartmentsPage      = lazy(() => import("./admin/department/DepartmentsPage"));
 const Leaves               = lazy(() => import("./common_moduls/leaves/LeavesPage"));
 const Payroll              = lazy(() => import("./admin/payroll/payrollPage"));
@@ -32,10 +33,20 @@ const Home                 = lazy(() => import("./pages/Home"));
 const Features             = lazy(() => import("./pages/Features"));
 const Pricing              = lazy(() => import("./pages/Pricing"));
 const Contact              = lazy(() => import("./pages/Contact"));
-const AssignTask =lazy(()=>import("./employee/task/AssignTask"))
-const MyTasks =lazy(()=>import("./employee/mytask/MyTasks"))
+const AssignTask           = lazy(() => import("./employee/task/AssignTask"));
+const MyTasks              = lazy(() => import("./employee/mytask/MyTasks"));
+const AdvanceRequests      = lazy(() => import("./admin/AdvanceRequests/AdvanceRequests"));
+const IncrementPromotion   = lazy(() => import("./admin/IncrementPromotion/IncrementPromotion"));
+const SalaryAdvance        = lazy(() => import("./employee/prepayment/SalaryAdvance"));
+const CareerHistory        = lazy(() => import("./employee/increment/CareerHistory"));
+const EmployeePayslips     = lazy(() => import("./employee/employeePayslip/Payslips"));
 
-
+const AdminWarnings        = lazy(() => import("./admin/employeeOffboardings/Adminwarnings"));
+const AdminResignations    = lazy(() => import("./admin/employeeOffboardings/Adminresignations"));
+const AdminComplaints      = lazy(() => import("./admin/employeeOffboardings/Admincomplaints"));
+const EmployeeWarnings     = lazy(() => import("./employee/offboarding/Employeewarnings"));
+const EmployeeResignation  = lazy(() => import("./employee/offboarding/Employeeresignation"));
+const EmployeeComplaints   = lazy(() => import("./employee/offboarding/Employeecomplaints"));
 
 const PageLoader = () => (
   <div style={{
@@ -85,13 +96,14 @@ const HomeRedirect = () => {
   const role  = localStorage.getItem("role");
 
   if (!token) return <Home />;
-  if (role === "employee")    return <Navigate to="/employee-dashboard" replace />;
+  if (role === "employee")      return <Navigate to="/employee-dashboard" replace />;
   if (role === "company_admin") return <Navigate to="/dashboard" replace />;
   return <Navigate to="/superadmin-dashboard" replace />;
 };
 
 function App() {
   return (
+      <ThemeProvider>
     <Router>
       <Suspense fallback={<PageLoader />}>
         <Routes>
@@ -187,6 +199,36 @@ function App() {
             </ProtectedRoute>
           } />
 
+          <Route path="/admin/advance-requests" element={
+            <ProtectedRoute allowedRoles={["company_admin"]}>
+              <AdvanceRequests />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/admin/increment-promotion" element={
+            <ProtectedRoute allowedRoles={["company_admin"]}>
+              <IncrementPromotion />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/admin/warnings" element={
+            <ProtectedRoute allowedRoles={["company_admin"]}>
+              <AdminWarnings />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/admin/resignations" element={
+            <ProtectedRoute allowedRoles={["company_admin"]}>
+              <AdminResignations />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/admin/complaints" element={
+            <ProtectedRoute allowedRoles={["company_admin"]}>
+              <AdminComplaints />
+            </ProtectedRoute>
+          } />
+
           <Route path="/profile" element={
             <ProtectedRoute allowedRoles={["employee"]}>
               <Profile />
@@ -223,12 +265,47 @@ function App() {
             </ProtectedRoute>
           } />
 
+          <Route path="/employee/salary-advance" element={
+            <ProtectedRoute allowedRoles={["employee"]}>
+              <SalaryAdvance />
+            </ProtectedRoute>
+          } />
 
+          <Route path="/employee/career-history" element={
+            <ProtectedRoute allowedRoles={["employee"]}>
+              <CareerHistory />
+            </ProtectedRoute>
+          } />
 
-          <Route path="/my-tasks" element=
-          {<ProtectedRoute allowedRoles={["employee"]}>
-            <MyTasks />
-            </ProtectedRoute>} />
+          <Route path="/employee/payslips" element={
+            <ProtectedRoute allowedRoles={["employee"]}>
+              <EmployeePayslips />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/employee/warnings" element={
+            <ProtectedRoute allowedRoles={["employee"]}>
+              <EmployeeWarnings />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/employee/resignation" element={
+            <ProtectedRoute allowedRoles={["employee"]}>
+              <EmployeeResignation />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/employee/complaints" element={
+            <ProtectedRoute allowedRoles={["employee"]}>
+              <EmployeeComplaints />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/my-tasks" element={
+            <ProtectedRoute allowedRoles={["employee"]}>
+              <MyTasks />
+            </ProtectedRoute>
+          } />
 
           <Route path="/superadmin-dashboard" element={
             <ProtectedRoute allowedRoles={["super_admin", "software_owner"]}>
@@ -268,6 +345,7 @@ function App() {
         </Routes>
       </Suspense>
     </Router>
+    </ThemeProvider>
   );
 }
 

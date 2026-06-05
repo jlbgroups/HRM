@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   UserPlus, Mail, Phone, Calendar,
-  Briefcase, Lock, ArrowRight, Bell, Search, Users,
+  Briefcase, Lock, ArrowRight, Bell, Search, Users, DollarSign, Award
 } from "lucide-react";
 import Sidebar from "../../layouts/sidebar";
 import MobileTopBar from "../../employee/MobileTopBar";
+import { useTheme } from "../../context/ThemeContext";
 
 const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
@@ -15,21 +16,44 @@ function AddEmployee() {
   const [formData, setFormData] = useState({
     name: "", email: "", password: "", phone: "",
     department_id: "",
+    designation_id: "",
     manager_id: "",
     joining_date: new Date().toISOString().split("T")[0],
+    salary: "",
   });
   const [departments, setDepartments] = useState([]);
+  const [designations, setDesignations] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [deptLoading, setDeptLoading] = useState(true);
+  const [desigLoading, setDesigLoading] = useState(true);
   const [empLoading, setEmpLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
+  const { isDark } = useTheme();
 
   const name = localStorage.getItem("name") || "Admin";
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
   const headers = { "x-auth-token": localStorage.getItem("token"), "Content-Type": "application/json" };
+
+  const t = {
+    bg: isDark ? "#0F1219" : "#F9FAFB",
+    card: isDark ? "#161B27" : "#fff",
+    cardHeader: isDark ? "#111827" : "#fff",
+    border: isDark ? "#1E2535" : "#F1F3F9",
+    textPrimary: isDark ? "#F3F4F6" : "#111827",
+    textSecondary: isDark ? "#9CA3AF" : "#6B7280",
+    textMuted: isDark ? "#6B7280" : "#9CA3AF",
+    inputBg: isDark ? "#0F1219" : "#fff",
+    inputBorder: isDark ? "#2D3748" : "#E5E7EB",
+    topbar: isDark ? "#161B27" : "#fff",
+    footerBg: isDark ? "#111827" : "#FAFBFF",
+    resetBtn: isDark ? "#1E2535" : "#F1F5F9",
+    resetBtnText: isDark ? "#D1D5DB" : "#374151",
+    skeletonBg: isDark ? "#1E2535" : "#F3F4F6",
+    iconAccentBg: isDark ? "#1E1B4B" : "#EEF2FF",
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -62,6 +86,22 @@ function AddEmployee() {
   }, []);
 
   useEffect(() => {
+    const fetchDesignations = async () => {
+      try {
+        setDesigLoading(true);
+        const res = await axios.get(`${API}/api/designations`, { headers });
+        const designationData = res.data.data || res.data.designations || res.data || [];
+        setDesignations(Array.isArray(designationData) ? designationData : []);
+      } catch (err) {
+        console.error("Error fetching designations:", err);
+        showToast("Could not load designations", "error");
+        setDesignations([]);
+      } finally { setDesigLoading(false); }
+    };
+    fetchDesignations();
+  }, []);
+
+  useEffect(() => {
     const fetchEmployees = async () => {
       try {
         setEmpLoading(true);
@@ -79,22 +119,37 @@ function AddEmployee() {
 
   const resetForm = () => setFormData({
     name: "", email: "", password: "", phone: "",
-    department_id: "", manager_id: "",
+    department_id: "", designation_id: "", manager_id: "",
     joining_date: new Date().toISOString().split("T")[0],
+    salary: "",
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password.length < 6) { showToast("Password must be at least 6 characters.", "error"); return; }
+
+    if (formData.salary && (isNaN(parseFloat(formData.salary)) || parseFloat(formData.salary) < 0)) {
+      showToast("Please enter a valid salary amount", "error");
+      return;
+    }
+
     setLoading(true);
     try {
-      await axios.post(`${API}/api/employees/add`, {
-        name: formData.name, email: formData.email, password: formData.password,
+      const selectedDesignation = designations.find(d => d._id === formData.designation_id);
+      const requestData = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
         phone: formData.phone,
         department_id: formData.department_id || undefined,
+        designation_id: formData.designation_id || undefined,
+        designation: selectedDesignation?.designation_name || "",
         manager_id: formData.manager_id || undefined,
         joining_date: formData.joining_date,
-      }, { headers });
+        salary: formData.salary ? parseFloat(formData.salary) : null,
+      };
+
+      await axios.post(`${API}/api/employees/add`, requestData, { headers });
       showToast("Employee onboarded successfully!");
       resetForm();
     } catch (error) {
@@ -104,40 +159,49 @@ function AddEmployee() {
 
   const inputBase = {
     width: "100%", padding: "11px 14px 11px 42px",
-    border: "1.5px solid #E5E7EB", borderRadius: "11px",
-    fontSize: "0.875rem", color: "#111827", backgroundColor: "#fff",
+    border: `1.5px solid ${t.inputBorder}`, borderRadius: "11px",
+    fontSize: "0.875rem", color: t.textPrimary, backgroundColor: t.inputBg,
     fontFamily: "'DM Sans', sans-serif", outline: "none",
     transition: "border-color 0.18s, box-shadow 0.18s",
   };
 
   const labelBase = {
     display: "block", fontSize: "0.75rem", fontWeight: "600",
-    color: "#374151", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.5px",
+    color: t.textSecondary, marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.5px",
   };
 
-  const iconBase = { position: "absolute", left: "13px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF", pointerEvents: "none" };
+  const iconBase = { position: "absolute", left: "13px", top: "50%", transform: "translateY(-50%)", color: t.textMuted, pointerEvents: "none" };
 
   const fields = [
-    { label: "Full Name",        id: "field-name",         field: "name",         type: "text",     icon: <UserPlus size={16} aria-hidden="true" style={iconBase} />, placeholder: "John Doe" },
-    { label: "Work Email",       id: "field-email",        field: "email",        type: "email",    icon: <Mail size={16} aria-hidden="true" style={iconBase} />,    placeholder: "name@company.com" },
-    { label: "Access Password",  id: "field-password",     field: "password",     type: "password", icon: <Lock size={16} aria-hidden="true" style={iconBase} />,    placeholder: "Min. 6 characters" },
-    { label: "Contact Number",   id: "field-phone",        field: "phone",        type: "tel",      icon: <Phone size={16} aria-hidden="true" style={iconBase} />,   placeholder: "+91 98765 43210" },
-    { label: "Joining Date",     id: "field-joining-date", field: "joining_date", type: "date",     icon: <Calendar size={16} aria-hidden="true" style={iconBase} />, placeholder: "" },
+    { label: "Full Name",        id: "field-name",         field: "name",         type: "text",     icon: <UserPlus size={16} aria-hidden="true" style={iconBase} />, placeholder: "John Doe", required: true },
+    { label: "Work Email",       id: "field-email",        field: "email",        type: "email",    icon: <Mail size={16} aria-hidden="true" style={iconBase} />,    placeholder: "name@company.com", required: true },
+    { label: "Access Password",  id: "field-password",     field: "password",     type: "password", icon: <Lock size={16} aria-hidden="true" style={iconBase} />,    placeholder: "Min. 6 characters", required: true },
+    { label: "Contact Number",   id: "field-phone",        field: "phone",        type: "tel",      icon: <Phone size={16} aria-hidden="true" style={iconBase} />,   placeholder: "+91 98765 43210", required: true },
+    { label: "Joining Date",     id: "field-joining-date", field: "joining_date", type: "date",     icon: <Calendar size={16} aria-hidden="true" style={iconBase} />, placeholder: "", required: true },
+    { label: "Salary (₹)",       id: "field-salary",       field: "salary",       type: "number",   icon: <DollarSign size={16} aria-hidden="true" style={iconBase} />, placeholder: "e.g., 50000", required: false },
   ];
 
-  const managers = employees.filter((emp) => emp.position === "manager");
+  const managers = employees.filter((emp) =>
+    emp.position === "manager" ||
+    emp.designation?.toLowerCase().includes("manager") ||
+    emp.designation_id?.designation_name?.toLowerCase().includes("manager")
+  );
+
   const selectedManager = managers.find((emp) => emp._id === formData.manager_id);
+  const selectedDesignation = designations.find((d) => d._id === formData.designation_id);
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", backgroundColor: "#F9FAFB", fontFamily: "'DM Sans', sans-serif" }}>
+    <div style={{ display: "flex", minHeight: "100vh", backgroundColor: t.bg, fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap');
         @keyframes fadeUp  { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
-        .field-input:focus  { border-color: #4F46E5 !important; box-shadow: 0 0 0 3px rgba(79,70,229,0.10) !important; }
-        .search-input:focus { outline: none; border-color: #4F46E5 !important; box-shadow: 0 0 0 3px rgba(79,70,229,0.10); }
-        .topbar-btn:hover   { background: #F3F4F6 !important; }
+        .field-input:focus  { border-color: #4F46E5 !important; box-shadow: 0 0 0 3px rgba(79,70,229,0.12) !important; }
+        .ae-search-input:focus { outline: none; border-color: #4F46E5 !important; box-shadow: 0 0 0 3px rgba(79,70,229,0.10); }
+        .topbar-btn:hover   { background: ${isDark ? "#1E2535" : "#F3F4F6"} !important; }
         * { box-sizing: border-box; }
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: ${isDark ? "invert(1)" : "none"}; }
+        select option { background: ${t.card}; color: ${t.textPrimary}; }
 
         .ae-topbar { display: flex; }
 
@@ -177,62 +241,62 @@ function AddEmployee() {
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
 
       <div style={{ marginLeft: `${sidebarWidth}px`, flex: 1, transition: "margin-left 0.25s cubic-bezier(0.4,0,0.2,1)", display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-        <div className="ae-topbar" style={{ height: "64px", backgroundColor: "#fff", borderBottom: "1px solid #F1F3F9", alignItems: "center", padding: "0 28px", gap: "16px", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 1px 4px rgba(15,23,42,0.04)" }}>
+        <div className="ae-topbar" style={{ height: "64px", backgroundColor: t.topbar, borderBottom: `1px solid ${t.border}`, alignItems: "center", padding: "0 28px", gap: "16px", position: "sticky", top: 0, zIndex: 100, boxShadow: isDark ? "0 1px 4px rgba(0,0,0,0.3)" : "0 1px 4px rgba(15,23,42,0.04)" }}>
           <div style={{ position: "relative", flex: 1, maxWidth: "380px" }}>
-            <Search size={15} aria-hidden="true" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF" }} />
+            <Search size={15} aria-hidden="true" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: t.textMuted }} />
             <label htmlFor="topbar-search" style={{ position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}>
               Search
             </label>
             <input
               id="topbar-search"
-              className="search-input"
+              className="ae-search-input"
               type="search"
               placeholder="Search anything..."
-              style={{ width: "100%", padding: "8px 12px 8px 36px", border: "1.5px solid #E5E7EB", borderRadius: "10px", fontSize: "0.875rem", color: "#374151", backgroundColor: "#F9FAFB" }}
+              style={{ width: "100%", padding: "8px 12px 8px 36px", border: `1.5px solid ${t.inputBorder}`, borderRadius: "10px", fontSize: "0.875rem", color: t.textPrimary, backgroundColor: t.inputBg }}
             />
           </div>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px" }}>
             <button
               className="topbar-btn"
               aria-label="Notifications"
-              style={{ width: "38px", height: "38px", borderRadius: "10px", border: "1.5px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280", position: "relative" }}
+              style={{ width: "38px", height: "38px", borderRadius: "10px", border: `1.5px solid ${t.inputBorder}`, background: t.card, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: t.textSecondary, position: "relative" }}
             >
               <Bell size={17} aria-hidden="true" />
-              <span aria-label="You have new notifications" style={{ position: "absolute", top: "8px", right: "8px", width: "7px", height: "7px", borderRadius: "50%", background: "#EF4444", border: "1.5px solid #fff" }} />
+              <span aria-label="You have new notifications" style={{ position: "absolute", top: "8px", right: "8px", width: "7px", height: "7px", borderRadius: "50%", background: "#EF4444", border: `1.5px solid ${t.card}` }} />
             </button>
             <div
               aria-label={`Logged in as ${name}`}
-              style={{ display: "flex", alignItems: "center", gap: "9px", padding: "5px 12px 5px 6px", border: "1.5px solid #E5E7EB", borderRadius: "10px", background: "#fff", cursor: "pointer" }}
+              style={{ display: "flex", alignItems: "center", gap: "9px", padding: "5px 12px 5px 6px", border: `1.5px solid ${t.inputBorder}`, borderRadius: "10px", background: t.card, cursor: "pointer" }}
             >
               <div aria-hidden="true" style={{ width: "28px", height: "28px", borderRadius: "50%", background: "linear-gradient(135deg, #4F46E5, #7C3AED)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "0.72rem", fontWeight: "600" }}>
                 {name.slice(0, 2).toUpperCase()}
               </div>
-              <span style={{ fontSize: "0.83rem", fontWeight: "500", color: "#374151" }}>{name}</span>
+              <span style={{ fontSize: "0.83rem", fontWeight: "500", color: t.textPrimary }}>{name}</span>
             </div>
           </div>
         </div>
 
         <main className="ae-main" style={{ padding: "28px 28px 40px", flex: 1 }}>
           <div style={{ marginBottom: "28px", animation: "fadeUp 0.4s ease both 0.05s" }}>
-            <p style={{ color: "#6B7280", fontSize: "0.875rem", margin: "0 0 4px" }}>
+            <p style={{ color: t.textSecondary, fontSize: "0.875rem", margin: "0 0 4px" }}>
               {greeting}, <strong style={{ color: "#4F46E5" }}>{name}</strong> 👋
             </p>
-            <h1 className="ae-h1" style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.85rem", fontWeight: "700", color: "#111827", margin: 0, lineHeight: 1.2 }}>Add Employee</h1>
-            <p style={{ color: "#6B7280", fontSize: "0.85rem", margin: "5px 0 0" }}>
+            <h1 className="ae-h1" style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.85rem", fontWeight: "700", color: t.textPrimary, margin: 0, lineHeight: 1.2 }}>Add Employee</h1>
+            <p style={{ color: t.textSecondary, fontSize: "0.85rem", margin: "5px 0 0" }}>
               <time dateTime={new Date().toISOString().split("T")[0]}>
                 {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
               </time>
             </p>
           </div>
 
-          <div style={{ backgroundColor: "#fff", borderRadius: "16px", border: "1px solid #F1F3F9", boxShadow: "0 2px 8px rgba(15,23,42,0.05)", overflow: "hidden", animation: "fadeUp 0.4s ease both 0.15s" }}>
-            <div style={{ padding: "20px 28px", borderBottom: "1px solid #F1F3F9", display: "flex", alignItems: "center", gap: "12px" }}>
-              <div aria-hidden="true" style={{ width: "40px", height: "40px", borderRadius: "11px", background: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center", color: "#4F46E5" }}>
+          <div style={{ backgroundColor: t.card, borderRadius: "16px", border: `1px solid ${t.border}`, boxShadow: isDark ? "0 2px 8px rgba(0,0,0,0.3)" : "0 2px 8px rgba(15,23,42,0.05)", overflow: "hidden", animation: "fadeUp 0.4s ease both 0.15s" }}>
+            <div style={{ padding: "20px 28px", borderBottom: `1px solid ${t.border}`, display: "flex", alignItems: "center", gap: "12px" }}>
+              <div aria-hidden="true" style={{ width: "40px", height: "40px", borderRadius: "11px", background: t.iconAccentBg, display: "flex", alignItems: "center", justifyContent: "center", color: "#4F46E5" }}>
                 <UserPlus size={19} />
               </div>
               <div>
-                <h2 style={{ fontSize: "1rem", fontWeight: "600", color: "#111827", margin: "0 0 2px" }}>New Employee Onboarding</h2>
-                <p style={{ fontSize: "0.78rem", color: "#6B7280", margin: 0 }}>Creates a login account + employee profile automatically</p>
+                <h2 style={{ fontSize: "1rem", fontWeight: "600", color: t.textPrimary, margin: "0 0 2px" }}>New Employee Onboarding</h2>
+                <p style={{ fontSize: "0.78rem", color: t.textSecondary, margin: 0 }}>Creates a login account + employee profile automatically</p>
               </div>
             </div>
 
@@ -242,11 +306,11 @@ function AddEmployee() {
                   Employee details
                 </legend>
                 <div className="ae-form-grid" style={{ padding: "28px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "20px" }}>
-                  {fields.map(({ label, id, field, type, icon, placeholder }) => (
+                  {fields.map(({ label, id, field, type, icon, placeholder, required }) => (
                     <div key={field}>
                       <label htmlFor={id} style={labelBase}>
-                        {label} <span aria-hidden="true" style={{ color: "#EF4444" }}>*</span>
-                        <span style={{ position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}>(required)</span>
+                        {label} {required && <span aria-hidden="true" style={{ color: "#EF4444" }}>*</span>}
+                        {required && <span style={{ position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}>(required)</span>}
                       </label>
                       <div style={{ position: "relative" }}>
                         {icon}
@@ -257,12 +321,18 @@ function AddEmployee() {
                           placeholder={placeholder}
                           value={formData[field]}
                           onChange={handleChange(field)}
-                          required
-                          aria-required="true"
+                          required={required}
+                          min={field === "salary" ? "0" : undefined}
+                          step={field === "salary" ? "1000" : undefined}
                           minLength={field === "password" ? 6 : undefined}
                           style={inputBase}
                         />
                       </div>
+                      {field === "salary" && formData.salary && (
+                        <p style={{ margin: "6px 0 0", fontSize: "0.7rem", color: isDark ? "#34D399" : "#059669" }}>
+                          ₹{parseFloat(formData.salary).toLocaleString()}
+                        </p>
+                      )}
                     </div>
                   ))}
 
@@ -281,12 +351,12 @@ function AddEmployee() {
                         required
                         aria-required="true"
                         disabled={deptLoading}
-                        style={{ ...inputBase, appearance: "none", cursor: deptLoading ? "not-allowed" : "pointer", color: formData.department_id ? "#111827" : "#6B7280", opacity: deptLoading ? 0.6 : 1 }}
+                        style={{ ...inputBase, appearance: "none", cursor: deptLoading ? "not-allowed" : "pointer", color: formData.department_id ? t.textPrimary : t.textMuted, opacity: deptLoading ? 0.6 : 1 }}
                       >
                         <option value="" disabled>{deptLoading ? "Loading departments..." : "Select Department"}</option>
                         {departments.map((dept) => <option key={dept._id} value={dept._id}>{dept.department_name}</option>)}
                       </select>
-                      <svg aria-hidden="true" style={{ position: "absolute", right: "13px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#9CA3AF" }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg aria-hidden="true" style={{ position: "absolute", right: "13px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: t.textMuted }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
                     </div>
@@ -298,9 +368,49 @@ function AddEmployee() {
                   </div>
 
                   <div>
+                    <label htmlFor="field-designation" style={labelBase}>
+                      Designation
+                    </label>
+                    <div style={{ position: "relative" }}>
+                      <Award size={16} aria-hidden="true" style={iconBase} />
+                      <select
+                        id="field-designation"
+                        className="field-input"
+                        value={formData.designation_id}
+                        onChange={handleChange("designation_id")}
+                        disabled={desigLoading}
+                        style={{ ...inputBase, appearance: "none", cursor: desigLoading ? "not-allowed" : "pointer", color: formData.designation_id ? t.textPrimary : t.textMuted, opacity: desigLoading ? 0.6 : 1 }}
+                      >
+                        <option value="">
+                          {desigLoading ? "Loading designations..." : designations.length === 0 ? "No designations available" : "Select Designation (Optional)"}
+                        </option>
+                        {designations.map((desig) => (
+                          <option key={desig._id} value={desig._id}>
+                            {desig.designation_name}
+                            {desig.company_id?.company_name && ` (${desig.company_id.company_name})`}
+                          </option>
+                        ))}
+                      </select>
+                      <svg aria-hidden="true" style={{ position: "absolute", right: "13px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: t.textMuted }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </div>
+                    {selectedDesignation && (
+                      <p style={{ margin: "6px 0 0", fontSize: "0.75rem", color: "#4F46E5", fontWeight: "500" }}>
+                        ✓ {selectedDesignation.designation_name}
+                        {selectedDesignation.company_id?.company_name && ` · ${selectedDesignation.company_id.company_name}`}
+                      </p>
+                    )}
+                    {designations.length === 0 && !desigLoading && (
+                      <p style={{ margin: "6px 0 0", fontSize: "0.7rem", color: isDark ? "#FCD34D" : "#D97706" }}>
+                        ⚠️ No designations found. Please add designations first.
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
                     <label htmlFor="field-manager" style={labelBase}>
                       Reporting Manager
-                      <span style={{ position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}>(optional)</span>
                     </label>
                     <div style={{ position: "relative" }}>
                       <Users size={16} aria-hidden="true" style={iconBase} />
@@ -310,33 +420,36 @@ function AddEmployee() {
                         value={formData.manager_id}
                         onChange={handleChange("manager_id")}
                         disabled={empLoading}
-                        style={{ ...inputBase, appearance: "none", cursor: empLoading ? "not-allowed" : "pointer", color: formData.manager_id ? "#111827" : "#6B7280", opacity: empLoading ? 0.6 : 1 }}
+                        style={{ ...inputBase, appearance: "none", cursor: empLoading ? "not-allowed" : "pointer", color: formData.manager_id ? t.textPrimary : t.textMuted, opacity: empLoading ? 0.6 : 1 }}
                       >
                         <option value="">
-                          {empLoading ? "Loading..." : managers.length === 0 ? "No managers assigned yet" : "Select Manager"}
+                          {empLoading ? "Loading..." : managers.length === 0 ? "No managers assigned yet" : "Select Manager (Optional)"}
                         </option>
                         {managers.map((emp) => (
-                          <option key={emp._id} value={emp._id}>{emp.name}</option>
+                          <option key={emp._id} value={emp._id}>
+                            {emp.name} {emp.designation ? `(${emp.designation})` : ""}
+                          </option>
                         ))}
                       </select>
-                      <svg aria-hidden="true" style={{ position: "absolute", right: "13px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#9CA3AF" }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg aria-hidden="true" style={{ position: "absolute", right: "13px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: t.textMuted }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
                     </div>
                     {selectedManager && (
                       <p style={{ margin: "6px 0 0", fontSize: "0.75rem", color: "#4F46E5", fontWeight: "500" }}>
-                        ✓ {selectedManager.name}{selectedManager.department_id?.department_name ? ` · ${selectedManager.department_id.department_name}` : ""}
+                        ✓ {selectedManager.name}
+                        {selectedManager.designation && ` · ${selectedManager.designation}`}
                       </p>
                     )}
                   </div>
                 </div>
               </fieldset>
 
-              <div className="ae-footer" style={{ padding: "18px 28px", borderTop: "1px solid #F1F3F9", backgroundColor: "#FAFBFF", display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "12px" }}>
+              <div className="ae-footer" style={{ padding: "18px 28px", borderTop: `1px solid ${t.border}`, backgroundColor: t.footerBg, display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "12px" }}>
                 <button
                   type="button"
                   onClick={resetForm}
-                  style={{ background: "#F1F5F9", color: "#374151", border: "none", borderRadius: "11px", padding: "11px 20px", fontWeight: "600", fontSize: "0.875rem", cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}
+                  style={{ background: t.resetBtn, color: t.resetBtnText, border: "none", borderRadius: "11px", padding: "11px 20px", fontWeight: "600", fontSize: "0.875rem", cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}
                 >
                   Reset
                 </button>

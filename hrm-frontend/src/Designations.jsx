@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Plus, Trash2, Bell, Search, Clock, Briefcase, Building2, X, Check } from "lucide-react";
+import { useTheme } from "./context/ThemeContext";
+
 import Sidebar from "../src/layouts/sidebar";
 import MobileTopBar from "./employee/MobileTopBar";
-import { Plus, Trash2, Bell, Search, Clock, Briefcase, Building2, X, Check } from "lucide-react";
 
 const Designations = () => {
   const [designations, setDesignations] = useState([]);
@@ -16,10 +18,40 @@ const Designations = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [toast, setToast] = useState(null);
+  const { isDark } = useTheme();
 
   const name = localStorage.getItem("name") || "Admin";
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+
+  const t = {
+    bg: isDark ? "#0F1219" : "#F9FAFB",
+    card: isDark ? "#161B27" : "#fff",
+    border: isDark ? "#1E2535" : "#F1F3F9",
+    textPrimary: isDark ? "#F3F4F6" : "#111827",
+    textSecondary: isDark ? "#9CA3AF" : "#6B7280",
+    textMuted: isDark ? "#6B7280" : "#9CA3AF",
+    inputBg: isDark ? "#1E2535" : "#F9FAFB",
+    inputBorder: isDark ? "#2D3748" : "#E5E7EB",
+    topbar: isDark ? "#161B27" : "#fff",
+    skeletonBg: isDark ? "#1E2535" : "#F3F4F6",
+    rowHover: isDark ? "#1E2535" : "#F5F7FF",
+    tableHead: isDark ? "#111827" : "#FAFBFF",
+    statIconBg1: isDark ? "#1E1B4B" : "#EEF2FF",
+    statIconBg2: isDark ? "#064E3B" : "#ECFDF5",
+    statIconBg3: isDark ? "#451A03" : "#FFFBEB",
+    statIconColor1: isDark ? "#818CF8" : "#4F46E5",
+    statIconColor2: isDark ? "#34D399" : "#059669",
+    statIconColor3: isDark ? "#FCD34D" : "#D97706",
+    modalOverlay: isDark ? "rgba(0,0,0,0.7)" : "rgba(15,23,42,0.45)",
+    buttonPrimary: "#4F46E5",
+    buttonDanger: "#DC2626",
+    buttonDeleteBg: isDark ? "#2D0F0F" : "#FFF1F2",
+    toastSuccessBg: isDark ? "#064E3B" : "#059669",
+    toastErrorBg: isDark ? "#7F1D1D" : "#EF4444",
+    designationIconBg: isDark ? "#1E2535" : "#F3F4F6",
+    companyIconBg: isDark ? "#1E1B4B" : "#EEF2FF",
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -96,28 +128,28 @@ const Designations = () => {
   const uniqueCompanies = [...new Set(designations.map((d) => d.company_id?.company_name).filter(Boolean))].length;
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", backgroundColor: "#F9FAFB", fontFamily: "'DM Sans', sans-serif" }}>
+    <div style={{ display: "flex", minHeight: "100vh", backgroundColor: t.bg, fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap');
         @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
         .stat-card { transition: transform 0.18s, box-shadow 0.18s; }
-        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(15,23,42,0.10) !important; }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(15,23,42,0.15) !important; }
         .des-row { transition: background 0.12s; }
-        .des-row:hover { background: #F5F7FF !important; }
+        .des-row:hover { background: ${t.rowHover} !important; }
         .search-input:focus { outline: none; border-color: #4F46E5 !important; box-shadow: 0 0 0 3px rgba(79,70,229,0.10); }
-        .topbar-btn:hover { background: #F3F4F6 !important; }
+        .topbar-btn:hover { background: ${isDark ? "#1E2535" : "#F3F4F6"} !important; }
         .del-btn { transition: background 0.12s, transform 0.12s; }
-        .del-btn:hover { background: #FFF1F2 !important; transform: scale(1.05); }
-        .form-input { width: 100%; padding: 9px 13px; border: 1.5px solid #E5E7EB; border-radius: 9px; font-size: 0.875rem; color: #374151; background: #F9FAFB; font-family: inherit; transition: border-color 0.18s, box-shadow 0.18s; }
+        .del-btn:hover { background: ${t.buttonDeleteBg} !important; transform: scale(1.05); }
+        .form-input { width: 100%; padding: 9px 13px; border: 1.5px solid ${t.inputBorder}; border-radius: 9px; font-size: 0.875rem; color: ${t.textPrimary}; background: ${t.inputBg}; font-family: inherit; transition: border-color 0.18s, box-shadow 0.18s; }
         .form-input:focus { outline: none; border-color: #4F46E5; box-shadow: 0 0 0 3px rgba(79,70,229,0.10); }
         * { box-sizing: border-box; }
-        .modal-bg { position: fixed; inset: 0; background: rgba(15,23,42,0.45); display: flex; align-items: flex-end; justify-content: center; z-index: 1000; padding: 0; }
-        .modal-box { background: #fff; border-radius: 18px 18px 0 0; width: 100%; max-height: 92vh; overflow-y: auto; padding: 24px 20px 32px; animation: slideUp 0.25s ease both; }
+        .modal-bg { position: fixed; inset: 0; background: ${t.modalOverlay}; display: flex; align-items: flex-end; justify-content: center; z-index: 1000; padding: 0; }
+        .modal-box { background: ${t.card}; border-radius: 18px 18px 0 0; width: 100%; max-height: 92vh; overflow-y: auto; padding: 24px 20px 32px; animation: slideUp 0.25s ease both; border-top: 1px solid ${t.border}; }
         @media (min-width: 600px) {
           .modal-bg { align-items: center; padding: 16px; }
-          .modal-box { border-radius: 16px; max-width: 440px; padding: 28px; animation: slideIn 0.2s ease both; }
+          .modal-box { border-radius: 16px; max-width: 440px; padding: 28px; animation: slideIn 0.2s ease both; border: 1px solid ${t.border}; }
         }
         .des-topbar { display: flex !important; }
         @media (max-width: 768px) {
@@ -142,7 +174,7 @@ const Designations = () => {
       {toast && (
         <div style={{
           position: "fixed", top: "20px", right: "20px", zIndex: 9999,
-          background: toast.type === "error" ? "#EF4444" : "#059669",
+          background: toast.type === "error" ? t.toastErrorBg : t.toastSuccessBg,
           color: "#fff", padding: "12px 20px", borderRadius: "12px",
           fontWeight: "500", fontSize: "0.875rem",
           boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
@@ -163,25 +195,24 @@ const Designations = () => {
         display: "flex", flexDirection: "column", minHeight: "100vh", minWidth: 0,
       }}>
         <div className="des-topbar" style={{
-          height: "64px", backgroundColor: "#fff", borderBottom: "1px solid #F1F3F9",
+          height: "64px", backgroundColor: t.topbar, borderBottom: `1px solid ${t.border}`,
           alignItems: "center", padding: "0 28px", gap: "16px",
-          position: "sticky", top: 0, zIndex: 100, boxShadow: "0 1px 4px rgba(15,23,42,0.04)",
+          position: "sticky", top: 0, zIndex: 100, boxShadow: isDark ? "0 1px 4px rgba(0,0,0,0.3)" : "0 1px 4px rgba(15,23,42,0.04)",
         }}>
           <div style={{ position: "relative", flex: 1, maxWidth: "380px" }}>
-            <Search size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#6B7280" }} />
+            <Search size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: t.textMuted }} />
             <input className="search-input" placeholder="Search designations..." value={search} onChange={(e) => setSearch(e.target.value)}
-              style={{ width: "100%", padding: "8px 12px 8px 36px", border: "1.5px solid #E5E7EB", borderRadius: "10px", fontSize: "0.875rem", color: "#374151", backgroundColor: "#F9FAFB", transition: "border-color 0.18s, box-shadow 0.18s" }} />
+              style={{ width: "100%", padding: "8px 12px 8px 36px", border: `1.5px solid ${t.inputBorder}`, borderRadius: "10px", fontSize: "0.875rem", color: t.textPrimary, backgroundColor: t.inputBg, transition: "border-color 0.18s, box-shadow 0.18s" }} />
           </div>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px" }}>
-            <button type="button"  aria-label="Notifications" className="topbar-btn" style={{ width: "38px", height: "38px", borderRadius: "10px", border: "1.5px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280", position: "relative" }}>
-              <Bell size={17} />
-              <span style={{ position: "absolute", top: "8px", right: "8px", width: "7px", height: "7px", borderRadius: "50%", background: "#EF4444", border: "1.5px solid #fff" }} />
+            <button className="topbar-btn" style={{ width: "38px", height: "38px", borderRadius: "10px", border: `1.5px solid ${t.inputBorder}`, background: t.card, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: t.textSecondary, position: "relative" }}>
+              <span style={{ position: "absolute", top: "8px", right: "8px", width: "7px", height: "7px", borderRadius: "50%", background: "#EF4444", border: `1.5px solid ${t.card}` }} />
             </button>
-            <div style={{ display: "flex", alignItems: "center", gap: "9px", padding: "5px 12px 5px 6px", border: "1.5px solid #E5E7EB", borderRadius: "10px", background: "#fff", cursor: "pointer" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "9px", padding: "5px 12px 5px 6px", border: `1.5px solid ${t.inputBorder}`, borderRadius: "10px", background: t.card, cursor: "pointer" }}>
               <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "linear-gradient(135deg, #4F46E5, #7C3AED)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "0.72rem", fontWeight: "600" }}>
                 {name.slice(0, 2).toUpperCase()}
               </div>
-              <span style={{ fontSize: "0.83rem", fontWeight: "500", color: "#374151" }}>{name}</span>
+              <span style={{ fontSize: "0.83rem", fontWeight: "500", color: t.textPrimary }}>{name}</span>
             </div>
           </div>
         </div>
@@ -189,19 +220,19 @@ const Designations = () => {
         <div className="des-main" style={{ padding: "28px 28px 40px", flex: 1 }}>
           <div className="des-page-head" style={{ marginBottom: "28px", display: "flex", alignItems: "flex-start", justifyContent: "space-between", animation: "fadeUp 0.4s ease both 0.05s" }}>
             <div>
-              <p style={{ color: "#6B7280", fontSize: "0.875rem", margin: "0 0 4px" }}>
+              <p style={{ color: t.textSecondary, fontSize: "0.875rem", margin: "0 0 4px" }}>
                 {greeting}, <strong style={{ color: "#4F46E5" }}>{name}</strong> 👋
               </p>
-              <h1 className="des-h1" style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.85rem", fontWeight: "700", color: "#111827", margin: 0, lineHeight: 1.2 }}>
+              <h1 className="des-h1" style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.85rem", fontWeight: "700", color: t.textPrimary, margin: 0, lineHeight: 1.2 }}>
                 Designations
               </h1>
-              <p style={{ color: "#6B7280", fontSize: "0.85rem", margin: "5px 0 0" }}>
+              <p style={{ color: t.textMuted, fontSize: "0.85rem", margin: "5px 0 0" }}>
                 {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
               </p>
             </div>
             <button className="des-add-btn"
               onClick={() => setShowModal(true)}
-              style={{ display: "flex", alignItems: "center", gap: "7px", padding: "10px 18px", backgroundColor: "#4F46E5", color: "#fff", border: "none", borderRadius: "10px", fontSize: "0.875rem", fontWeight: "500", cursor: "pointer", fontFamily: "inherit", boxShadow: "0 2px 8px rgba(79,70,229,0.25)", flexShrink: 0 }}
+              style={{ display: "flex", alignItems: "center", gap: "7px", padding: "10px 18px", backgroundColor: t.buttonPrimary, color: "#fff", border: "none", borderRadius: "10px", fontSize: "0.875rem", fontWeight: "500", cursor: "pointer", fontFamily: "inherit", boxShadow: "0 2px 8px rgba(79,70,229,0.25)", flexShrink: 0 }}
             >
               <Plus size={16} /> Add Designation
             </button>
@@ -209,13 +240,13 @@ const Designations = () => {
 
           <div className="des-stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px", marginBottom: "28px" }}>
             {[
-              { title: "Total Designations", count: designations.length, icon: <Briefcase size={20} />, color: "#4F46E5", bg: "#EEF2FF", trend: "All roles" },
-              { title: "Companies", count: uniqueCompanies, icon: <Building2 size={20} />, color: "#059669", bg: "#ECFDF5", trend: "Organisations" },
-              { title: "Filtered Results", count: filtered.length, icon: <Search size={20} />, color: "#D97706", bg: "#FFFBEB", trend: "Current view" },
+              { title: "Total Designations", count: designations.length, icon: <Briefcase size={20} />, color: t.statIconColor1, bg: t.statIconBg1, trend: "All roles" },
+              { title: "Companies", count: uniqueCompanies, icon: <Building2 size={20} />, color: t.statIconColor2, bg: t.statIconBg2, trend: "Organisations" },
+              { title: "Filtered Results", count: filtered.length, icon: <Search size={20} />, color: t.statIconColor3, bg: t.statIconBg3, trend: "Current view" },
             ].map((stat, idx) => (
               <div key={idx} className="stat-card" style={{
-                backgroundColor: "#fff", borderRadius: "14px", padding: "18px 20px",
-                border: "1px solid #F1F3F9", boxShadow: "0 2px 8px rgba(15,23,42,0.05)",
+                backgroundColor: t.card, borderRadius: "14px", padding: "18px 20px",
+                border: `1px solid ${t.border}`, boxShadow: isDark ? "0 2px 8px rgba(0,0,0,0.3)" : "0 2px 8px rgba(15,23,42,0.05)",
                 animation: `fadeUp 0.4s ease both ${0.1 + idx * 0.07}s`,
                 display: "flex", alignItems: "center", gap: "14px",
               }}>
@@ -223,35 +254,35 @@ const Designations = () => {
                   {stat.icon}
                 </div>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: "0.72rem", color: "#6B7280", fontWeight: "500", marginBottom: "2px", textTransform: "uppercase", letterSpacing: "0.4px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{stat.title}</div>
-                  <div style={{ fontSize: "1.7rem", fontWeight: "700", color: "#111827", lineHeight: 1, fontFamily: "'Playfair Display', serif" }}>
-                    {loading ? <span style={{ display: "inline-block", width: "50px", height: "28px", background: "#F3F4F6", borderRadius: "6px" }} /> : stat.count}
+                  <div style={{ fontSize: "0.72rem", color: t.textMuted, fontWeight: "500", marginBottom: "2px", textTransform: "uppercase", letterSpacing: "0.4px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{stat.title}</div>
+                  <div style={{ fontSize: "1.7rem", fontWeight: "700", color: t.textPrimary, lineHeight: 1, fontFamily: "'Playfair Display', serif" }}>
+                    {loading ? <span style={{ display: "inline-block", width: "50px", height: "28px", background: t.skeletonBg, borderRadius: "6px" }} /> : stat.count}
                   </div>
-                  <span style={{ fontSize: "0.72rem", color: "#059669", fontWeight: "500" }}>{stat.trend}</span>
+                  <span style={{ fontSize: "0.72rem", color: t.statIconColor2, fontWeight: "500" }}>{stat.trend}</span>
                 </div>
               </div>
             ))}
           </div>
 
-          <div style={{ backgroundColor: "#fff", borderRadius: "14px", border: "1px solid #F1F3F9", boxShadow: "0 2px 8px rgba(15,23,42,0.05)", overflow: "hidden", animation: "fadeUp 0.4s ease both 0.35s" }}>
-            <div className="des-table-header" style={{ padding: "18px 22px", borderBottom: "1px solid #F1F3F9", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
+          <div style={{ backgroundColor: t.card, borderRadius: "14px", border: `1px solid ${t.border}`, boxShadow: isDark ? "0 2px 8px rgba(0,0,0,0.3)" : "0 2px 8px rgba(15,23,42,0.05)", overflow: "hidden", animation: "fadeUp 0.4s ease both 0.35s" }}>
+            <div className="des-table-header" style={{ padding: "18px 22px", borderBottom: `1px solid ${t.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
               <div>
-                <h2 style={{ fontSize: "1rem", fontWeight: "600", color: "#111827", margin: "0 0 2px" }}>Designation List</h2>
-                <p style={{ fontSize: "0.78rem", color: "#6B7280", margin: 0 }}>{filtered.length} {filtered.length === 1 ? "designation" : "designations"} found</p>
+                <h2 style={{ fontSize: "1rem", fontWeight: "600", color: t.textPrimary, margin: "0 0 2px" }}>Designation List</h2>
+                <p style={{ fontSize: "0.78rem", color: t.textMuted, margin: 0 }}>{filtered.length} {filtered.length === 1 ? "designation" : "designations"} found</p>
               </div>
               <div style={{ position: "relative", flex: isMobile ? "1 1 100%" : "0 0 auto" }}>
-                <Search size={14} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "#6B7280" }} />
+                <Search size={14} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: t.textMuted }} />
                 <input className="search-input des-table-search" placeholder="Search by name or company..." value={search} onChange={(e) => setSearch(e.target.value)}
-                  style={{ padding: "8px 12px 8px 32px", border: "1.5px solid #E5E7EB", borderRadius: "9px", fontSize: "0.82rem", color: "#374151", backgroundColor: "#F9FAFB", width: isMobile ? "100%" : "240px", transition: "border-color 0.18s, box-shadow 0.18s" }} />
+                  style={{ padding: "8px 12px 8px 32px", border: `1.5px solid ${t.inputBorder}`, borderRadius: "9px", fontSize: "0.82rem", color: t.textPrimary, backgroundColor: t.inputBg, width: isMobile ? "100%" : "240px", transition: "border-color 0.18s, box-shadow 0.18s" }} />
               </div>
             </div>
 
             <div className="des-table-wrap">
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
-                  <tr style={{ backgroundColor: "#FAFBFF" }}>
+                  <tr style={{ backgroundColor: t.tableHead }}>
                     {["#", "Designation", "Company", "Action"].map((h, i) => (
-                      <th key={i} style={{ padding: "11px 22px", textAlign: i === 3 ? "right" : "left", fontSize: "0.72rem", fontWeight: "600", color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "1px solid #F1F3F9", whiteSpace: "nowrap" }}>{h}</th>
+                      <th key={i} style={{ padding: "11px 22px", textAlign: i === 3 ? "right" : "left", fontSize: "0.72rem", fontWeight: "600", color: t.textMuted, textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: `1px solid ${t.border}`, whiteSpace: "nowrap" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -261,56 +292,56 @@ const Designations = () => {
                       <tr key={i}>
                         {[40, 180, 160, 60].map((w, j) => (
                           <td key={j} style={{ padding: "14px 22px" }}>
-                            <div style={{ height: "14px", width: `${w}px`, background: "#F3F4F6", borderRadius: "4px" }} />
+                            <div style={{ height: "14px", width: `${w}px`, background: t.skeletonBg, borderRadius: "4px" }} />
                           </td>
                         ))}
                       </tr>
                     ))
                   ) : filtered.length === 0 ? (
                     <tr>
-                      <td colSpan="4" style={{ padding: "40px", textAlign: "center", color: "#6B7280", fontSize: "0.875rem" }}>
+                      <td colSpan="4" style={{ padding: "40px", textAlign: "center", color: t.textMuted, fontSize: "0.875rem" }}>
                         No designations found
                       </td>
                     </tr>
                   ) : (
                     filtered.map((d, i) => (
-                      <tr key={d._id} className="des-row" style={{ borderBottom: "1px solid #F9FAFB" }}>
-                        <td style={{ padding: "13px 22px", fontSize: "0.82rem", color: "#6B7280", fontWeight: "500" }}>
+                      <tr key={d._id} className="des-row" style={{ borderBottom: `1px solid ${t.border}` }}>
+                        <td style={{ padding: "13px 22px", fontSize: "0.82rem", color: t.textMuted, fontWeight: "500" }}>
                           {String(i + 1).padStart(2, "0")}
                         </td>
                         <td style={{ padding: "13px 22px" }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                            <div style={{ width: "32px", height: "32px", borderRadius: "9px", background: `hsl(${(d.designation_name?.charCodeAt(0) || 65) * 5 % 360}, 55%, 92%)`, display: "flex", alignItems: "center", justifyContent: "center", color: `hsl(${(d.designation_name?.charCodeAt(0) || 65) * 5 % 360}, 55%, 38%)`, flexShrink: 0 }}>
+                            <div style={{ width: "32px", height: "32px", borderRadius: "9px", background: t.designationIconBg, display: "flex", alignItems: "center", justifyContent: "center", color: t.statIconColor1, flexShrink: 0 }}>
                               <Briefcase size={14} />
                             </div>
                             <div>
-                              <div style={{ fontSize: "0.875rem", fontWeight: "500", color: "#111827", whiteSpace: "nowrap" }}>{d.designation_name}</div>
-                              <div style={{ fontSize: "0.72rem", color: "#6B7280" }}>ID: {d._id?.slice(-6)}</div>
+                              <div style={{ fontSize: "0.875rem", fontWeight: "500", color: t.textPrimary, whiteSpace: "nowrap" }}>{d.designation_name}</div>
+                              <div style={{ fontSize: "0.72rem", color: t.textMuted }}>ID: {d._id?.slice(-6)}</div>
                             </div>
                           </div>
                         </td>
                         <td style={{ padding: "13px 22px" }}>
                           {d.company_id?.company_name ? (
                             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                              <div style={{ width: "24px", height: "24px", borderRadius: "6px", backgroundColor: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                                <Building2 size={12} color="#4F46E5" />
+                              <div style={{ width: "24px", height: "24px", borderRadius: "6px", backgroundColor: t.companyIconBg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                <Building2 size={12} color={t.statIconColor1} />
                               </div>
-                              <span style={{ fontSize: "0.855rem", color: "#374151", whiteSpace: "nowrap" }}>{d.company_id.company_name}</span>
+                              <span style={{ fontSize: "0.855rem", color: t.textSecondary, whiteSpace: "nowrap" }}>{d.company_id.company_name}</span>
                             </div>
                           ) : (
-                            <span style={{ fontSize: "0.855rem", color: "#6B7280" }}>—</span>
+                            <span style={{ fontSize: "0.855rem", color: t.textMuted }}>—</span>
                           )}
                         </td>
                         <td style={{ padding: "13px 22px", textAlign: "right" }}>
                           {deleteConfirm === d._id ? (
                             <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                              <span style={{ fontSize: "0.75rem", color: "#6B7280" }}>Confirm?</span>
-                              <button onClick={() => deleteDesignation(d._id)} style={{ padding: "4px 10px", background: "#DC2626", color: "#fff", border: "none", borderRadius: "7px", fontSize: "0.75rem", cursor: "pointer", fontFamily: "inherit" }}>Yes</button>
-                              <button onClick={() => setDeleteConfirm(null)} style={{ padding: "4px 10px", background: "#F9FAFB", color: "#374151", border: "1.5px solid #E5E7EB", borderRadius: "7px", fontSize: "0.75rem", cursor: "pointer", fontFamily: "inherit" }}>No</button>
+                              <span style={{ fontSize: "0.75rem", color: t.textMuted }}>Confirm?</span>
+                              <button onClick={() => deleteDesignation(d._id)} style={{ padding: "4px 10px", background: t.buttonDanger, color: "#fff", border: "none", borderRadius: "7px", fontSize: "0.75rem", cursor: "pointer", fontFamily: "inherit" }}>Yes</button>
+                              <button onClick={() => setDeleteConfirm(null)} style={{ padding: "4px 10px", background: t.inputBg, color: t.textSecondary, border: `1.5px solid ${t.inputBorder}`, borderRadius: "7px", fontSize: "0.75rem", cursor: "pointer", fontFamily: "inherit" }}>No</button>
                             </div>
                           ) : (
-                            <button   type="button"  aria-label={`Delete ${d.designation_name}`} className="del-btn" onClick={() => setDeleteConfirm(d._id)}
-                              style={{ width: "32px", height: "32px", borderRadius: "8px", border: "1.5px solid #FECDD3", backgroundColor: "#FFF1F2", color: "#DC2626", display: "inline-flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+                            <button className="del-btn" onClick={() => setDeleteConfirm(d._id)}
+                              style={{ width: "32px", height: "32px", borderRadius: "8px", border: `1.5px solid ${t.inputBorder}`, backgroundColor: t.buttonDeleteBg, color: t.buttonDanger, display: "inline-flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
                               <Trash2 size={14} />
                             </button>
                           )}
@@ -323,11 +354,11 @@ const Designations = () => {
             </div>
 
             {!loading && filtered.length > 0 && (
-              <div style={{ padding: "12px 22px", borderTop: "1px solid #F1F3F9", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "6px" }}>
-                <span style={{ fontSize: "0.78rem", color: "#6B7280" }}>Showing {filtered.length} of {designations.length} designations</span>
+              <div style={{ padding: "12px 22px", borderTop: `1px solid ${t.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "6px" }}>
+                <span style={{ fontSize: "0.78rem", color: t.textMuted }}>Showing {filtered.length} of {designations.length} designations</span>
                 <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                  <Clock size={12} style={{ color: "#6B7280" }} />
-                  <span style={{ fontSize: "0.72rem", color: "#6B7280" }}>Updated just now</span>
+                  <Clock size={12} style={{ color: t.textMuted }} />
+                  <span style={{ fontSize: "0.72rem", color: t.textMuted }}>Updated just now</span>
                 </div>
               </div>
             )}
@@ -340,26 +371,26 @@ const Designations = () => {
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
               <div>
-                <h2 style={{ fontSize: "1.1rem", fontWeight: "700", color: "#111827", margin: "0 0 2px", fontFamily: "'Playfair Display', serif" }}>Add Designation</h2>
-                <p style={{ fontSize: "0.78rem", color: "#6B7280", margin: 0 }}>Enter the designation details below</p>
+                <h2 style={{ fontSize: "1.1rem", fontWeight: "700", color: t.textPrimary, margin: "0 0 2px", fontFamily: "'Playfair Display', serif" }}>Add Designation</h2>
+                <p style={{ fontSize: "0.78rem", color: t.textMuted, margin: 0 }}>Enter the designation details below</p>
               </div>
-              <button  type="button"   aria-label="Close modal" onClick={() => setShowModal(false)} style={{ width: "32px", height: "32px", borderRadius: "8px", border: "1.5px solid #E5E7EB", background: "#F9FAFB", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280" }}>
+              <button onClick={() => setShowModal(false)} style={{ width: "32px", height: "32px", borderRadius: "8px", border: `1.5px solid ${t.inputBorder}`, background: t.inputBg, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: t.textMuted }}>
                 <X size={16} />
               </button>
             </div>
             <form onSubmit={addDesignation}>
               <div style={{ marginBottom: "16px" }}>
-                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: "500", color: "#374151", marginBottom: "6px" }}>Designation Name</label>
+                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: "500", color: t.textSecondary, marginBottom: "6px" }}>Designation Name</label>
                 <input className="form-input" placeholder="e.g. Software Engineer" value={designationName} onChange={(e) => setDesignationName(e.target.value)} required />
               </div>
               <div style={{ marginBottom: "24px" }}>
-                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: "500", color: "#374151", marginBottom: "6px" }}>Company Object ID</label>
+                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: "500", color: t.textSecondary, marginBottom: "6px" }}>Company Object ID</label>
                 <input className="form-input" placeholder="MongoDB ObjectId" value={companyId} onChange={(e) => setCompanyId(e.target.value)} required />
-                <p style={{ fontSize: "0.75rem", color: "#6B7280", margin: "5px 0 0" }}>Enter the company's MongoDB ObjectId</p>
+                <p style={{ fontSize: "0.75rem", color: t.textMuted, margin: "5px 0 0" }}>Enter the company's MongoDB ObjectId</p>
               </div>
               <div style={{ display: "flex", gap: "10px" }}>
-                <button type="button" onClick={() => setShowModal(false)} style={{ flex: 1, padding: "11px", border: "1.5px solid #E5E7EB", borderRadius: "10px", background: "#fff", fontSize: "0.875rem", fontWeight: "500", color: "#374151", cursor: "pointer", fontFamily: "inherit" }}>Cancel</button>
-                <button type="submit" disabled={isSubmitting} style={{ flex: 1, padding: "11px", border: "none", borderRadius: "10px", background: "#4F46E5", fontSize: "0.875rem", fontWeight: "500", color: "#fff", cursor: isSubmitting ? "not-allowed" : "pointer", fontFamily: "inherit", boxShadow: "0 2px 8px rgba(79,70,229,0.25)", opacity: isSubmitting ? 0.7 : 1 }}>
+                <button type="button" onClick={() => setShowModal(false)} style={{ flex: 1, padding: "11px", border: `1.5px solid ${t.inputBorder}`, borderRadius: "10px", background: t.card, fontSize: "0.875rem", fontWeight: "500", color: t.textSecondary, cursor: "pointer", fontFamily: "inherit" }}>Cancel</button>
+                <button type="submit" disabled={isSubmitting} style={{ flex: 1, padding: "11px", border: "none", borderRadius: "10px", background: t.buttonPrimary, fontSize: "0.875rem", fontWeight: "500", color: "#fff", cursor: isSubmitting ? "not-allowed" : "pointer", fontFamily: "inherit", boxShadow: "0 2px 8px rgba(79,70,229,0.25)", opacity: isSubmitting ? 0.7 : 1 }}>
                   {isSubmitting ? "Adding..." : "Add Designation"}
                 </button>
               </div>

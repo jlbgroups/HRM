@@ -2,11 +2,13 @@ import React, { useEffect, useState, useCallback, useRef } from "react";
 import Sidebar from "../../layouts/sidebar";
 import MobileTopBar from "../MobileTopBar";
 import axios from "axios";
-import { KeyRound, User, Mail, Phone, Building2, Camera, Trash2 } from "lucide-react";
+import { KeyRound, User, Mail, Phone, Building2, Camera, Trash2, Bell } from "lucide-react";
+import { useTheme } from "../../context/ThemeContext";
 
 const API = "https://hrm-backend-vvqg.onrender.com/api/employee";
 
 const Profile = () => {
+  const { isDark } = useTheme();
   const [isOpen, setIsOpen] = useState(window.innerWidth > 768);
   const [profile, setProfile] = useState({
     name: "",
@@ -32,17 +34,53 @@ const Profile = () => {
   useEffect(() => { profileRef.current = profile; }, [profile]);
 
   const token = localStorage.getItem("token");
+  const name = localStorage.getItem("name") || "Employee";
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
   const isMobile = window.innerWidth <= 768;
   const sidebarWidth = isMobile ? 0 : (isOpen ? 255 : 68);
 
+  const t = {
+    bg: isDark ? "#0F1219" : "#F9FAFB",
+    card: isDark ? "#161B27" : "#fff",
+    border: isDark ? "#1E2535" : "#F1F3F9",
+    textPrimary: isDark ? "#F3F4F6" : "#111827",
+    textSecondary: isDark ? "#9CA3AF" : "#6B7280",
+    textMuted: isDark ? "#6B7280" : "#9CA3AF",
+    inputBg: isDark ? "#1E2535" : "#F9FAFB",
+    inputBorder: isDark ? "#2D3748" : "#E5E7EB",
+    topbar: isDark ? "#161B27" : "#fff",
+    skeletonBg: isDark ? "#1E2535" : "#F3F4F6",
+    avatarGradient: "linear-gradient(135deg, #4F46E5, #7C3AED)",
+    avatarBorder: isDark ? "#1E1B4B" : "#EEF2FF",
+    roleBadgeBg: isDark ? "#1E1B4B" : "#EEF2FF",
+    roleBadgeColor: isDark ? "#818CF8" : "#4F46E5",
+    infoCardBg: isDark ? "#1E2535" : "#fff",
+    changePhotoBg: isDark ? "#1E1B4B" : "#EEF2FF",
+    changePhotoColor: isDark ? "#818CF8" : "#4F46E5",
+    removePhotoBg: isDark ? "#2D0F0F" : "#FEF2F2",
+    removePhotoColor: "#DC2626",
+    headerIconBg1: isDark ? "#1E1B4B" : "#EEF2FF",
+    headerIconColor1: isDark ? "#818CF8" : "#4F46E5",
+    headerIconBg2: isDark ? "#064E3B" : "#ECFDF5",
+    headerIconColor2: isDark ? "#6EE7B7" : "#059669",
+    toastSuccessBg: isDark ? "#064E3B" : "#ECFDF5",
+    toastSuccessText: isDark ? "#6EE7B7" : "#059669",
+    toastErrorBg: isDark ? "#2D0F0F" : "#FEF2F2",
+    toastErrorText: isDark ? "#F87171" : "#DC2626",
+    disabledInputBg: isDark ? "#1E2535" : "#F3F4F6",
+    disabledInputText: isDark ? "#6B7280" : "#9CA3AF",
+  };
+
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth <= 768) setIsOpen(false);
+      const mobile = window.innerWidth <= 768;
+      if (!mobile && !isOpen) setIsOpen(true);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [isOpen]);
 
   const showToast = (message, type = "success") => {
     setToast({ message, type });
@@ -68,12 +106,12 @@ const Profile = () => {
       const avatarUrl = data.avatar || null;
 
       setProfile({
-        name:       data.name       || "",
-        email:      data.email      || "",
-        phone:      data.phone      || "",
+        name: data.name || "",
+        email: data.email || "",
+        phone: data.phone || "",
         department: data.department || "General",
-        role:       data.role       || "Employee",
-        avatar:     avatarUrl,
+        role: data.role || "Employee",
+        avatar: avatarUrl,
       });
 
       persistAvatarToStorage(avatarUrl);
@@ -95,7 +133,7 @@ const Profile = () => {
 
   const handleAvatarChange = async (e) => {
     const file = e.target.files?.[0];
-    e.target.value = ""; 
+    e.target.value = "";
 
     if (!file) return;
 
@@ -116,11 +154,11 @@ const Profile = () => {
 
       const cur = profileRef.current;
       const formData = new FormData();
-      formData.append("name",       cur.name);
-      formData.append("email",      cur.email);
-      formData.append("phone",      cur.phone       || "");
-      formData.append("department", cur.department  || "General");
-      formData.append("avatar",     file); 
+      formData.append("name", cur.name);
+      formData.append("email", cur.email);
+      formData.append("phone", cur.phone || "");
+      formData.append("department", cur.department || "General");
+      formData.append("avatar", file);
 
       const res = await axios.put(`${API}/profile`, formData, {
         headers: { "x-auth-token": token },
@@ -131,9 +169,9 @@ const Profile = () => {
       if (newAvatar) {
         setProfile((prev) => ({ ...prev, avatar: newAvatar }));
         persistAvatarToStorage(newAvatar);
-        setAvatarPreview(null); 
+        setAvatarPreview(null);
       } else {
-        await loadProfile(); 
+        await loadProfile();
       }
 
       localStorage.setItem("name", cur.name);
@@ -148,15 +186,13 @@ const Profile = () => {
     }
   };
 
-
-
   const updateProfile = async () => {
     try {
       setSaving(true);
       const formData = new FormData();
-      formData.append("name",       profile.name);
-      formData.append("email",      profile.email);
-      formData.append("phone",      profile.phone);
+      formData.append("name", profile.name);
+      formData.append("email", profile.email);
+      formData.append("phone", profile.phone);
       formData.append("department", profile.department);
 
       const res = await axios.put(`${API}/profile`, formData, {
@@ -176,7 +212,6 @@ const Profile = () => {
       setSaving(false);
     }
   };
-
 
   const removeAvatar = async () => {
     if (!profile.avatar && !avatarPreview) return;
@@ -226,11 +261,11 @@ const Profile = () => {
   const inputStyle = {
     width: "100%",
     padding: "10px 14px",
-    border: "1.5px solid #E5E7EB",
+    border: `1.5px solid ${t.inputBorder}`,
     borderRadius: "9px",
     fontSize: "0.875rem",
-    color: "#374151",
-    backgroundColor: "#F9FAFB",
+    color: t.textPrimary,
+    backgroundColor: t.inputBg,
     fontFamily: "'DM Sans', sans-serif",
     transition: "border-color 0.18s, box-shadow 0.18s",
     outline: "none",
@@ -243,7 +278,7 @@ const Profile = () => {
     gap: "6px",
     fontSize: "0.78rem",
     fontWeight: "600",
-    color: "#6B7280",
+    color: t.textMuted,
     textTransform: "uppercase",
     letterSpacing: "0.4px",
     marginBottom: "6px",
@@ -253,7 +288,7 @@ const Profile = () => {
     <div style={{
       display: "flex",
       minHeight: "100vh",
-      backgroundColor: "#F9FAFB",
+      backgroundColor: t.bg,
       fontFamily: "'DM Sans', sans-serif",
     }}>
       <style>{`
@@ -267,6 +302,7 @@ const Profile = () => {
         .profile-btn:disabled { opacity:.6; cursor:not-allowed; }
         .avatar-overlay { opacity:0; transition:opacity .2s; }
         .avatar-wrapper:hover .avatar-overlay { opacity:1; }
+        .topbar-btn:hover { background: ${isDark ? "#1E2535" : "#F3F4F6"} !important; }
         * { box-sizing:border-box; }
         @media (max-width: 768px) {
           .prof-main { padding: 76px 14px 32px !important; }
@@ -277,6 +313,7 @@ const Profile = () => {
           .prof-card-body   { padding: 16px !important; }
           .prof-avatar-row  { flex-direction: column !important; align-items: center !important; text-align: center !important; }
           .prof-avatar-actions { flex-direction: column !important; align-items: stretch !important; }
+          .prof-topbar { display: none !important; }
         }
         @media (min-width: 769px) and (max-width: 1024px) {
           .prof-main { padding: 28px 18px 40px !important; }
@@ -289,8 +326,8 @@ const Profile = () => {
         <div style={{
           position: "fixed", top: "20px", right: "20px", zIndex: 9999,
           padding: "12px 20px", borderRadius: "10px",
-          backgroundColor: toast.type === "error" ? "#FEF2F2" : "#ECFDF5",
-          color: toast.type === "error" ? "#DC2626" : "#059669",
+          backgroundColor: toast.type === "error" ? t.toastErrorBg : t.toastSuccessBg,
+          color: toast.type === "error" ? t.toastErrorText : t.toastSuccessText,
           border: `1px solid ${toast.type === "error" ? "#FECACA" : "#A7F3D0"}`,
           fontWeight: "500", fontSize: "0.875rem",
           animation: "slideIn 0.3s ease both",
@@ -321,20 +358,21 @@ const Profile = () => {
           minWidth: 0,
         }}
       >
-        <div style={{ marginBottom: "24px", animation: "fadeUp 0.4s ease both 0.05s" }}>
-          <p style={{ color: "#6B7280", fontSize: "0.875rem", margin: "0 0 4px" }}>Account Settings</p>
+        <div className="prof-topbar" style={{ marginBottom: "24px", animation: "fadeUp 0.4s ease both 0.05s" }}>
+          <p style={{ color: t.textSecondary, fontSize: "0.875rem", margin: "0 0 4px" }}>{greeting}, <strong style={{ color: "#4F46E5" }}>{name}</strong> 👋</p>
+          <p style={{ color: t.textSecondary, fontSize: "0.875rem", margin: "0 0 4px" }}>Account Settings</p>
           <h1
             className="prof-page-title"
             style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(1.5rem, 4vw, 1.85rem)",
-              fontWeight: "700", color: "#111827", margin: 0, lineHeight: 1.2,
+              fontWeight: "700", color: t.textPrimary, margin: 0, lineHeight: 1.2,
             }}
           >
             My Profile
           </h1>
-          <p style={{ color: "#9CA3AF", fontSize: "0.85rem", margin: "5px 0 0" }}>
-            Manage your personal information and account settings.
+          <p style={{ color: t.textMuted, fontSize: "0.85rem", margin: "5px 0 0" }}>
+            {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
           </p>
         </div>
 
@@ -347,15 +385,15 @@ const Profile = () => {
                 borderRadius: "50%", animation: "spin 0.8s linear infinite",
                 margin: "0 auto 16px",
               }} />
-              <p style={{ color: "#6B7280", fontWeight: "500", fontSize: "0.9rem" }}>Loading profile...</p>
+              <p style={{ color: t.textMuted, fontWeight: "500", fontSize: "0.9rem" }}>Loading profile...</p>
             </div>
           </div>
         ) : (
           <>
             <div
               style={{
-                backgroundColor: "#fff", borderRadius: "14px",
-                border: "1px solid #F1F3F9", boxShadow: "0 2px 8px rgba(15,23,42,0.05)",
+                backgroundColor: t.card, borderRadius: "14px",
+                border: `1px solid ${t.border}`, boxShadow: isDark ? "0 2px 8px rgba(0,0,0,0.3)" : "0 2px 8px rgba(15,23,42,0.05)",
                 padding: "20px 24px", marginBottom: "16px",
                 animation: "fadeUp 0.4s ease both 0.07s",
                 display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap",
@@ -374,7 +412,7 @@ const Profile = () => {
                     alt="Profile"
                     style={{
                       width: "72px", height: "72px", borderRadius: "50%",
-                      objectFit: "cover", border: "3px solid #EEF2FF", display: "block",
+                      objectFit: "cover", border: `3px solid ${t.avatarBorder}`, display: "block",
                     }}
                     onError={(e) => {
                       e.target.style.display = "none";
@@ -384,7 +422,7 @@ const Profile = () => {
                 ) : null}
                 <div style={{
                   width: "72px", height: "72px", borderRadius: "50%",
-                  background: "linear-gradient(135deg, #4F46E5, #7C3AED)",
+                  background: t.avatarGradient,
                   display: displayAvatar ? "none" : "flex",
                   alignItems: "center", justifyContent: "center",
                   color: "#fff", fontSize: "1.4rem", fontWeight: "700",
@@ -419,14 +457,14 @@ const Profile = () => {
                 )}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: "1rem", fontWeight: "600", color: "#111827" }}>{profile.name || "—"}</div>
-                <div style={{ fontSize: "0.82rem", color: "#6B7280", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                <div style={{ fontSize: "1rem", fontWeight: "600", color: t.textPrimary }}>{profile.name || "—"}</div>
+                <div style={{ fontSize: "0.82rem", color: t.textMuted, marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {profile.email || "—"}
                 </div>
                 <span style={{
                   display: "inline-block", marginTop: "6px",
-                  fontSize: "0.7rem", fontWeight: "600", color: "#4F46E5",
-                  backgroundColor: "#EEF2FF", padding: "2px 10px", borderRadius: "20px",
+                  fontSize: "0.7rem", fontWeight: "600", color: t.roleBadgeColor,
+                  backgroundColor: t.roleBadgeBg, padding: "2px 10px", borderRadius: "20px",
                 }}>
                   {profile.role}
                 </span>
@@ -439,7 +477,7 @@ const Profile = () => {
                   style={{
                     display: "flex", alignItems: "center", gap: "6px",
                     padding: "8px 14px", borderRadius: "8px",
-                    backgroundColor: "#EEF2FF", color: "#4F46E5",
+                    backgroundColor: t.changePhotoBg, color: t.changePhotoColor,
                     fontSize: "0.8rem", fontWeight: "600",
                   }}
                 >
@@ -455,7 +493,7 @@ const Profile = () => {
                     style={{
                       display: "flex", alignItems: "center", gap: "6px",
                       padding: "8px 14px", borderRadius: "8px",
-                      backgroundColor: "#FEF2F2", color: "#DC2626",
+                      backgroundColor: t.removePhotoBg, color: t.removePhotoColor,
                       fontSize: "0.8rem", fontWeight: "600",
                     }}
                   >
@@ -466,21 +504,21 @@ const Profile = () => {
               </div>
             </div>
             <div style={{
-              backgroundColor: "#fff", borderRadius: "14px",
-              border: "1px solid #F1F3F9", boxShadow: "0 2px 8px rgba(15,23,42,0.05)",
+              backgroundColor: t.card, borderRadius: "14px",
+              border: `1px solid ${t.border}`, boxShadow: isDark ? "0 2px 8px rgba(0,0,0,0.3)" : "0 2px 8px rgba(15,23,42,0.05)",
               overflow: "hidden", marginBottom: "16px",
               animation: "fadeUp 0.4s ease both 0.1s",
             }}>
               <div
                 className="prof-card-header"
-                style={{ padding: "18px 24px", borderBottom: "1px solid #F1F3F9", display: "flex", alignItems: "center", gap: "10px" }}
+                style={{ padding: "18px 24px", borderBottom: `1px solid ${t.border}`, display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <div style={{ width: "36px", height: "36px", borderRadius: "9px", backgroundColor: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center", color: "#4F46E5", flexShrink: 0 }}>
+                <div style={{ width: "36px", height: "36px", borderRadius: "9px", backgroundColor: t.headerIconBg1, display: "flex", alignItems: "center", justifyContent: "center", color: t.headerIconColor1, flexShrink: 0 }}>
                   <User size={17} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: "1rem", fontWeight: "600", color: "#111827", margin: 0 }}>Personal Information</h2>
-                  <p style={{ fontSize: "0.78rem", color: "#9CA3AF", margin: 0 }}>Update your profile details</p>
+                  <h2 style={{ fontSize: "1rem", fontWeight: "600", color: t.textPrimary, margin: 0 }}>Personal Information</h2>
+                  <p style={{ fontSize: "0.78rem", color: t.textMuted, margin: 0 }}>Update your profile details</p>
                 </div>
               </div>
 
@@ -490,16 +528,15 @@ const Profile = () => {
                   style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "18px" }}
                 >
                   {[
-                    { label: "Full Name",     name: "name",       icon: <User size={13} />,      type: "text"  },
-                    { label: "Email Address", name: "email",      icon: <Mail size={13} />,      type: "email" },
-                    { label: "Phone Number",  name: "phone",      icon: <Phone size={13} />,     type: "text"  },
-                    { label: "Department",    name: "department", icon: <Building2 size={13} />, type: "text"  },
+                    { label: "Full Name", name: "name", icon: <User size={13} />, type: "text" },
+                    { label: "Email Address", name: "email", icon: <Mail size={13} />, type: "email" },
+                    { label: "Phone Number", name: "phone", icon: <Phone size={13} />, type: "text" },
+                    { label: "Department", name: "department", icon: <Building2 size={13} />, type: "text" },
                   ].map((field) => (
                     <div key={field.name}>
                       <label htmlFor={field.name} style={labelStyle}>{field.icon} {field.label}</label>
                       <input
                         id={field.name}
-                        aria-label={field.label}
                         className="profile-input"
                         type={field.type}
                         name={field.name}
@@ -513,8 +550,8 @@ const Profile = () => {
                   <div>
                     <label htmlFor="role" style={labelStyle}><User size={13} /> Role</label>
                     <input
-                      id="role" aria-label="Role"
-                      style={{ ...inputStyle, backgroundColor: "#F3F4F6", color: "#9CA3AF", cursor: "not-allowed" }}
+                      id="role"
+                      style={{ ...inputStyle, backgroundColor: t.disabledInputBg, color: t.disabledInputText, cursor: "not-allowed" }}
                       value={profile.role}
                       readOnly
                     />
@@ -522,14 +559,13 @@ const Profile = () => {
 
                   <div style={{ gridColumn: "1 / -1" }}>
                     <button
-                      aria-label="Update Profile"
                       className="profile-btn"
                       onClick={updateProfile}
                       disabled={saving}
                       style={{
                         width: "100%", padding: "12px", borderRadius: "10px",
                         fontWeight: "600", fontSize: "0.9rem",
-                        backgroundColor: "#4F46E5", color: "#fff",
+                        backgroundColor: t.headerIconColor1, color: "#fff",
                       }}
                     >
                       {saving ? "Saving..." : "Update Profile"}
@@ -539,20 +575,20 @@ const Profile = () => {
               </div>
             </div>
             <div style={{
-              backgroundColor: "#fff", borderRadius: "14px",
-              border: "1px solid #F1F3F9", boxShadow: "0 2px 8px rgba(15,23,42,0.05)",
+              backgroundColor: t.card, borderRadius: "14px",
+              border: `1px solid ${t.border}`, boxShadow: isDark ? "0 2px 8px rgba(0,0,0,0.3)" : "0 2px 8px rgba(15,23,42,0.05)",
               overflow: "hidden", animation: "fadeUp 0.4s ease both 0.2s",
             }}>
               <div
                 className="prof-card-header"
-                style={{ padding: "18px 24px", borderBottom: "1px solid #F1F3F9", display: "flex", alignItems: "center", gap: "10px" }}
+                style={{ padding: "18px 24px", borderBottom: `1px solid ${t.border}`, display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <div style={{ width: "36px", height: "36px", borderRadius: "9px", backgroundColor: "#ECFDF5", display: "flex", alignItems: "center", justifyContent: "center", color: "#059669", flexShrink: 0 }}>
+                <div style={{ width: "36px", height: "36px", borderRadius: "9px", backgroundColor: t.headerIconBg2, display: "flex", alignItems: "center", justifyContent: "center", color: t.headerIconColor2, flexShrink: 0 }}>
                   <KeyRound size={17} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: "1rem", fontWeight: "600", color: "#111827", margin: 0 }}>Change Password</h2>
-                  <p style={{ fontSize: "0.78rem", color: "#9CA3AF", margin: 0 }}>Update your account password</p>
+                  <h2 style={{ fontSize: "1rem", fontWeight: "600", color: t.textPrimary, margin: 0 }}>Change Password</h2>
+                  <p style={{ fontSize: "0.78rem", color: t.textMuted, margin: 0 }}>Update your account password</p>
                 </div>
               </div>
 
@@ -564,7 +600,7 @@ const Profile = () => {
                   <div>
                     <label htmlFor="current_password" style={labelStyle}>Current Password</label>
                     <input
-                      id="current_password" aria-label="Current Password"
+                      id="current_password"
                       className="profile-input" type="password"
                       placeholder="Enter current password"
                       value={passwordData.current_password}
@@ -576,7 +612,7 @@ const Profile = () => {
                   <div>
                     <label htmlFor="new_password" style={labelStyle}>New Password</label>
                     <input
-                      id="new_password" aria-label="New Password"
+                      id="new_password"
                       className="profile-input" type="password"
                       placeholder="Enter new password"
                       value={passwordData.new_password}
@@ -593,7 +629,7 @@ const Profile = () => {
                       style={{
                         width: "100%", padding: "12px", borderRadius: "10px",
                         fontWeight: "600", fontSize: "0.9rem",
-                        backgroundColor: "#059669", color: "#fff",
+                        backgroundColor: t.headerIconColor2, color: "#fff",
                       }}
                     >
                       {changingPassword ? "Updating..." : "Update Password"}

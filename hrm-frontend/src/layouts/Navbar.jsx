@@ -21,8 +21,6 @@ const Navbar = () => {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap');
-
-        /* ── Reset ── */
         *, *::before, *::after { box-sizing: border-box; }
 
         .shn-navbar {

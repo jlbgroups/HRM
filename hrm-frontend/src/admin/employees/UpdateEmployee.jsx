@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import Sidebar from "../../layouts/sidebar";
 import MobileTopBar from "../../employee/MobileTopBar";
+import { useTheme } from "../../context/ThemeContext";
 
 const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
@@ -16,6 +17,7 @@ function UpdateEmployee() {
   const [updatingId, setUpdatingId] = useState(null);
   const [toast, setToast] = useState(null);
   const [search, setSearch] = useState("");
+  const { isDark } = useTheme();
 
   const name = localStorage.getItem("name") || "Admin";
   const hour = new Date().getHours();
@@ -24,6 +26,32 @@ function UpdateEmployee() {
   const headers = {
     "x-auth-token": localStorage.getItem("token"),
     "Content-Type": "application/json",
+  };
+
+  const t = {
+    bg: isDark ? "#0F1219" : "#F9FAFB",
+    card: isDark ? "#161B27" : "#fff",
+    border: isDark ? "#1E2535" : "#F1F3F9",
+    textPrimary: isDark ? "#F3F4F6" : "#111827",
+    textSecondary: isDark ? "#9CA3AF" : "#6B7280",
+    textMuted: isDark ? "#6B7280" : "#9CA3AF",
+    inputBg: isDark ? "#1E2535" : "#F9FAFB",
+    inputBorder: isDark ? "#2D3748" : "#E5E7EB",
+    topbar: isDark ? "#161B27" : "#fff",
+    tableHead: isDark ? "#111827" : "#F9FAFB",
+    rowHover: isDark ? "#1E2535" : "#FAFBFF",
+    skeletonBg: isDark ? "#1E2535" : "#F3F4F6",
+    iconAccentBg: isDark ? "#1E1B4B" : "#EEF2FF",
+    managerBadgeBg: isDark ? "#1E1B4B" : "#EEF2FF",
+    managerBadgeText: isDark ? "#818CF8" : "#4F46E5",
+    empBadgeBg: isDark ? "#052E16" : "#F0FDF4",
+    empBadgeText: isDark ? "#4ADE80" : "#16A34A",
+    makeManagerBg: isDark ? "#1E1B4B" : "#EEF2FF",
+    makeManagerText: isDark ? "#818CF8" : "#4F46E5",
+    removeManagerBg: isDark ? "#2D0F0F" : "#FEF2F2",
+    removeManagerText: isDark ? "#F87171" : "#DC2626",
+    disabledBg: isDark ? "#1E2535" : "#E5E7EB",
+    disabledText: isDark ? "#4B5563" : "#9CA3AF",
   };
 
   useEffect(() => {
@@ -86,17 +114,16 @@ function UpdateEmployee() {
   );
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", backgroundColor: "#F9FAFB", fontFamily: "'DM Sans', sans-serif" }}>
+    <div style={{ display: "flex", minHeight: "100vh", backgroundColor: t.bg, fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap');
 
         * { box-sizing: border-box; }
-
         @keyframes fadeUp  { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 
-        .search-input:focus { outline: none; border-color: #4F46E5 !important; box-shadow: 0 0 0 3px rgba(79,70,229,0.10); }
-        .topbar-btn:hover { background: #F3F4F6 !important; }
+        .ue-search-input:focus { outline: none; border-color: #4F46E5 !important; box-shadow: 0 0 0 3px rgba(79,70,229,0.10); }
+        .topbar-btn:hover { background: ${isDark ? "#1E2535" : "#F3F4F6"} !important; }
 
         .pos-btn {
           border: none;
@@ -111,7 +138,7 @@ function UpdateEmployee() {
         }
         .pos-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
-        .emp-row:hover { background: #FAFBFF !important; }
+        .emp-row:hover { background: ${t.rowHover} !important; }
 
         .ue-topbar { display: flex; }
 
@@ -137,15 +164,15 @@ function UpdateEmployee() {
           text-align: left;
           font-size: 0.72rem;
           font-weight: 700;
-          color: #6B7280;
+          color: ${t.textMuted};
           text-transform: uppercase;
           letter-spacing: 0.5px;
-          background-color: #F9FAFB;
-          border-bottom: 1px solid #F1F3F9;
+          background-color: ${t.tableHead};
+          border-bottom: 1px solid ${t.border};
         }
 
         .emp-table td {
-          border-bottom: 1px solid #F9FAFB;
+          border-bottom: 1px solid ${t.border};
         }
 
         .emp-name-cell { white-space: normal; min-width: 160px; }
@@ -153,28 +180,22 @@ function UpdateEmployee() {
 
         @media (max-width: 768px) {
           .ue-topbar { display: none !important; }
-
           .ue-main { padding: 76px 12px 32px !important; }
-
           .ue-h1 { font-size: 1.4rem !important; }
-
           .card-header {
             flex-direction: column !important;
             align-items: flex-start !important;
             gap: 12px !important;
           }
-
           .card-header .search-wrap {
             width: 100% !important;
             min-width: unset !important;
           }
-
           .emp-table th,
           .emp-table td {
             padding: 11px 12px;
             font-size: 0.8rem;
           }
-
           .pos-btn {
             padding: 5px 10px;
             font-size: 0.74rem;
@@ -183,11 +204,7 @@ function UpdateEmployee() {
 
         @media (max-width: 480px) {
           .ue-main { padding: 72px 8px 24px !important; }
-
-          .emp-table {
-            min-width: 580px;
-          }
-
+          .emp-table { min-width: 580px; }
           .emp-table th,
           .emp-table td {
             padding: 10px 10px;
@@ -197,10 +214,7 @@ function UpdateEmployee() {
 
         @media (min-width: 769px) and (max-width: 1024px) {
           .ue-main { padding: 24px 20px 36px !important; }
-
-          .emp-table {
-            min-width: 680px;
-          }
+          .emp-table { min-width: 680px; }
         }
       `}</style>
 
@@ -234,81 +248,81 @@ function UpdateEmployee() {
         minWidth: 0,
       }}>
         <div className="ue-topbar" style={{
-          height: "64px", backgroundColor: "#fff",
-          borderBottom: "1px solid #F1F3F9", alignItems: "center",
+          height: "64px", backgroundColor: t.topbar,
+          borderBottom: `1px solid ${t.border}`, alignItems: "center",
           padding: "0 28px", gap: "16px", position: "sticky", top: 0,
-          zIndex: 100, boxShadow: "0 1px 4px rgba(15,23,42,0.04)",
+          zIndex: 100, boxShadow: isDark ? "0 1px 4px rgba(0,0,0,0.3)" : "0 1px 4px rgba(15,23,42,0.04)",
         }}>
           <div style={{ position: "relative", flex: 1, maxWidth: "380px" }}>
-            <Search size={15} aria-hidden="true" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF" }} />
+            <Search size={15} aria-hidden="true" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: t.textMuted }} />
             <label htmlFor="topbar-search" style={{ position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}>Search</label>
             <input
               id="topbar-search"
-              className="search-input"
+              className="ue-search-input"
               type="search"
               placeholder="Search anything..."
-              style={{ width: "100%", padding: "8px 12px 8px 36px", border: "1.5px solid #E5E7EB", borderRadius: "10px", fontSize: "0.875rem", color: "#374151", backgroundColor: "#F9FAFB" }}
+              style={{ width: "100%", padding: "8px 12px 8px 36px", border: `1.5px solid ${t.inputBorder}`, borderRadius: "10px", fontSize: "0.875rem", color: t.textPrimary, backgroundColor: t.inputBg }}
             />
           </div>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px" }}>
-            <button className="topbar-btn" aria-label="Notifications" style={{ width: "38px", height: "38px", borderRadius: "10px", border: "1.5px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280", position: "relative" }}>
+            <button className="topbar-btn" aria-label="Notifications" style={{ width: "38px", height: "38px", borderRadius: "10px", border: `1.5px solid ${t.inputBorder}`, background: t.card, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: t.textSecondary, position: "relative" }}>
               <Bell size={17} aria-hidden="true" />
-              <span aria-label="You have new notifications" style={{ position: "absolute", top: "8px", right: "8px", width: "7px", height: "7px", borderRadius: "50%", background: "#EF4444", border: "1.5px solid #fff" }} />
+              <span aria-label="You have new notifications" style={{ position: "absolute", top: "8px", right: "8px", width: "7px", height: "7px", borderRadius: "50%", background: "#EF4444", border: `1.5px solid ${t.card}` }} />
             </button>
-            <div aria-label={`Logged in as ${name}`} style={{ display: "flex", alignItems: "center", gap: "9px", padding: "5px 12px 5px 6px", border: "1.5px solid #E5E7EB", borderRadius: "10px", background: "#fff", cursor: "pointer" }}>
+            <div aria-label={`Logged in as ${name}`} style={{ display: "flex", alignItems: "center", gap: "9px", padding: "5px 12px 5px 6px", border: `1.5px solid ${t.inputBorder}`, borderRadius: "10px", background: t.card, cursor: "pointer" }}>
               <div aria-hidden="true" style={{ width: "28px", height: "28px", borderRadius: "50%", background: "linear-gradient(135deg, #4F46E5, #7C3AED)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "0.72rem", fontWeight: "600" }}>
                 {name.slice(0, 2).toUpperCase()}
               </div>
-              <span style={{ fontSize: "0.83rem", fontWeight: "500", color: "#374151" }}>{name}</span>
+              <span style={{ fontSize: "0.83rem", fontWeight: "500", color: t.textPrimary }}>{name}</span>
             </div>
           </div>
         </div>
 
         <main className="ue-main" style={{ padding: "28px 28px 40px", flex: 1 }}>
           <div style={{ marginBottom: "28px", animation: "fadeUp 0.4s ease both 0.05s" }}>
-            <p style={{ color: "#6B7280", fontSize: "0.875rem", margin: "0 0 4px" }}>
+            <p style={{ color: t.textSecondary, fontSize: "0.875rem", margin: "0 0 4px" }}>
               {greeting}, <strong style={{ color: "#4F46E5" }}>{name}</strong> 👋
             </p>
-            <h1 className="ue-h1" style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.85rem", fontWeight: "700", color: "#111827", margin: 0, lineHeight: 1.2 }}>
+            <h1 className="ue-h1" style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.85rem", fontWeight: "700", color: t.textPrimary, margin: 0, lineHeight: 1.2 }}>
               Manage Positions
             </h1>
-            <p style={{ color: "#6B7280", fontSize: "0.85rem", margin: "5px 0 0" }}>
+            <p style={{ color: t.textSecondary, fontSize: "0.85rem", margin: "5px 0 0" }}>
               <time dateTime={new Date().toISOString().split("T")[0]}>
                 {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
               </time>
             </p>
           </div>
 
-          <div style={{ backgroundColor: "#fff", borderRadius: "16px", border: "1px solid #F1F3F9", boxShadow: "0 2px 8px rgba(15,23,42,0.05)", overflow: "hidden", animation: "fadeUp 0.4s ease both 0.15s" }}>
-            <div className="card-header" style={{ padding: "20px 28px", borderBottom: "1px solid #F1F3F9", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", flexWrap: "wrap" }}>
+          <div style={{ backgroundColor: t.card, borderRadius: "16px", border: `1px solid ${t.border}`, boxShadow: isDark ? "0 2px 8px rgba(0,0,0,0.3)" : "0 2px 8px rgba(15,23,42,0.05)", overflow: "hidden", animation: "fadeUp 0.4s ease both 0.15s" }}>
+            <div className="card-header" style={{ padding: "20px 28px", borderBottom: `1px solid ${t.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", flexWrap: "wrap" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                <div aria-hidden="true" style={{ width: "40px", height: "40px", borderRadius: "11px", background: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center", color: "#4F46E5", flexShrink: 0 }}>
+                <div aria-hidden="true" style={{ width: "40px", height: "40px", borderRadius: "11px", background: t.iconAccentBg, display: "flex", alignItems: "center", justifyContent: "center", color: "#4F46E5", flexShrink: 0 }}>
                   <Users size={19} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: "1rem", fontWeight: "600", color: "#111827", margin: "0 0 2px" }}>Employee Positions</h2>
-                  <p style={{ fontSize: "0.78rem", color: "#6B7280", margin: 0 }}>Promote or demote employees between roles</p>
+                  <h2 style={{ fontSize: "1rem", fontWeight: "600", color: t.textPrimary, margin: "0 0 2px" }}>Employee Positions</h2>
+                  <p style={{ fontSize: "0.78rem", color: t.textSecondary, margin: 0 }}>Promote or demote employees between roles</p>
                 </div>
               </div>
               <div className="search-wrap" style={{ position: "relative", minWidth: "220px" }}>
-                <Search size={14} aria-hidden="true" style={{ position: "absolute", left: "11px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF" }} />
+                <Search size={14} aria-hidden="true" style={{ position: "absolute", left: "11px", top: "50%", transform: "translateY(-50%)", color: t.textMuted }} />
                 <input
                   type="search"
-                  className="search-input"
+                  className="ue-search-input"
                   placeholder="Search employees..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  style={{ width: "100%", padding: "8px 12px 8px 32px", border: "1.5px solid #E5E7EB", borderRadius: "10px", fontSize: "0.83rem", color: "#374151", backgroundColor: "#F9FAFB" }}
+                  style={{ width: "100%", padding: "8px 12px 8px 32px", border: `1.5px solid ${t.inputBorder}`, borderRadius: "10px", fontSize: "0.83rem", color: t.textPrimary, backgroundColor: t.inputBg }}
                 />
               </div>
             </div>
 
             {loading ? (
-              <div style={{ padding: "60px", textAlign: "center", color: "#9CA3AF", fontSize: "0.9rem" }}>
+              <div style={{ padding: "60px", textAlign: "center", color: t.textMuted, fontSize: "0.9rem" }}>
                 Loading employees...
               </div>
             ) : filtered.length === 0 ? (
-              <div style={{ padding: "60px", textAlign: "center", color: "#9CA3AF", fontSize: "0.9rem" }}>
+              <div style={{ padding: "60px", textAlign: "center", color: t.textMuted, fontSize: "0.9rem" }}>
                 No employees found.
               </div>
             ) : (
@@ -330,23 +344,23 @@ function UpdateEmployee() {
                               {emp.name?.slice(0, 2).toUpperCase()}
                             </div>
                             <div style={{ minWidth: 0 }}>
-                              <p style={{ margin: 0, fontSize: "0.875rem", fontWeight: "600", color: "#111827", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{emp.name}</p>
-                              <p style={{ margin: 0, fontSize: "0.75rem", color: "#9CA3AF", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "160px" }}>{emp.email}</p>
+                              <p style={{ margin: 0, fontSize: "0.875rem", fontWeight: "600", color: t.textPrimary, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{emp.name}</p>
+                              <p style={{ margin: 0, fontSize: "0.75rem", color: t.textMuted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "160px" }}>{emp.email}</p>
                             </div>
                           </div>
                         </td>
-                        <td style={{ fontSize: "0.85rem", color: "#374151" }}>
+                        <td style={{ fontSize: "0.85rem", color: t.textSecondary }}>
                           {emp.department_id?.department_name || "—"}
                         </td>
-                        <td style={{ fontSize: "0.83rem", color: "#6B7280" }}>
+                        <td style={{ fontSize: "0.83rem", color: t.textSecondary }}>
                           {emp.joining_date ? new Date(emp.joining_date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—"}
                         </td>
                         <td>
                           <span style={{
                             display: "inline-flex", alignItems: "center", gap: "5px",
                             padding: "4px 12px", borderRadius: "20px", fontSize: "0.78rem", fontWeight: "600",
-                            background: emp.position === "manager" ? "#EEF2FF" : "#F0FDF4",
-                            color: emp.position === "manager" ? "#4F46E5" : "#16A34A",
+                            background: emp.position === "manager" ? t.managerBadgeBg : t.empBadgeBg,
+                            color: emp.position === "manager" ? t.managerBadgeText : t.empBadgeText,
                           }}>
                             {emp.position === "manager" ? <ShieldCheck size={12} aria-hidden="true" /> : <UserCheck size={12} aria-hidden="true" />}
                             {emp.position === "manager" ? "Manager" : "Employee"}
@@ -358,7 +372,10 @@ function UpdateEmployee() {
                               className="pos-btn"
                               disabled={emp.position === "manager" || updatingId === emp._id}
                               onClick={() => handlePositionChange(emp._id, "manager")}
-                              style={{ background: emp.position === "manager" ? "#E5E7EB" : "#EEF2FF", color: emp.position === "manager" ? "#9CA3AF" : "#4F46E5" }}
+                              style={{
+                                background: emp.position === "manager" ? t.disabledBg : t.makeManagerBg,
+                                color: emp.position === "manager" ? t.disabledText : t.makeManagerText,
+                              }}
                             >
                               {updatingId === emp._id ? "Saving..." : "Make Manager"}
                             </button>
@@ -366,7 +383,10 @@ function UpdateEmployee() {
                               className="pos-btn"
                               disabled={emp.position === "employee" || updatingId === emp._id}
                               onClick={() => handlePositionChange(emp._id, "employee")}
-                              style={{ background: emp.position === "employee" ? "#E5E7EB" : "#FEF2F2", color: emp.position === "employee" ? "#9CA3AF" : "#DC2626" }}
+                              style={{
+                                background: emp.position === "employee" ? t.disabledBg : t.removeManagerBg,
+                                color: emp.position === "employee" ? t.disabledText : t.removeManagerText,
+                              }}
                             >
                               {updatingId === emp._id ? "Saving..." : "Remove Manager"}
                             </button>

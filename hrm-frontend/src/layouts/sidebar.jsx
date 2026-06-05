@@ -5,55 +5,92 @@ import {
   Wallet, LogOut, Building2, CreditCard, HeadphonesIcon,
   UserCog, Globe, Menu, UserCircle, ChevronRight,
   ClipboardList, Mail, ArrowLeftRight, X,
-  UserPen,
+  UserPen, HandCoins, TrendingUp, Receipt, FileText,
+  AlertTriangle, DoorOpen, MessageSquareWarning, Sun, Moon
 } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 const ALL_MENU_ITEMS = [
-  { name: "Admin Dashboard",     path: "/dashboard",                   icon: <LayoutDashboard size={17} />, roles: ["company_admin"] },
-  { name: "Super Control Panel", path: "/superadmin-dashboard",        icon: <LayoutDashboard size={17} />, roles: ["super_admin", "software_owner"] },
-  { name: "My Dashboard",        path: "/employee-dashboard",          icon: <LayoutDashboard size={17} />, roles: ["employee"] },
-  { name: "Add Employee",        path: "/add-employee",                icon: <UserPlus size={17} />,        roles: ["company_admin"] },
-    { name: "Update Employee",        path: "/update-employee",                icon: <UserPen size={17} />,        roles: ["company_admin"] },
-  { name: "Employee Attendance", path: "/admin-attendance",            icon: <Clock size={17} />,           roles: ["company_admin"] },
-  { name: "My Attendance",       path: "/attendance",                  icon: <Clock size={17} />,           roles: ["employee"] },
-  { name: "Holidays",            path: "/holidays",                    icon: <Palmtree size={17} />,        roles: ["company_admin", "employee"] },
-  { name: "Leaves",              path: "/leaves",                      icon: <CalendarRange size={17} />,   roles: ["company_admin", "employee"] },
+  { name: "Admin Dashboard", path: "/dashboard", icon: <LayoutDashboard size={17} />, roles: ["company_admin"] },
+  { name: "Super Control Panel", path: "/superadmin-dashboard", icon: <LayoutDashboard size={17} />, roles: ["super_admin", "software_owner"] },
+  { name: "My Dashboard", path: "/employee-dashboard", icon: <LayoutDashboard size={17} />, roles: ["employee"] },
+  { name: "Add Employee", path: "/add-employee", icon: <UserPlus size={17} />, roles: ["company_admin"] },
+  { name: "Update Employee", path: "/update-employee", icon: <UserPen size={17} />, roles: ["company_admin"] },
+  { name: "Employee Attendance", path: "/admin-attendance", icon: <Clock size={17} />, roles: ["company_admin"] },
+  { name: "My Attendance", path: "/attendance", icon: <Clock size={17} />, roles: ["employee"] },
+  { name: "Holidays", path: "/holidays", icon: <Palmtree size={17} />, roles: ["company_admin", "employee"] },
+  { name: "Leaves", path: "/leaves", icon: <CalendarRange size={17} />, roles: ["company_admin", "employee"] },
   { name: "Assign Task", path: "/assign-task", icon: <ClipboardList size={17} />, roles: ["employee"], positions: ["manager"] },
   { name: "My Tasks", path: "/my-tasks", icon: <ClipboardList size={17} />, roles: ["employee"], positions: ["employee"] },
-  { name: "Appreciations",       path: "/appreciations",               icon: <LayoutDashboard size={17} />, roles: ["employee"] },
-  { name: "Employee Policies",   path: "/employeePolicies",            icon: <ClipboardList size={17} />,   roles: ["employee"] },
-  { name: "Employee Letters",    path: "/employeeLetters",             icon: <Mail size={17} />,            roles: ["employee"] },
-  { name: "Payroll",             path: "/payroll",                     icon: <Wallet size={17} />,          roles: ["company_admin"] },
-  { name: "Departments",         path: "/departments",                 icon: <Building2 size={17} />,       roles: ["company_admin"] },
-  { name: "Designations",        path: "/designations",                icon: <UserPlus size={17} />,        roles: ["company_admin"] },
-  { name: "Profile",             path: "/profile",                     icon: <UserCircle size={17} />,      roles: ["employee"] },
-  { name: "Transactions",        path: "/transactions",                icon: <CreditCard size={17} />,      roles: ["super_admin", "software_owner"] },
-  { name: "Companies",           path: "/superadmin/companiespage",    icon: <Building2 size={17} />,       roles: ["super_admin", "software_owner"] },
-  { name: "Add Super Admin",     path: "/add-superadmin",              icon: <UserCog size={17} />,         roles: ["super_admin", "software_owner"] },
-  { name: "Pricing Plans",       path: "/superadmin/pricing",          icon: <CreditCard size={17} />,      roles: ["super_admin", "software_owner"] },
-  { name: "Website Settings",    path: "/superadmin/website-settings", icon: <Globe size={17} />,           roles: ["software_owner"] },
-  { name: "Appreciation",        path: "/appreciation",                icon: <UserPlus size={17} />,        roles: ["company_admin"] },
-  { name: "Letters",             path: "/letter",                      icon: <ClipboardList size={17} />,   roles: ["company_admin"] },
-  { name: "Policies",            path: "/policy",                      icon: <Mail size={17} />,            roles: ["company_admin"] },
+  { name: "Salary Advance", path: "/employee/salary-advance", icon: <HandCoins size={17} />, roles: ["employee"] },
+  { name: "Career History", path: "/employee/career-history", icon: <TrendingUp size={17} />, roles: ["employee"] },
+  { name: "My Payslips", path: "/employee/payslips", icon: <Receipt size={17} />, roles: ["employee"] },
+  { name: "Appreciations", path: "/appreciations", icon: <LayoutDashboard size={17} />, roles: ["employee"] },
+  { name: "Employee Policies", path: "/employeePolicies", icon: <ClipboardList size={17} />, roles: ["employee"] },
+  { name: "Employee Letters", path: "/employeeLetters", icon: <Mail size={17} />, roles: ["employee"] },
+  { name: "My Warnings", path: "/employee/warnings", icon: <AlertTriangle size={17} />, roles: ["employee"] },
+  { name: "Resignation", path: "/employee/resignation", icon: <DoorOpen size={17} />, roles: ["employee"] },
+  { name: "Complaints", path: "/employee/complaints", icon: <MessageSquareWarning size={17} />, roles: ["employee"] },
+  { name: "Advance Requests", path: "/admin/advance-requests", icon: <FileText size={17} />, roles: ["company_admin"] },
+  { name: "Increment & Promotion", path: "/admin/increment-promotion", icon: <TrendingUp size={17} />, roles: ["company_admin"] },
+  { name: "Warnings", path: "/admin/warnings", icon: <AlertTriangle size={17} />, roles: ["company_admin"] },
+  { name: "Resignations", path: "/admin/resignations", icon: <DoorOpen size={17} />, roles: ["company_admin"] },
+  { name: "Complaints", path: "/admin/complaints", icon: <MessageSquareWarning size={17} />, roles: ["company_admin"] },
+  { name: "Payroll", path: "/payroll", icon: <Wallet size={17} />, roles: ["company_admin"] },
+  { name: "Departments", path: "/departments", icon: <Building2 size={17} />, roles: ["company_admin"] },
+  { name: "Designations", path: "/designations", icon: <UserPlus size={17} />, roles: ["company_admin"] },
+  { name: "Profile", path: "/profile", icon: <UserCircle size={17} />, roles: ["employee"] },
+  { name: "Transactions", path: "/transactions", icon: <CreditCard size={17} />, roles: ["super_admin", "software_owner"] },
+  { name: "Companies", path: "/superadmin/companiespage", icon: <Building2 size={17} />, roles: ["super_admin", "software_owner"] },
+  { name: "Add Super Admin", path: "/add-superadmin", icon: <UserCog size={17} />, roles: ["super_admin", "software_owner"] },
+  { name: "Pricing Plans", path: "/superadmin/pricing", icon: <CreditCard size={17} />, roles: ["super_admin", "software_owner"] },
+  { name: "Website Settings", path: "/superadmin/website-settings", icon: <Globe size={17} />, roles: ["software_owner"] },
+  { name: "Appreciation", path: "/appreciation", icon: <UserPlus size={17} />, roles: ["company_admin"] },
+  { name: "Letters", path: "/letter", icon: <ClipboardList size={17} />, roles: ["company_admin"] },
+  { name: "Policies", path: "/policy", icon: <Mail size={17} />, roles: ["company_admin"] },
 ];
 
 const ROLE_LABELS = {
-  company_admin:  "Company Admin",
-  super_admin:    "Super Admin",
+  company_admin: "Company Admin",
+  super_admin: "Super Admin",
   software_owner: "Software Owner",
-  employee:       "Employee",
+  employee: "Employee",
 };
 
-const SB_STYLES = `
+const SB_STYLES = (isDark) => `
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap');
-  .sb-nav-link  { transition: background 0.15s, color 0.15s; }
-  .sb-nav-link:hover { background: rgba(99,102,241,0.08) !important; color: #4F46E5 !important; }
-  .sb-nav-link:hover .sb-icon { color: #4F46E5 !important; }
-  .sb-toggle:hover  { background: rgba(99,102,241,0.08) !important; }
-  .sb-logout:hover  { background: #fef2f2 !important; color: #dc2626 !important; }
-  .sb-scroll::-webkit-scrollbar       { width: 4px; }
+
+  :root {
+    --sb-bg: ${isDark ? "#161B27" : "#fff"};
+    --sb-border: ${isDark ? "#1E2535" : "#F1F3F9"};
+    --sb-text-primary: ${isDark ? "#F3F4F6" : "#111827"};
+    --sb-text-secondary: ${isDark ? "#9CA3AF" : "#6B7280"};
+    --sb-text-muted: ${isDark ? "#6B7280" : "#9CA3AF"};
+    --sb-icon: ${isDark ? "#9CA3AF" : "#6B7280"};
+    --sb-hover-bg: ${isDark ? "rgba(99,102,241,0.12)" : "rgba(99,102,241,0.08)"};
+    --sb-active-bg: ${isDark ? "linear-gradient(135deg,#312E81,#3730A3)" : "linear-gradient(135deg,#EEF2FF,#E0E7FF)"};
+    --sb-active-text: ${isDark ? "#C7D2FE" : "#4338CA"};
+    --sb-active-icon: ${isDark ? "#818CF8" : "#4F46E5"};
+    --sb-toggle-bg: ${isDark ? "#1E2535" : "#F3F4F6"};
+    --sb-tab-active-admin: ${isDark ? "#312E81" : "#1E1B4B"};
+    --sb-tab-active-emp: ${isDark ? "#3730A3" : "#4F46E5"};
+    --sb-tab-inactive-text: ${isDark ? "#6B7280" : "#6B7280"};
+    --sb-logout-hover-bg: ${isDark ? "#2D1515" : "#fef2f2"};
+    --sb-logout-hover-text: ${isDark ? "#F87171" : "#dc2626"};
+    --sb-shadow: ${isDark ? "2px 0 16px rgba(0,0,0,0.4)" : "2px 0 16px rgba(15,23,42,0.06)"};
+    --sb-shadow-mobile: ${isDark ? "4px 0 24px rgba(0,0,0,0.5)" : "4px 0 24px rgba(15,23,42,0.15)"};
+    --sb-logo-text: ${isDark ? "#E0E7FF" : "#111827"};
+    --sb-brand-badge: ${isDark ? "linear-gradient(135deg,#312E81,#4F46E5)" : "linear-gradient(135deg,#1E1B4B,#4F46E5)"};
+  }
+
+  .sb-nav-link { transition: background 0.15s, color 0.15s; }
+  .sb-nav-link:hover { background: var(--sb-hover-bg) !important; color: var(--sb-active-icon) !important; }
+  .sb-nav-link:hover .sb-icon { color: var(--sb-active-icon) !important; }
+  .sb-toggle:hover { background: var(--sb-hover-bg) !important; }
+  .sb-logout:hover { background: var(--sb-logout-hover-bg) !important; color: var(--sb-logout-hover-text) !important; }
+  .sb-scroll::-webkit-scrollbar { width: 4px; }
   .sb-scroll::-webkit-scrollbar-track { background: transparent; }
-  .sb-scroll::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 4px; }
+  .sb-scroll::-webkit-scrollbar-thumb { background: ${isDark ? "#2D3748" : "#E5E7EB"}; border-radius: 4px; }
   @keyframes badgePulse { 0%,100%{opacity:1} 50%{opacity:0.55} }
   .preview-badge { animation: badgePulse 2.5s ease-in-out infinite; }
   .view-tab { transition: all 0.2s ease; }
@@ -66,6 +103,7 @@ const SB_STYLES = `
     z-index: 999;
     backdrop-filter: blur(2px);
   }
+
   @media (max-width: 768px) {
     .sb-overlay.active { display: block; }
   }
@@ -81,7 +119,7 @@ const useIsMobile = () => {
   return isMobile;
 };
 
-const UserAvatar = ({ size = 36, initials, avatarUrl, showBadge = false }) => {
+const UserAvatar = ({ size = 36, initials, avatarUrl, showBadge = false, isDark }) => {
   const [imgError, setImgError] = useState(false);
   useEffect(() => { setImgError(false); }, [avatarUrl]);
 
@@ -89,7 +127,6 @@ const UserAvatar = ({ size = 36, initials, avatarUrl, showBadge = false }) => {
 
   return (
     <div
-      aria-hidden="true"
       style={{
         width: `${size}px`,
         height: `${size}px`,
@@ -97,7 +134,7 @@ const UserAvatar = ({ size = 36, initials, avatarUrl, showBadge = false }) => {
         flexShrink: 0,
         position: "relative",
         overflow: "hidden",
-        border: showImage ? "2px solid #E0E7FF" : "none",
+        border: showImage ? `2px solid ${isDark ? "#312E81" : "#E0E7FF"}` : "none",
       }}
     >
       {showImage ? (
@@ -131,7 +168,6 @@ const UserAvatar = ({ size = 36, initials, avatarUrl, showBadge = false }) => {
       )}
       {showBadge && (
         <span
-          aria-label="Viewing as employee"
           style={{
             position: "absolute",
             bottom: 0,
@@ -150,11 +186,12 @@ const UserAvatar = ({ size = 36, initials, avatarUrl, showBadge = false }) => {
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
   const location = useLocation();
-  const navigate  = useNavigate();
-  const isMobile  = useIsMobile();
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  const { isDark, toggleTheme } = useTheme();
 
   const trueRole = localStorage.getItem("true_role");
-  const name     = localStorage.getItem("name") || "Administrator";
+  const name = localStorage.getItem("name") || "Administrator";
   const [avatarUrl, setAvatarUrl] = useState(() => localStorage.getItem("avatar") || "");
 
   useEffect(() => {
@@ -175,22 +212,20 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const trueRoleLabel = ROLE_LABELS[trueRole] || trueRole;
   const isAdminViewingAsEmployee = trueRole === "company_admin" && viewMode === "employee";
 
-
-
   const position = localStorage.getItem("position");
 
-const menuItems = useMemo(
-  () =>
-    ALL_MENU_ITEMS.filter((item) => {
-      if (!item.roles.includes(viewMode)) return false;
-      if (item.positions && !item.positions.includes(position)) return false;
-      return true;
-    }),
-  [viewMode, position]
-);
+  const menuItems = useMemo(
+    () =>
+      ALL_MENU_ITEMS.filter((item) => {
+        if (!item.roles.includes(viewMode)) return false;
+        if (item.positions && !item.positions.includes(position)) return false;
+        return true;
+      }),
+    [viewMode, position]
+  );
 
-  const sidebarVisible  = isMobile ? isOpen : true;
-  const sidebarExpanded = isMobile ? true   : isOpen;
+  const sidebarVisible = isMobile ? isOpen : true;
+  const sidebarExpanded = isMobile ? true : isOpen;
 
   const handleViewSwitch = useCallback(() => {
     const next = viewMode === "company_admin" ? "employee" : "company_admin";
@@ -215,16 +250,13 @@ const menuItems = useMemo(
 
   return (
     <>
-      <style>{SB_STYLES}</style>
+      <style>{SB_STYLES(isDark)}</style>
       <div
         className={`sb-overlay${isMobile && isOpen ? " active" : ""}`}
         onClick={() => setIsOpen(false)}
-        aria-hidden="true"
       />
 
       <nav
-        id="sidebar-nav"
-        aria-label="Main navigation"
         style={{
           width: sidebarExpanded ? "255px" : "68px",
           height: "100vh",
@@ -232,11 +264,9 @@ const menuItems = useMemo(
           left: isMobile ? (isOpen ? "0" : "-280px") : "0",
           top: 0,
           zIndex: 1000,
-          backgroundColor: "#fff",
-          borderRight: "1px solid #F1F3F9",
-          boxShadow: isMobile && isOpen
-            ? "4px 0 24px rgba(15,23,42,0.15)"
-            : "2px 0 16px rgba(15,23,42,0.06)",
+          backgroundColor: "var(--sb-bg)",
+          borderRight: "1px solid var(--sb-border)",
+          boxShadow: isMobile && isOpen ? "var(--sb-shadow-mobile)" : "var(--sb-shadow)",
           display: "flex",
           flexDirection: "column",
           transition: isMobile
@@ -248,7 +278,7 @@ const menuItems = useMemo(
       >
         <div style={{
           padding: sidebarExpanded ? "18px 16px 14px" : "18px 0 14px",
-          borderBottom: "1px solid #F1F3F9",
+          borderBottom: "1px solid var(--sb-border)",
           display: "flex",
           alignItems: "center",
           justifyContent: sidebarExpanded ? "space-between" : "center",
@@ -258,42 +288,39 @@ const menuItems = useMemo(
           {sidebarExpanded && (
             <div style={{ display: "flex", alignItems: "center", gap: "10px", overflow: "hidden" }}>
               <div
-                aria-hidden="true"
                 style={{
                   width: "34px", height: "34px", borderRadius: "9px",
-                  background: "linear-gradient(135deg, #1E1B4B, #4F46E5)",
+                  background: "var(--sb-brand-badge)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   color: "#fff", fontFamily: "'Playfair Display', serif",
                   fontSize: "1.1rem", fontWeight: "700", flexShrink: 0,
                 }}
               >S</div>
-              <span style={{ fontSize: "1rem", fontWeight: "600", color: "#111827", letterSpacing: "-0.2px", whiteSpace: "nowrap" }}>
+              <span style={{ fontSize: "1rem", fontWeight: "600", color: "var(--sb-logo-text)", letterSpacing: "-0.2px", whiteSpace: "nowrap" }}>
                 Shnoor
               </span>
             </div>
           )}
           <button
             className="sb-toggle"
-            aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
-            aria-expanded={isOpen}
-            aria-controls="sidebar-nav"
             onClick={isMobile ? () => setIsOpen(false) : handleToggle}
             style={{
               width: "34px", height: "34px", borderRadius: "8px",
               border: "none", background: "transparent", cursor: "pointer",
               display: "flex", alignItems: "center", justifyContent: "center",
-              color: "#6B7280", flexShrink: 0,
+              color: "var(--sb-text-secondary)", flexShrink: 0,
             }}
           >
             {isMobile
-              ? <X size={19} aria-hidden="true" />
-              : <Menu size={19} aria-hidden="true" style={{ transform: isOpen ? "rotate(0deg)" : "rotate(180deg)", transition: "transform 0.25s" }} />
+              ? <X size={19} />
+              : <Menu size={19} style={{ transform: isOpen ? "rotate(0deg)" : "rotate(180deg)", transition: "transform 0.25s" }} />
             }
           </button>
         </div>
+
         <div style={{
           padding: sidebarExpanded ? "12px 14px" : "12px 0",
-          borderBottom: "1px solid #F1F3F9",
+          borderBottom: "1px solid var(--sb-border)",
           display: "flex",
           alignItems: "center",
           justifyContent: sidebarExpanded ? "flex-start" : "center",
@@ -305,11 +332,12 @@ const menuItems = useMemo(
             initials={initials}
             avatarUrl={avatarUrl}
             showBadge={isAdminViewingAsEmployee}
+            isDark={isDark}
           />
 
           {sidebarExpanded && (
             <div style={{ overflow: "hidden" }}>
-              <div style={{ fontSize: "0.82rem", fontWeight: "600", color: "#111827", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              <div style={{ fontSize: "0.82rem", fontWeight: "600", color: "var(--sb-text-primary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                 {name}
               </div>
               <div style={{ fontSize: "0.7rem", color: "#6366F1", fontWeight: "500" }}>
@@ -318,10 +346,11 @@ const menuItems = useMemo(
             </div>
           )}
         </div>
+
         {trueRole === "company_admin" && (
           <div style={{
             padding: sidebarExpanded ? "10px 12px" : "10px 6px",
-            borderBottom: "1px solid #F1F3F9",
+            borderBottom: "1px solid var(--sb-border)",
             flexShrink: 0,
           }}>
             {sidebarExpanded ? (
@@ -329,7 +358,6 @@ const menuItems = useMemo(
                 {isAdminViewingAsEmployee && (
                   <div
                     className="preview-badge"
-                    aria-live="polite"
                     style={{
                       fontSize: "0.64rem", fontWeight: "600", color: "#059669",
                       textTransform: "uppercase", letterSpacing: "0.6px",
@@ -337,30 +365,27 @@ const menuItems = useMemo(
                       display: "flex", alignItems: "center", gap: "5px",
                     }}
                   >
-                    <span aria-hidden="true" style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10B981", display: "inline-block" }} />
+                    <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10B981", display: "inline-block" }} />
                     Viewing as Employee
                   </div>
                 )}
                 <div
-                  role="group"
-                  aria-label="View mode switcher"
-                  style={{ display: "flex", background: "#F3F4F6", borderRadius: "10px", padding: "3px", gap: "2px" }}
+                  style={{ display: "flex", background: "var(--sb-toggle-bg)", borderRadius: "10px", padding: "3px", gap: "2px" }}
                 >
                   {[
                     { mode: "company_admin", label: "Admin" },
-                    { mode: "employee",      label: "Employee" },
+                    { mode: "employee", label: "Employee" },
                   ].map(({ mode, label }) => {
                     const active = viewMode === mode;
                     return (
                       <button
                         key={mode}
                         className="view-tab"
-                        aria-pressed={active}
                         onClick={() => { if (!active) handleViewSwitch(); }}
                         style={{
                           flex: 1, padding: "7px 6px", borderRadius: "8px", border: "none",
-                          background: active ? (mode === "employee" ? "#4F46E5" : "#1E1B4B") : "transparent",
-                          color: active ? "#fff" : "#6B7280",
+                          background: active ? (mode === "employee" ? "var(--sb-tab-active-emp)" : "var(--sb-tab-active-admin)") : "transparent",
+                          color: active ? "#fff" : "var(--sb-tab-inactive-text)",
                           fontSize: "0.75rem", fontWeight: "600",
                           cursor: active ? "default" : "pointer",
                           fontFamily: "'DM Sans', sans-serif",
@@ -377,23 +402,23 @@ const menuItems = useMemo(
               <button
                 className="sb-toggle"
                 onClick={handleViewSwitch}
-                aria-label={viewMode === "company_admin" ? "Switch to Employee View" : "Switch to Admin View"}
                 style={{
                   width: "100%", display: "flex", alignItems: "center", justifyContent: "center",
                   padding: "8px 0", borderRadius: "9px", border: "none",
                   background: isAdminViewingAsEmployee ? "rgba(79,70,229,0.10)" : "transparent",
-                  color: isAdminViewingAsEmployee ? "#4F46E5" : "#9CA3AF",
+                  color: isAdminViewingAsEmployee ? "#4F46E5" : "var(--sb-icon)",
                   cursor: "pointer",
                 }}
               >
-                <ArrowLeftRight size={17} aria-hidden="true" />
+                <ArrowLeftRight size={17} />
               </button>
             )}
           </div>
         )}
+
         <div className="sb-scroll" style={{ flex: 1, overflowY: "auto", padding: sidebarExpanded ? "10px" : "10px 6px" }}>
           {sidebarExpanded && (
-            <p style={{ fontSize: "0.65rem", fontWeight: "600", color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.8px", padding: "4px 8px 8px", margin: 0 }}>
+            <p style={{ fontSize: "0.65rem", fontWeight: "600", color: "var(--sb-text-muted)", textTransform: "uppercase", letterSpacing: "0.8px", padding: "4px 8px 8px", margin: 0 }}>
               Navigation
             </p>
           )}
@@ -406,53 +431,75 @@ const menuItems = useMemo(
                     to={item.path}
                     className="sb-nav-link"
                     title={!sidebarExpanded ? item.name : undefined}
-                    aria-current={isActive ? "page" : undefined}
                     onClick={handleNavClick}
                     style={{
                       display: "flex", alignItems: "center", gap: "10px",
                       padding: sidebarExpanded ? "9px 10px" : "9px 0",
                       justifyContent: sidebarExpanded ? "flex-start" : "center",
                       borderRadius: "9px", textDecoration: "none",
-                      background: isActive ? "linear-gradient(135deg,#EEF2FF,#E0E7FF)" : "transparent",
-                      color: isActive ? "#4338CA" : "#374151",
+                      background: isActive ? "var(--sb-active-bg)" : "transparent",
+                      color: isActive ? "var(--sb-active-text)" : "var(--sb-text-primary)",
                       fontWeight: isActive ? "600" : "400",
                       fontSize: "0.855rem", position: "relative",
                     }}
                   >
                     {isActive && (
-                      <span aria-hidden="true" style={{
+                      <span style={{
                         position: "absolute", left: 0, top: "20%", bottom: "20%",
                         width: "3px", borderRadius: "0 3px 3px 0", background: "#4F46E5",
                       }} />
                     )}
-                    <span className="sb-icon" aria-hidden="true" style={{ color: isActive ? "#4F46E5" : "#6B7280", flexShrink: 0, display: "flex" }}>
+                    <span className="sb-icon" style={{ color: isActive ? "var(--sb-active-icon)" : "var(--sb-icon)", flexShrink: 0, display: "flex" }}>
                       {item.icon}
                     </span>
                     {sidebarExpanded && <span style={{ whiteSpace: "nowrap" }}>{item.name}</span>}
-                    {sidebarExpanded && isActive && <ChevronRight size={13} aria-hidden="true" style={{ marginLeft: "auto", color: "#4F46E5" }} />}
+                    {sidebarExpanded && isActive && <ChevronRight size={13} style={{ marginLeft: "auto", color: "var(--sb-active-icon)" }} />}
                   </Link>
                 </li>
               );
             })}
           </ul>
         </div>
-        <div style={{ padding: sidebarExpanded ? "12px 10px" : "12px 6px", borderTop: "1px solid #F1F3F9", flexShrink: 0 }}>
+
+        <div style={{ padding: sidebarExpanded ? "10px 10px 6px" : "10px 6px 6px", borderTop: "1px solid var(--sb-border)", flexShrink: 0 }}>
           <button
-            className="sb-logout"
-            onClick={handleLogout}
-            aria-label="Log out of your account"
+            className="theme-toggle-btn"
+            onClick={toggleTheme}
+            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
             style={{
               width: "100%", display: "flex", alignItems: "center",
               justifyContent: sidebarExpanded ? "flex-start" : "center",
               gap: "10px", padding: sidebarExpanded ? "9px 10px" : "9px 0",
               borderRadius: "9px", border: "none",
-              background: "transparent", color: "#6B7280",
+              background: isDark ? "rgba(99,102,241,0.10)" : "rgba(99,102,241,0.06)",
+              color: isDark ? "#818CF8" : "#4F46E5",
+              fontSize: "0.855rem", fontWeight: "500", cursor: "pointer",
+              fontFamily: "'DM Sans', sans-serif",
+              marginBottom: "4px",
+            }}
+          >
+            {isDark
+              ? <Sun size={17} style={{ flexShrink: 0 }} />
+              : <Moon size={17} style={{ flexShrink: 0 }} />
+            }
+            {sidebarExpanded && <span>{isDark ? "Light Mode" : "Dark Mode"}</span>}
+          </button>
+
+          <button
+            className="sb-logout"
+            onClick={handleLogout}
+            style={{
+              width: "100%", display: "flex", alignItems: "center",
+              justifyContent: sidebarExpanded ? "flex-start" : "center",
+              gap: "10px", padding: sidebarExpanded ? "9px 10px" : "9px 0",
+              borderRadius: "9px", border: "none",
+              background: "transparent", color: "var(--sb-text-secondary)",
               fontSize: "0.855rem", fontWeight: "500", cursor: "pointer",
               transition: "background 0.15s, color 0.15s",
               fontFamily: "'DM Sans', sans-serif",
             }}
           >
-            <LogOut size={17} aria-hidden="true" style={{ flexShrink: 0 }} />
+            <LogOut size={17} style={{ flexShrink: 0 }} />
             {sidebarExpanded && <span>Logout</span>}
           </button>
         </div>

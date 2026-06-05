@@ -3,21 +3,29 @@ import Sidebar from "../../layouts/sidebar";
 import MobileTopBar from "../MobileTopBar";
 import axios from "axios";
 import { Star, Award, Search, Heart } from "lucide-react";
+import { useTheme } from "../../context/ThemeContext";
 
 const API = "https://hrm-backend-vvqg.onrender.com/api/appreciations";
 
 const typeColors = {
-  general:          { bg: "#FFFBEB", color: "#F59E0B", label: "General"          },
-  performance:      { bg: "#EEF2FF", color: "#6366F1", label: "Performance"      },
-  teamwork:         { bg: "#ECFDF5", color: "#10B981", label: "Teamwork"         },
-  innovation:       { bg: "#EFF6FF", color: "#3B82F6", label: "Innovation"       },
-  leadership:       { bg: "#F5F3FF", color: "#8B5CF6", label: "Leadership"       },
-  customer_service: { bg: "#FDF2F8", color: "#EC4899", label: "Customer Service" },
+  general:          { bg: "#FFFBEB", color: "#F59E0B", label: "General", darkBg: "#451A03", darkColor: "#FCD34D" },
+  performance:      { bg: "#EEF2FF", color: "#6366F1", label: "Performance", darkBg: "#1E1B4B", darkColor: "#818CF8" },
+  teamwork:         { bg: "#ECFDF5", color: "#10B981", label: "Teamwork", darkBg: "#064E3B", darkColor: "#6EE7B7" },
+  innovation:       { bg: "#EFF6FF", color: "#3B82F6", label: "Innovation", darkBg: "#1E1B4B", darkColor: "#60A5FA" },
+  leadership:       { bg: "#F5F3FF", color: "#8B5CF6", label: "Leadership", darkBg: "#1E1B4B", darkColor: "#A78BFA" },
+  customer_service: { bg: "#FDF2F8", color: "#EC4899", label: "Customer Service", darkBg: "#2D0F0F", darkColor: "#F87171" },
 };
 
-const getTypeStyle = (t) => typeColors[t] || typeColors.general;
+const getTypeStyle = (t, isDark) => {
+  const style = typeColors[t] || typeColors.general;
+  if (isDark) {
+    return { bg: style.darkBg, color: style.darkColor, label: style.label };
+  }
+  return { bg: style.bg, color: style.color, label: style.label };
+};
 
 const EmployeeAppreciations = () => {
+  const { isDark } = useTheme();
   const [isOpen, setIsOpen] = useState(window.innerWidth > 768);
   const [appreciations, setAppreciations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,9 +33,33 @@ const EmployeeAppreciations = () => {
   const [toast, setToast] = useState(null);
 
   const token = localStorage.getItem("token");
+  const name = localStorage.getItem("name") || "Employee";
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
   const isMobile = window.innerWidth <= 768;
   const sidebarWidth = isMobile ? 0 : (isOpen ? 255 : 68);
+
+  const t = {
+    bg: isDark ? "#0F1219" : "#F9FAFB",
+    card: isDark ? "#161B27" : "#fff",
+    border: isDark ? "#1E2535" : "#F1F3F9",
+    textPrimary: isDark ? "#F3F4F6" : "#111827",
+    textSecondary: isDark ? "#9CA3AF" : "#6B7280",
+    textMuted: isDark ? "#6B7280" : "#9CA3AF",
+    inputBg: isDark ? "#1E2535" : "#F9FAFB",
+    inputBorder: isDark ? "#2D3748" : "#E5E7EB",
+    topbar: isDark ? "#161B27" : "#fff",
+    skeletonBg: isDark ? "#1E2535" : "#F3F4F6",
+    rowHover: isDark ? "#1E2535" : "#F5F7FF",
+    headerIconBg: isDark ? "#1E1B4B" : "#FEF3C7",
+    headerIconColor: isDark ? "#FCD34D" : "#D97706",
+    toastSuccessBg: isDark ? "#064E3B" : "#ECFDF5",
+    toastSuccessText: isDark ? "#6EE7B7" : "#059669",
+    toastErrorBg: isDark ? "#2D0F0F" : "#FEF2F2",
+    toastErrorText: isDark ? "#F87171" : "#DC2626",
+    heartColor: "#F87171",
+  };
 
   const showToast = (message, type = "success") => {
     setToast({ message, type });
@@ -58,6 +90,8 @@ const EmployeeAppreciations = () => {
     const handleResize = () => {
       if (window.innerWidth <= 768) {
         setIsOpen(false);
+      } else {
+        setIsOpen(true);
       }
     };
     window.addEventListener("resize", handleResize);
@@ -80,7 +114,7 @@ const EmployeeAppreciations = () => {
     <div style={{
       display: "flex",
       minHeight: "100vh",
-      backgroundColor: "#F9FAFB",
+      backgroundColor: t.bg,
       fontFamily: "'DM Sans', sans-serif",
     }}>
       <style>{`
@@ -107,6 +141,7 @@ const EmployeeAppreciations = () => {
           .appr-header-inner { padding: 14px !important; }
           .appr-content-inner { padding: 14px !important; }
           .appr-page-title { font-size: 1.5rem !important; }
+          .appr-topbar { display: none !important; }
         }
         @media (min-width: 769px) and (max-width: 1024px) {
           .appr-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -118,8 +153,8 @@ const EmployeeAppreciations = () => {
         <div style={{
           position: "fixed", top: "20px", right: "20px", zIndex: 9999,
           padding: "12px 20px", borderRadius: "10px",
-          backgroundColor: toast.type === "error" ? "#FEF2F2" : "#ECFDF5",
-          color: toast.type === "error" ? "#DC2626" : "#059669",
+          backgroundColor: toast.type === "error" ? t.toastErrorBg : t.toastSuccessBg,
+          color: toast.type === "error" ? t.toastErrorText : t.toastSuccessText,
           border: `1px solid ${toast.type === "error" ? "#FECACA" : "#A7F3D0"}`,
           fontWeight: "500", fontSize: "0.875rem",
           animation: "slideIn 0.3s ease both",
@@ -143,32 +178,26 @@ const EmployeeAppreciations = () => {
           minWidth: 0,
         }}
       >
-        <div style={{ marginBottom: "24px", animation: "fadeUp 0.4s ease both 0.05s" }}>
-          <p style={{ color: "#6B7280", fontSize: "0.875rem", margin: "0 0 4px" }}>Recognition</p>
-          <h1
-            className="appr-page-title"
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: "clamp(1.5rem, 4vw, 1.85rem)",
-              fontWeight: "700", color: "#111827", margin: 0, lineHeight: 1.2,
-            }}
-          >
+        <div className="appr-topbar" style={{ marginBottom: "28px", animation: "fadeUp 0.4s ease both 0.05s" }}>
+          <p style={{ color: t.textSecondary, fontSize: "0.875rem", margin: "0 0 4px" }}>{greeting}, <strong style={{ color: "#4F46E5" }}>{name}</strong> 👋</p>
+          <p style={{ color: t.textSecondary, fontSize: "0.875rem", margin: "0 0 4px" }}>Recognition</p>
+          <h1 className="appr-page-title" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.5rem, 4vw, 1.85rem)", fontWeight: "700", color: t.textPrimary, margin: 0, lineHeight: 1.2 }}>
             My Appreciations
           </h1>
-          <p style={{ color: "#9CA3AF", fontSize: "0.85rem", margin: "5px 0 0" }}>
-            Recognition awarded to you by your team.
+          <p style={{ color: t.textMuted, fontSize: "0.85rem", margin: "5px 0 0" }}>
+            {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
           </p>
         </div>
         <div style={{
-          backgroundColor: "#fff", borderRadius: "14px",
-          border: "1px solid #F1F3F9",
-          boxShadow: "0 2px 8px rgba(15,23,42,0.05)",
+          backgroundColor: t.card, borderRadius: "14px",
+          border: `1px solid ${t.border}`,
+          boxShadow: isDark ? "0 2px 8px rgba(0,0,0,0.3)" : "0 2px 8px rgba(15,23,42,0.05)",
           overflow: "hidden", animation: "fadeUp 0.4s ease both 0.1s",
         }}>
           <div
             className="appr-header-row appr-header-inner"
             style={{
-              padding: "18px 24px", borderBottom: "1px solid #F1F3F9",
+              padding: "18px 24px", borderBottom: `1px solid ${t.border}`,
               display: "flex", alignItems: "center",
               justifyContent: "space-between", flexWrap: "wrap", gap: "12px",
             }}
@@ -176,17 +205,17 @@ const EmployeeAppreciations = () => {
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <div style={{
                 width: "36px", height: "36px", borderRadius: "9px",
-                backgroundColor: "#FEF3C7", display: "flex",
-                alignItems: "center", justifyContent: "center", color: "#D97706",
+                backgroundColor: t.headerIconBg, display: "flex",
+                alignItems: "center", justifyContent: "center", color: t.headerIconColor,
                 flexShrink: 0,
               }}>
                 <Award size={17} />
               </div>
               <div>
-                <h2 style={{ fontSize: "1rem", fontWeight: "600", color: "#111827", margin: 0 }}>
+                <h2 style={{ fontSize: "1rem", fontWeight: "600", color: t.textPrimary, margin: 0 }}>
                   Wall of Recognition
                 </h2>
-                <p style={{ fontSize: "0.78rem", color: "#9CA3AF", margin: 0 }}>
+                <p style={{ fontSize: "0.78rem", color: t.textMuted, margin: 0 }}>
                   {appreciations.length} appreciation{appreciations.length !== 1 ? "s" : ""} received
                 </p>
               </div>
@@ -195,7 +224,7 @@ const EmployeeAppreciations = () => {
             <div className="appr-search-wrap" style={{ position: "relative" }}>
               <Search size={14} style={{
                 position: "absolute", left: "12px", top: "50%",
-                transform: "translateY(-50%)", color: "#9CA3AF", pointerEvents: "none",
+                transform: "translateY(-50%)", color: t.textMuted, pointerEvents: "none",
               }} />
               <input
                 className="appr-search"
@@ -204,9 +233,9 @@ const EmployeeAppreciations = () => {
                 onChange={(e) => setSearch(e.target.value)}
                 style={{
                   padding: "9px 14px 9px 38px",
-                  border: "1.5px solid #E5E7EB", borderRadius: "9px",
-                  fontSize: "0.875rem", color: "#374151",
-                  backgroundColor: "#F9FAFB",
+                  border: `1.5px solid ${t.inputBorder}`, borderRadius: "9px",
+                  fontSize: "0.875rem", color: t.textPrimary,
+                  backgroundColor: t.inputBg,
                   fontFamily: "'DM Sans', sans-serif",
                   outline: "none", width: "260px",
                   transition: "border-color 0.18s, box-shadow 0.18s",
@@ -220,19 +249,19 @@ const EmployeeAppreciations = () => {
                 <div style={{ textAlign: "center" }}>
                   <div style={{
                     width: "40px", height: "40px",
-                    border: "3px solid #E5E7EB", borderTop: "3px solid #D97706",
+                    border: `3px solid ${t.inputBorder}`, borderTop: `3px solid ${t.headerIconColor}`,
                     borderRadius: "50%", animation: "spin 0.8s linear infinite",
                     margin: "0 auto 14px",
                   }} />
-                  <p style={{ color: "#6B7280", fontWeight: "500", fontSize: "0.875rem" }}>
+                  <p style={{ color: t.textMuted, fontWeight: "500", fontSize: "0.875rem" }}>
                     Loading appreciations...
                   </p>
                 </div>
               </div>
             ) : filtered.length === 0 ? (
               <div style={{ padding: "40px 24px", textAlign: "center" }}>
-                <Heart size={40} style={{ color: "#E5E7EB", marginBottom: "12px" }} />
-                <p style={{ color: "#9CA3AF", fontSize: "0.9rem", margin: 0 }}>
+                <Heart size={40} style={{ color: t.textMuted, marginBottom: "12px" }} />
+                <p style={{ color: t.textMuted, fontSize: "0.9rem", margin: 0 }}>
                   {search ? "No appreciations match your search." : "No appreciations have been received yet."}
                 </p>
               </div>
@@ -246,15 +275,15 @@ const EmployeeAppreciations = () => {
                 }}
               >
                 {filtered.map((item, i) => {
-                  const cs = getTypeStyle(item.appreciation_type);
+                  const cs = getTypeStyle(item.appreciation_type, isDark);
                   return (
                     <div
                       key={item._id}
                       className="appr-card"
                       style={{
-                        backgroundColor: "#fff", border: "1px solid #F1F3F9",
+                        backgroundColor: t.card, border: `1px solid ${t.border}`,
                         borderRadius: "12px", padding: "20px",
-                        boxShadow: "0 1px 4px rgba(15,23,42,0.05)",
+                        boxShadow: isDark ? "0 1px 4px rgba(0,0,0,0.3)" : "0 1px 4px rgba(15,23,42,0.05)",
                         animation: `fadeUp 0.4s ease both ${0.05 + i * 0.04}s`,
                         display: "flex", flexDirection: "column", gap: "12px",
                       }}
@@ -270,7 +299,7 @@ const EmployeeAppreciations = () => {
                           </div>
                           <div style={{ minWidth: 0 }}>
                             <p style={{
-                              margin: 0, fontWeight: "600", fontSize: "0.875rem", color: "#111827",
+                              margin: 0, fontWeight: "600", fontSize: "0.875rem", color: t.textPrimary,
                               whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
                             }}>
                               {item.title || "Recognition"}
@@ -286,13 +315,13 @@ const EmployeeAppreciations = () => {
                           </div>
                         </div>
                         <span className="heart" style={{ flexShrink: 0 }}>
-                          <Heart size={16} style={{ color: "#F87171", marginTop: "2px" }} />
+                          <Heart size={16} style={{ color: t.heartColor, marginTop: "2px" }} />
                         </span>
                       </div>
 
                       {item.message && (
                         <p style={{
-                          margin: 0, fontSize: "0.855rem", color: "#4B5563",
+                          margin: 0, fontSize: "0.855rem", color: t.textSecondary,
                           lineHeight: 1.6,
                           borderLeft: `3px solid ${cs.color}`,
                           paddingLeft: "10px", fontStyle: "italic",
@@ -303,13 +332,13 @@ const EmployeeAppreciations = () => {
 
                       <div style={{
                         display: "flex", alignItems: "center", justifyContent: "space-between",
-                        paddingTop: "10px", borderTop: "1px solid #F1F3F9",
+                        paddingTop: "10px", borderTop: `1px solid ${t.border}`,
                         gap: "8px", flexWrap: "wrap",
                       }}>
-                        <p style={{ margin: 0, fontSize: "0.78rem", color: "#374151", fontWeight: "500" }}>
+                        <p style={{ margin: 0, fontSize: "0.78rem", color: t.textSecondary, fontWeight: "500" }}>
                           {item.employee_name || "—"}
                         </p>
-                        <span style={{ fontSize: "0.72rem", color: "#9CA3AF", whiteSpace: "nowrap" }}>
+                        <span style={{ fontSize: "0.72rem", color: t.textMuted, whiteSpace: "nowrap" }}>
                           {formatDate(item.createdAt)}
                         </span>
                       </div>
