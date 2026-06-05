@@ -1,74 +1,108 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin } from "lucide-react";
-import { useWebsiteSettings } from "../hook/useWebsiteSettings";
 
 const Footer = () => {
-  const { data: s = {} } = useWebsiteSettings("footer");
-
-  const companyName = s.companyName || "Shnoor International LLC";
-  const tagline = s.tagline || "Next-gen HR management for modern businesses.";
-  const email = s.email || "support@shnoor.com";
-  const phone = s.phone || "+91 98765 43210";
-  const address = s.address || "Business Bay, Dubai / Kuppam, India";
-  const copyright =
-    s.copyright ||
-    `© ${new Date().getFullYear()} ${companyName}. All rights reserved.`;
+  const companyName = "Levroxen Software Innovations";
+  const email = "admin@levroxen.com";
+  const phone1 = "+91 83412 96994";
+  const phone2 = "+91 86884 56559";
+  const address = "Headquartered in USA";
+  const copyright = `© ${new Date().getFullYear()} ${companyName}. All rights reserved.`;
 
   return (
     <>
       <style>{`
+        .shn-footer-cta {
+          background: #ffffff;
+          padding: 48px 0;
+          border-top: 1px solid rgba(255, 255, 255, 0.05);
+          border-bottom: 1px solid #eef2f6;
+        }
+
+        .shn-footer-cta-inner {
+          max-width: 1280px;
+          margin: 0 auto;
+          padding: 0 24px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 24px;
+          flex-wrap: wrap;
+        }
+
+        .shn-footer-cta-title {
+          font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+          font-weight: 700;
+          color: #090e1a;
+          margin: 0 0 6px 0;
+          font-family: 'DM Sans', sans-serif;
+        }
+
+        .shn-footer-cta-desc {
+          font-size: 0.95rem;
+          color: #6b7280;
+          margin: 0;
+          font-family: 'DM Sans', sans-serif;
+        }
+
+        .shn-footer-cta-btn {
+          padding: 12px 28px;
+          background: #0F62FE;
+          color: #ffffff;
+          border-radius: 30px;
+          font-weight: 600;
+          text-decoration: none;
+          transition: background 0.15s, transform 0.1s;
+          display: inline-block;
+          font-size: 0.95rem;
+          font-family: 'DM Sans', sans-serif;
+        }
+
+        .shn-footer-cta-btn:hover {
+          background: #0052ec;
+        }
+
+        .shn-footer-cta-btn:active {
+          transform: scale(0.98);
+        }
 
         .shn-footer {
-          background: #fff;
-          border-top: 1px solid #F1F3F9;
+          background: #090e1a;
+          color: rgba(255, 255, 255, 0.75);
           font-family: 'DM Sans', sans-serif;
+          border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .shn-footer-inner {
           max-width: 1280px;
           margin: 0 auto;
-          padding: 56px 28px 40px;
+          padding: 64px 24px 48px;
           display: grid;
-          grid-template-columns: 2fr 1fr 1fr 2fr;
-          gap: 40px;
+          grid-template-columns: 2.5fr 1.5fr 2fr 2fr;
+          gap: 48px;
         }
 
-        .shn-footer-logo-box {
-          width: 36px;
-          height: 36px;
-          border-radius: 10px;
-          background: linear-gradient(135deg, #4F46E5, #7C3AED);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #fff;
-          font-size: 0.75rem;
-          font-weight: 600;
-          margin-bottom: 12px;
-          flex-shrink: 0;
-        }
-
-        .shn-footer-brand-name {
-          font-size: 0.96rem;
-          font-weight: 600;
-          color: #111827;
-          margin: 0 0 8px;
+        .shn-footer-logo-img {
+          height: 32px;
+          width: auto;
+          margin-bottom: 20px;
+          object-fit: contain;
         }
 
         .shn-footer-tagline {
-          font-size: 0.84rem;
-          color: #9CA3AF;
+          font-size: 0.9rem;
+          color: rgba(255, 255, 255, 0.6);
           line-height: 1.6;
           margin: 0;
         }
 
         .shn-footer-col-title {
-          font-size: 0.72rem;
-          font-weight: 600;
-          color: #9CA3AF;
+          font-size: 0.8rem;
+          font-weight: 700;
+          color: #ffffff;
           text-transform: uppercase;
-          letter-spacing: 0.5px;
-          margin: 0 0 16px;
+          letter-spacing: 1px;
+          margin: 0 0 24px;
         }
 
         .shn-footer-links {
@@ -77,50 +111,48 @@ const Footer = () => {
           padding: 0;
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 12px;
         }
 
         .shn-footer-link {
-          font-size: 0.855rem;
-          color: #6B7280;
+          font-size: 0.9rem;
+          color: rgba(255, 255, 255, 0.6);
           text-decoration: none;
           transition: color 0.15s;
-          font-weight: 400;
         }
 
         .shn-footer-link:hover {
-          color: #4F46E5;
+          color: #ffffff;
         }
 
         .shn-footer-contact-item {
           display: flex;
           align-items: flex-start;
           gap: 10px;
-          margin-bottom: 14px;
+          margin-bottom: 16px;
         }
 
         .shn-footer-contact-icon {
-          color: #4F46E5;
-          margin-top: 1px;
+          color: #0F62FE;
+          margin-top: 2px;
           flex-shrink: 0;
         }
 
         .shn-footer-contact-text {
-          font-size: 0.84rem;
-          color: #6B7280;
+          font-size: 0.9rem;
+          color: rgba(255, 255, 255, 0.6);
           line-height: 1.5;
-          word-break: break-word;
         }
 
         .shn-footer-bottom {
-          border-top: 1px solid #F1F3F9;
-          background: #F9FAFB;
+          border-top: 1px solid rgba(255, 255, 255, 0.05);
+          background: #060a13;
         }
 
         .shn-footer-bottom-inner {
           max-width: 1280px;
           margin: 0 auto;
-          padding: 16px 28px;
+          padding: 20px 24px;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -129,101 +161,122 @@ const Footer = () => {
         }
 
         .shn-footer-copy {
-          font-size: 0.78rem;
-          color: #9CA3AF;
+          font-size: 0.825rem;
+          color: rgba(255, 255, 255, 0.4);
           margin: 0;
         }
 
-        /* ── Responsive ── */
         @media (max-width: 1024px) {
           .shn-footer-inner {
             grid-template-columns: 1fr 1fr;
-            gap: 32px;
+            gap: 40px;
           }
         }
 
         @media (max-width: 640px) {
           .shn-footer-inner {
-            grid-template-columns: 1fr 1fr;
-            padding: 36px 20px 28px;
-            gap: 28px;
+            grid-template-columns: 1fr;
+            padding: 48px 20px 32px;
+            gap: 32px;
           }
-
-          /* Brand col spans full width on small phones */
-          .shn-footer-brand-col {
-            grid-column: 1 / -1;
-          }
-
           .shn-footer-bottom-inner {
             flex-direction: column;
             align-items: flex-start;
-            gap: 6px;
-          }
-        }
-
-        @media (max-width: 400px) {
-          .shn-footer-inner {
-            grid-template-columns: 1fr;
-          }
-          .shn-footer-brand-col {
-            grid-column: auto;
           }
         }
       `}</style>
 
+      {/* CTA Footer Banner Section */}
+      <div className="shn-footer-cta">
+        <div className="shn-footer-cta-inner">
+          <div>
+            <h3 className="shn-footer-cta-title">Ready to scale your business with top talent?</h3>
+            <p className="shn-footer-cta-desc">IT Staffing + Software Development expertise, under one roof.</p>
+          </div>
+          <Link to="/contact" className="shn-footer-cta-btn">
+            Get in Touch
+          </Link>
+        </div>
+      </div>
+
       <footer className="shn-footer">
         <div className="shn-footer-inner">
           <div className="shn-footer-brand-col">
-            <div className="shn-footer-logo-box">
-              {companyName.slice(0, 2).toUpperCase()}
-            </div>
-            <p className="shn-footer-brand-name">{companyName}</p>
-            <p className="shn-footer-tagline">{tagline}</p>
+            <img src="/logo.png" className="shn-footer-logo-img" alt={companyName} />
+            <p className="shn-footer-tagline">
+              Levroxen Software Innovations specializes in IT Staffing & Consulting, Software Development, and Managed Services across the USA.
+            </p>
           </div>
           <div>
-            <p className="shn-footer-col-title">Quick Links</p>
+            <p className="shn-footer-col-title">Navigation</p>
             <ul className="shn-footer-links">
               {[
                 { label: "Home", path: "/" },
-                { label: "Features", path: "/features" },
-                { label: "Pricing", path: "/pricing" },
-                { label: "Contact", path: "/contact" },
+                { label: "About Us", path: "/#about" },
+                { label: "Services", path: "/#services" },
+                { label: "Industries", path: "/#industries" },
+                { label: "Contact Us", path: "/contact" },
               ].map((link) => (
-                <li key={link.path}>
-                  <Link to={link.path} className="shn-footer-link">
-                    {link.label}
-                  </Link>
+                <li key={link.label}>
+                  {link.path.startsWith("/#") ? (
+                    <a
+                      href={link.path}
+                      className="shn-footer-link"
+                      onClick={(e) => {
+                        const element = document.getElementById(link.path.substring(2));
+                        if (element) {
+                          e.preventDefault();
+                          element.scrollIntoView({ behavior: "smooth" });
+                        }
+                      }}
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link to={link.path} className="shn-footer-link">
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <p className="shn-footer-col-title">Account</p>
+            <p className="shn-footer-col-title">Expertise</p>
             <ul className="shn-footer-links">
               {[
-                { label: "Login", path: "/login" },
-                { label: "Register", path: "/register" },
-              ].map((link) => (
-                <li key={link.path}>
-                  <Link to={link.path} className="shn-footer-link">
-                    {link.label}
-                  </Link>
+                "Cloud Management",
+                "Enterprise Management",
+                "Data & AI",
+                "Consulting & Staffing",
+                "Background Verification",
+                "Network Management"
+              ].map((item) => (
+                <li key={item}>
+                  <a href="/#services" className="shn-footer-link" onClick={(e) => {
+                    const el = document.getElementById("services");
+                    if (el) { e.preventDefault(); el.scrollIntoView({ behavior: "smooth" }); }
+                  }}>{item}</a>
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <p className="shn-footer-col-title">Contact Us</p>
+            <p className="shn-footer-col-title">Let's Connect</p>
             <div className="shn-footer-contact-item">
-              <Mail size={15} className="shn-footer-contact-icon" aria-hidden="true" />
+              <Mail size={16} className="shn-footer-contact-icon" aria-hidden="true" />
               <span className="shn-footer-contact-text">{email}</span>
             </div>
-            <div className="shn-footer-contact-item">
-              <Phone size={15} className="shn-footer-contact-icon" aria-hidden="true" />
-              <span className="shn-footer-contact-text">{phone}</span>
+            <div className="shn-footer-contact-item" style={{ marginBottom: "8px" }}>
+              <Phone size={16} className="shn-footer-contact-icon" aria-hidden="true" />
+              <span className="shn-footer-contact-text">{phone1}</span>
             </div>
             <div className="shn-footer-contact-item">
-              <MapPin size={15} className="shn-footer-contact-icon" aria-hidden="true" />
+              <Phone size={16} className="shn-footer-contact-icon" aria-hidden="true" />
+              <span className="shn-footer-contact-text">{phone2}</span>
+            </div>
+            <div className="shn-footer-contact-item">
+              <MapPin size={16} className="shn-footer-contact-icon" aria-hidden="true" />
               <span className="shn-footer-contact-text">{address}</span>
             </div>
           </div>

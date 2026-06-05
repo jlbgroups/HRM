@@ -36,7 +36,7 @@ const Contact = () => {
     {
       icon: Mail,
       label: "Email Us",
-      value: s?.email || "support@shnoor.com",
+      value: s?.email || "admin@levroxen.com",
       color: "#4F46E5",
       bg: "#EEF2FF",
       valueColor: "#059669",

@@ -295,9 +295,9 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   color: "#fff", fontFamily: "'Playfair Display', serif",
                   fontSize: "1.1rem", fontWeight: "700", flexShrink: 0,
                 }}
-              >S</div>
+              >L</div>
               <span style={{ fontSize: "1rem", fontWeight: "600", color: "var(--sb-logo-text)", letterSpacing: "-0.2px", whiteSpace: "nowrap" }}>
-                Shnoor
+                Levroxen
               </span>
             </div>
           )}

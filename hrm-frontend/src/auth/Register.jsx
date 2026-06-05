@@ -219,15 +219,15 @@ function Register() {
         <div className="register-left">
           <div className="register-left-inner">
             <div style={s.logo}>
-              <div style={s.logoMark}>S</div>
-              <span style={s.logoText}>Shnoor International</span>
+              <div style={s.logoMark}>L</div>
+              <span style={s.logoText}>Levroxen Software</span>
             </div>
 
             <div className="register-hero">
               <p style={s.eyebrow}>Start your journey</p>
               <h1 style={s.heroH1}>HR Management built for modern teams.</h1>
               <p style={s.heroP}>
-                Join thousands of companies that trust Shnoor to manage their
+                Join thousands of companies that trust Levroxen to manage their
                 most valuable asset — their people.
               </p>
             </div>

@@ -119,7 +119,7 @@ const Features = () => {
               <div>
                 <p className="feat-cta-title">Ready to get started?</p>
                 <p className="feat-cta-desc">
-                  Join 500+ companies already using Shnoor to manage their workforce smarter.
+                  Join 500+ companies already using Levroxen to manage their workforce smarter.
                 </p>
               </div>
               <a href="/register" className="feat-btn-primary">

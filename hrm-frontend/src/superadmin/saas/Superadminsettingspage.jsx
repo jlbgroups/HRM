@@ -27,7 +27,7 @@ const SuperadminSettingsPage = () => {
   const [saved, setSaved] = useState(false);
 
   const [header, setHeader] = useState({
-    logo_text: "SHNOOR INTERNATIONAL LLC",
+    logo_text: "LEVROXEN SOFTWARE INNOVATIONS",
     nav_links: "Home, Features, Pricing, Contact",
     show_login_btn: true,
     show_register_btn: true,
@@ -35,7 +35,7 @@ const SuperadminSettingsPage = () => {
 
 
   const [footer, setFooter] = useState({
-    company_name: "Shnoor International LLC",
+    company_name: "Levroxen Software Innovations",
     tagline: "Empowering HR globally.",
     copyright_year: "2025",
     show_social_links: true,

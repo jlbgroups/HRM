@@ -207,8 +207,8 @@ function Login() {
         <div className="login-left">
           <div className="login-left-inner">
             <div style={s.logo}>
-              <div style={s.logoMark}>S</div>
-              <span style={s.logoText}>Shnoor International</span>
+              <div style={s.logoMark}>L</div>
+              <span style={s.logoText}>Levroxen Software</span>
             </div>
             <div className="login-hero-text">
               <h1 style={s.heroH1}>The smarter way to manage your workforce.</h1>

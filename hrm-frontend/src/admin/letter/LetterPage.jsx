@@ -32,12 +32,12 @@ const letterShell = (accentColor, logoUrl, signatureUrl, bodyContent, footerNote
 
   <div style="padding:28px 40px;display:flex;align-items:center;justify-content:space-between;">
     <div>
-      ${logoUrl ? `<img src="${logoUrl}" style="max-height:150px;max-width:150px;object-fit:contain;display:block;" alt="Company Logo"/>` : `<span style="font-size:22px;font-weight:700;color:#1a1a1a;letter-spacing:1px;">SHNOOR INTERNATIONAL LLC</span>`}
+      ${logoUrl ? `<img src="${logoUrl}" style="max-height:150px;max-width:150px;object-fit:contain;display:block;" alt="Company Logo"/>` : `<span style="font-size:22px;font-weight:700;color:#1a1a1a;letter-spacing:1px;">LEVROXEN SOFTWARE INNOVATIONS</span>`}
     </div>
     <div style="text-align:right;font-size:11px;line-height:1.8;font-family:Arial,sans-serif;color:#555;">
-      <div style="font-weight:600;font-size:12px;color:#1a1a1a;">SHNOOR INTERNATIONAL LLC</div>
+      <div style="font-weight:600;font-size:12px;color:#1a1a1a;">LEVROXEN SOFTWARE INNOVATIONS</div>
       <div>123 Business Avenue, Dubai, UAE</div>
-      <div>hr@shnoorinternational.com</div>
+      <div>hr@levroxen.com</div>
       <div>+971 4 000 0000</div>
     </div>
   </div>
@@ -70,7 +70,7 @@ const letterShell = (accentColor, logoUrl, signatureUrl, bodyContent, footerNote
   </div>
 
   <div style="margin-top:24px;background:#f8f8f8;border-top:3px solid ${accentColor};padding:12px 40px;display:flex;justify-content:space-between;align-items:center;">
-    <span style="font-size:10.5px;color:#999;font-family:Arial,sans-serif;">This is an official document issued by SHNOOR INTERNATIONAL LLC. Any alterations render it void.</span>
+    <span style="font-size:10.5px;color:#999;font-family:Arial,sans-serif;">This is an official document issued by LEVROXEN SOFTWARE INNOVATIONS. Any alterations render it void.</span>
     <span style="font-size:10.5px;color:${accentColor}99;font-family:Arial,sans-serif;font-weight:600;">Confidential</span>
   </div>
 </div>`;
@@ -84,7 +84,7 @@ const templates = {
 
     <p style="margin:0 0 14px;">Dear <strong>${name || "[Employee Name]"}</strong>,</p>
 
-    <p style="margin:0 0 14px;">We are delighted to offer you the position of <strong>[Job Title]</strong> at SHNOOR INTERNATIONAL LLC. After careful consideration, we believe your skills and experience make you an excellent fit for our team.</p>
+    <p style="margin:0 0 14px;">We are delighted to offer you the position of <strong>[Job Title]</strong> at LEVROXEN SOFTWARE INNOVATIONS. After careful consideration, we believe your skills and experience make you an excellent fit for our team.</p>
 
     <p style="margin:0 0 14px;">Your employment will commence on <strong>[Start Date]</strong> and your compensation package is outlined below:</p>
 
@@ -110,7 +110,7 @@ const templates = {
 
     <p style="margin:0 0 14px;"><strong>To Whom It May Concern,</strong></p>
 
-    <p style="margin:0 0 14px;">This is to certify that <strong>${name || "[Employee Name]"}</strong>, was employed with <strong>SHNOOR INTERNATIONAL LLC</strong> from <strong>[Start Date]</strong> to <strong>[End Date]</strong>.</p>
+    <p style="margin:0 0 14px;">This is to certify that <strong>${name || "[Employee Name]"}</strong>, was employed with <strong>LEVROXEN SOFTWARE INNOVATIONS</strong> from <strong>[Start Date]</strong> to <strong>[End Date]</strong>.</p>
 
     <p style="margin:0 0 14px;">During their tenure, they served as <strong>[Designation]</strong> in the <strong>[Department]</strong> department. Throughout this period, they demonstrated dedication, professionalism, and a consistent commitment to delivering quality work.</p>
 
@@ -152,7 +152,7 @@ const templates = {
 
     <p style="margin:0 0 14px;">Dear <strong>${name || "[Employee Name]"}</strong>,</p>
 
-    <p style="margin:0 0 14px;">This letter is to confirm that your resignation dated <strong>[Resignation Date]</strong> has been accepted and you have been relieved from your duties as <strong>[Designation]</strong> in the <strong>[Department]</strong> department of SHNOOR INTERNATIONAL LLC effective <strong>[Last Working Day]</strong>, after a notice period of <strong>[Notice Period]</strong>.</p>
+    <p style="margin:0 0 14px;">This letter is to confirm that your resignation dated <strong>[Resignation Date]</strong> has been accepted and you have been relieved from your duties as <strong>[Designation]</strong> in the <strong>[Department]</strong> department of LEVROXEN SOFTWARE INNOVATIONS effective <strong>[Last Working Day]</strong>, after a notice period of <strong>[Notice Period]</strong>.</p>
 
     <p style="margin:0 0 14px;">You have completed all formalities including handover of duties and return of company assets. All dues have been settled as per company policy.</p>
 
@@ -174,7 +174,7 @@ const templates = {
 
     <p style="margin:0 0 14px;">Add any additional paragraphs, tables, or content that you need for this letter type.</p>
 
-    <p style="margin:0;">Thank you for your continued association with SHNOOR INTERNATIONAL LLC.</p>`,
+    <p style="margin:0;">Thank you for your continued association with LEVROXEN SOFTWARE INNOVATIONS.</p>`,
     ""
   ),
 };
@@ -789,7 +789,7 @@ export default function LetterPage() {
                     <div>
                       <div style={{ position:"relative" }}>
                         <Mail size={13} style={{ position:"absolute", left:"11px", top:"50%", transform:"translateY(-50%)", color:t.textMuted, pointerEvents:"none" }}/>
-                        <input type="text" placeholder="Email Subject (e.g. Appreciation — SHNOOR LLC)" value={form.customSubject} onChange={e => setField("customSubject", e.target.value)} className={`form-input ${errors.customSubject ? "err" : ""}`} style={{ paddingLeft:"30px", fontSize:"0.82rem", background:t.inputBg, color:t.textPrimary, borderColor:t.inputBorder }}/>
+                        <input type="text" placeholder="Email Subject (e.g. Appreciation — LEVROXEN)" value={form.customSubject} onChange={e => setField("customSubject", e.target.value)} className={`form-input ${errors.customSubject ? "err" : ""}`} style={{ paddingLeft:"30px", fontSize:"0.82rem", background:t.inputBg, color:t.textPrimary, borderColor:t.inputBorder }}/>
                       </div>
                       {errors.customSubject && <p style={{ color:"#EF4444", fontSize:"0.72rem", margin:"4px 0 0 2px" }}>{errors.customSubject}</p>}
                     </div>

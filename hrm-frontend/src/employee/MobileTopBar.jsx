@@ -48,9 +48,9 @@ const MobileTopBar = ({ isOpen, setIsOpen }) => {
               color: "#fff", fontFamily: "'Playfair Display', serif",
               fontSize: "1rem", fontWeight: "700",
             }}
-          >S</div>
+          >L</div>
           <span style={{ fontSize: "0.95rem", fontWeight: "600", color: t.textPrimary, letterSpacing: "-0.2px" }}>
-            Shnoor
+            Levroxen
           </span>
         </div>
         <button

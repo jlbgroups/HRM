@@ -11,26 +11,26 @@ const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.c
 
 const DEFAULTS = {
   header: {
-    appName: "Shnoor International LLC SAAS",
+    appName: "Levroxen Software Innovations SAAS",
     title: "Next Generation HR Management For Your Company",
-    subtitle: "Grow Your Business With SHNOOR INTERNATIONAL LLC",
+    subtitle: "Grow Your Business With LEVROXEN SOFTWARE INNOVATIONS",
     description: "Best-rated HR management application for small to large scale business.",
     btn1Text: "Get Started", btn1Url: "/register",
     btn2Text: "View Features", btn2Url: "/features",
     showBtn1: "true", showBtn2: "true",
   },
   footer: {
-    companyName: "Shnoor International LLC",
+    companyName: "Levroxen Software Innovations",
     tagline: "Next-gen HR management for modern businesses.",
-    email: "support@shnoor.com", phone: "+91 98765 43210",
+    email: "admin@levroxen.com", phone: "+91 98765 43210",
     address: "Business Bay, Dubai / Kuppam, India",
-    copyright: "© 2025 Shnoor International LLC. All rights reserved.",
+    copyright: "© 2025 Levroxen Software Innovations. All rights reserved.",
     logo: "",
   },
   contact: {
     title: "Get in Touch",
     subtitle: "Have questions about our HR modules? Our team is ready to help.",
-    email: "support@shnoor.com", phone: "+91 98765 43210",
+    email: "admin@levroxen.com", phone: "+91 98765 43210",
     address: "Business Bay, Dubai / Kuppam, India",
   },
   pricing: {
