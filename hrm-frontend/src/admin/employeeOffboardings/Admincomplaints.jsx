@@ -5,7 +5,7 @@ import MobileTopBar from "../../employee/MobileTopBar";
 import { Bell, Search, X, Check, AlertCircle } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 
-const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com/api";
+const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
 const priorityColors = {
   low: { bg: "#ECFDF5", text: "#059669" },
@@ -79,7 +79,7 @@ export default function AdminComplaints() {
 
   const fetchComplaints = async () => {
     try {
-      const res = await axios.get(`${API}/complaints`, { headers });
+      const res = await axios.get(`${API}/api/complaints`, { headers });
       setComplaints(res.data.data || []);
     } catch (err) {
       console.error(err);
@@ -91,7 +91,7 @@ export default function AdminComplaints() {
   const handleResolve = async () => {
     setSubmitting(true);
     try {
-      await axios.patch(`${API}/complaints/${selected._id}/resolve`, resolveForm, { headers });
+      await axios.patch(`${API}/api/complaints/${selected._id}/resolve`, resolveForm, { headers });
       setSelected(null);
       fetchComplaints();
     } catch (err) {
