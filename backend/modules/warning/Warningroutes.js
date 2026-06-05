@@ -3,7 +3,7 @@ const router = express.Router();
 
 const auth = require("../../middleware/authMiddleware");
 const roleCheck = require("../../middleware/roleCheck");
-const warningController = require("./warningController");
+const warningController = require("./Warningcontroller");
 
 router.post("/", auth, roleCheck(["company_admin", "super_admin"]), warningController.createWarning);
 router.get("/", auth, roleCheck(["company_admin", "super_admin"]), warningController.getWarnings);
