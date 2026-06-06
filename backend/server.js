@@ -2,8 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
-const connectDB = require("./config/db"); 
-connectDB(); 
+const connectDB = require("./config/db");
+connectDB();
 
 const app = express();
 app.use(
@@ -13,6 +13,7 @@ app.use(
       "http://localhost:5174",
       "http://localhost:4173",
       "https://hrm-portal-frontend.onrender.com",
+      "https://hrm-vyaq.onrender.com",
     ],
     credentials: true,
   })
