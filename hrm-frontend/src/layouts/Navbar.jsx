@@ -1,4 +1,5 @@
 import { useState } from "react";
+import logoImg from "../assets/logo.png";
 import { NavLink, Link } from "react-router-dom";
 import { Globe, X, Menu } from "lucide-react";
 import { useWebsiteSettings } from "../hook/useWebsiteSettings";
@@ -259,7 +260,7 @@ const Navbar = () => {
       <nav className="shn-navbar" role="navigation" aria-label="Main navigation">
         <div className="shn-inner">
           <Link to="/" className="shn-brand" onClick={closeMenu}>
-            <img src="/logo.png" alt={appName} />
+            <img src={logoImg} alt={appName} />
           </Link>
           
           <ul className="shn-nav-links shn-desktop-only" role="list">
