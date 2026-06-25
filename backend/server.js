@@ -14,6 +14,7 @@ app.use(
       "http://localhost:4173",
       "https://hrm-portal-frontend.onrender.com",
       "https://hrm-vyaq.onrender.com",
+      "https://hrm.levroxen.com",   // ← yeh add karo
     ],
     credentials: true,
   })
