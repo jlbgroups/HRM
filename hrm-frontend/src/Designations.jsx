@@ -4,6 +4,8 @@ import { Plus, Trash2, Bell, Search, Clock, Briefcase, Building2, X, Check } fro
 import { useTheme } from "./context/ThemeContext";
 
 import Sidebar from "../src/layouts/sidebar";
+import MobileTopBar from "./employee/MobileTopBar";
+
 const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
 const Designations = () => {
