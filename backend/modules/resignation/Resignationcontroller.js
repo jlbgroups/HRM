@@ -1,5 +1,6 @@
 const Resignation = require("../../models/Resignation");
 const Employee = require("../../models/Employee");
+const { createNotification, getCompanyAdmins } = require("../notifications/notificationHelper");
 
 exports.submitResignation = async (req, res) => {
   try {
@@ -30,6 +31,25 @@ exports.submitResignation = async (req, res) => {
       notice_date: notice_date ? new Date(notice_date) : new Date(),
       reason,
     });
+
+    // Notify company admins
+    try {
+      const adminIds = await getCompanyAdmins(employee.company_id);
+      for (const adminId of adminIds) {
+        await createNotification(
+          adminId,
+          "resignation",
+          `🚶 ${employee.name} has submitted a resignation request. Last working day: ${new Date(last_working_day).toLocaleDateString()}.`
+        );
+      }
+    } catch (_) {}
+
+    // Notify the employee that it was submitted
+    await createNotification(
+      req.user.id,
+      "resignation",
+      `✅ Your resignation has been submitted and is under review.`
+    );
 
     res.status(201).json({ success: true, data: resignation });
   } catch (err) {
@@ -125,6 +145,19 @@ exports.reviewResignation = async (req, res) => {
     resignation.reviewed_at = new Date();
     resignation.admin_note = admin_note || "";
     await resignation.save();
+
+    // Notify the employee
+    try {
+      const emp = await Employee.findById(resignation.employee_id);
+      if (emp?.user_id) {
+        const icon = status === "approved" ? "✅" : "❌";
+        await createNotification(
+          emp.user_id,
+          "resignation",
+          `${icon} Your resignation request has been ${status} by the admin.`
+        );
+      }
+    } catch (_) {}
 
     res.json({ success: true, data: resignation });
   } catch (err) {

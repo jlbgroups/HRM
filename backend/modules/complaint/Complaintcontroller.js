@@ -1,5 +1,6 @@
 const Complaint = require("../../models/Complaint");
 const Employee = require("../../models/Employee");
+const { createNotification, getCompanyAdmins } = require("../notifications/notificationHelper");
 
 exports.raiseComplaint = async (req, res) => {
   try {
@@ -35,6 +36,18 @@ exports.raiseComplaint = async (req, res) => {
       description,
       priority: priority || "medium",
     });
+
+    // Notify company admins
+    try {
+      const adminIds = await getCompanyAdmins(raisedByEmployee.company_id);
+      for (const adminId of adminIds) {
+        await createNotification(
+          adminId,
+          "complaint",
+          `📢 New complaint raised by ${raisedByEmployee.name}: "${subject}".`
+        );
+      }
+    } catch (_) {}
 
     res.status(201).json({ success: true, data: complaint });
   } catch (err) {
@@ -105,6 +118,16 @@ exports.resolveComplaint = async (req, res) => {
       complaint.resolved_at = new Date();
     }
     await complaint.save();
+
+    // Notify both parties
+    try {
+      const raisedBy = await Employee.findById(complaint.raised_by).populate("user_id", "_id");
+      const against  = await Employee.findById(complaint.against).populate("user_id", "_id");
+      const icon = status === "resolved" ? "✅" : status === "dismissed" ? "❌" : "🔍";
+      const msg = `${icon} Complaint "${complaint.subject}" has been marked as ${status}.`;
+      if (raisedBy?.user_id?._id) await createNotification(raisedBy.user_id._id, "complaint", msg);
+      if (against?.user_id?._id)  await createNotification(against.user_id._id,  "complaint", msg);
+    } catch (_) {}
 
     res.json({ success: true, data: complaint });
   } catch (err) {

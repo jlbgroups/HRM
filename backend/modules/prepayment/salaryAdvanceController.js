@@ -1,5 +1,6 @@
 const SalaryAdvance = require("../../models/SalaryAdvance");
 const Employee = require("../../models/Employee");
+const { createNotification, getCompanyAdmins } = require("../notifications/notificationHelper");
 
 exports.getAllAdvances = async (req, res) => {
   try {
@@ -86,6 +87,18 @@ exports.requestAdvance = async (req, res) => {
 
     await advance.save();
 
+    // Notify company admins about new advance request
+    try {
+      const adminIds = await getCompanyAdmins(employee.company_id);
+      for (const adminId of adminIds) {
+        await createNotification(
+          adminId,
+          "advance",
+          `💰 ${employee.name} has requested a salary advance of ₹${Number(amount).toLocaleString()}.`
+        );
+      }
+    } catch (_) {}
+
     res.status(201).json({ success: true, data: advance });
   } catch (err) {
     console.error(err);
@@ -149,6 +162,19 @@ exports.updateAdvanceStatus = async (req, res) => {
     }
 
     await advance.save();
+
+    // Notify employee about status change
+    try {
+      const emp = await Employee.findById(advance.employee_id);
+      if (emp?.user_id) {
+        const icon = status === "approved" ? "✅" : "❌";
+        await createNotification(
+          emp.user_id,
+          "advance",
+          `${icon} Your salary advance request of ₹${Number(advance.amount).toLocaleString()} has been ${status}.`
+        );
+      }
+    } catch (_) {}
 
     res.json({ success: true, data: advance });
   } catch (err) {

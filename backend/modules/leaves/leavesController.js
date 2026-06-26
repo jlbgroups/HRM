@@ -1,6 +1,8 @@
 const Employee = require('../../models/Employee');
 const LeaveApplication = require('../../models/LeaveApplication');
 const LeaveBalance = require('../../models/LeaveBalance');
+const { createNotification, getCompanyAdmins } = require('../notifications/notificationHelper');
+const User = require('../../models/User');
 
 exports.applyLeave = async (req, res) => {
   const { leave_type, start_date, end_date, reason } = req.body;
@@ -22,6 +24,25 @@ exports.applyLeave = async (req, res) => {
       reason,
       status: "Pending",
     });
+
+    // Notify company admins about new leave request
+    try {
+      const adminIds = await getCompanyAdmins(employee.company_id);
+      for (const adminId of adminIds) {
+        await createNotification(
+          adminId,
+          "leave",
+          `🌿 ${employee.name} has applied for ${leave_type} leave from ${new Date(start_date).toLocaleDateString()} to ${new Date(end_date).toLocaleDateString()}.`
+        );
+      }
+    } catch (_) {}
+
+    // Notify the requesting employee
+    await createNotification(
+      req.user.id,
+      "leave",
+      `✅ Your ${leave_type} leave request has been submitted and is pending approval.`
+    );
 
     res.status(201).json({
       success: true,
@@ -155,6 +176,20 @@ exports.approveLeave = async (req, res) => {
 
     leave.status = normalizedStatus;
     await leave.save();
+
+    // Notify the employee about leave decision
+    try {
+      const empUser = await User.findOne({ _id: { $exists: true }, email: employee.email });
+      const userId = employee.user_id || empUser?._id;
+      if (userId) {
+        const icon = normalizedStatus === "Approved" ? "✅" : "❌";
+        await createNotification(
+          userId,
+          "leave",
+          `${icon} Your ${leave.leave_type} leave request has been ${normalizedStatus.toLowerCase()}.`
+        );
+      }
+    } catch (_) {}
 
     return res.status(200).json({
       success: true,

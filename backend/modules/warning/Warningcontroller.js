@@ -1,5 +1,6 @@
 const Warning = require("../../models/Warning");
 const Employee = require("../../models/Employee");
+const { createNotification, getCompanyAdmins } = require("../notifications/notificationHelper");
 
 exports.createWarning = async (req, res) => {
   try {
@@ -24,6 +25,17 @@ exports.createWarning = async (req, res) => {
       severity: severity || "medium",
       warning_date: warning_date ? new Date(warning_date) : new Date(),
     });
+
+    // Notify the employee
+    try {
+      if (employee.user_id) {
+        await createNotification(
+          employee.user_id,
+          "warning",
+          `⚠️ You have received a warning: "${subject}". Please check your warnings section.`
+        );
+      }
+    } catch (_) {}
 
     res.status(201).json({ success: true, data: warning });
   } catch (err) {
@@ -85,6 +97,18 @@ exports.acknowledgeWarning = async (req, res) => {
     warning.status = "acknowledged";
     warning.acknowledged_at = new Date();
     await warning.save();
+
+    // Notify admin when employee acknowledges warning
+    try {
+      const adminIds = await getCompanyAdmins(employee.company_id);
+      for (const adminId of adminIds) {
+        await createNotification(
+          adminId,
+          "warning",
+          `✅ ${employee.name} has acknowledged the warning: "${warning.subject}".`
+        );
+      }
+    } catch (_) {}
 
     res.json({ success: true, data: warning });
   } catch (err) {
