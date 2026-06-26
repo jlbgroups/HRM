@@ -86,6 +86,14 @@ exports.extendTrial = async (req, res) => {
 
     await user.save();
 
+    if (user.company_id) {
+      const Company = require("../../models/Company");
+      await Company.findByIdAndUpdate(user.company_id, {
+        trial_end: newDate,
+        is_active: true
+      });
+    }
+
     res.json({ success: true, data: user });
 
   } catch (err) {
@@ -101,18 +109,21 @@ exports.getMyTrial = async (req, res) => {
       return res.json({ success: true, data: null });
     }
 
-    const trialEnd = user.trial_end || new Date(user.createdAt.getTime() + 15 * 86400000);
+    const trialEnd = user.company_id.trial_end || user.trial_end || new Date(user.createdAt.getTime() + 15 * 86400000);
     const days_left = Math.max(
       Math.ceil((trialEnd - new Date()) / (1000 * 60 * 60 * 24)),
       0
     );
+    const isExpired = user.company_id.is_trial && (new Date(trialEnd) < new Date());
 
     res.json({
       success: true,
       data: {
         company_name: user.company_id.company_name,
+        is_trial: user.company_id.is_trial,
         trial_end: trialEnd,
-        days_left
+        days_left,
+        is_expired: isExpired
       }
     });
 
