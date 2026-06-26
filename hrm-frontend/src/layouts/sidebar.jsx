@@ -9,6 +9,7 @@ import {
   AlertTriangle, DoorOpen, MessageSquareWarning, Sun, Moon
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
+import NotificationPanel from "./NotificationPanel";
 
 const ALL_MENU_ITEMS = [
   { name: "Admin Dashboard", path: "/dashboard", icon: <LayoutDashboard size={17} />, roles: ["company_admin"] },
@@ -282,11 +283,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           display: "flex",
           alignItems: "center",
           justifyContent: sidebarExpanded ? "space-between" : "center",
-          gap: "10px",
+          gap: "8px",
           flexShrink: 0,
         }}>
           {sidebarExpanded && (
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", overflow: "hidden" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", overflow: "hidden", flex: 1 }}>
               <div
                 style={{
                   width: "34px", height: "34px", borderRadius: "9px",
@@ -301,6 +302,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               </span>
             </div>
           )}
+          <NotificationPanel isDark={isDark} sidebarExpanded={sidebarExpanded} />
           <button
             className="sb-toggle"
             onClick={isMobile ? () => setIsOpen(false) : handleToggle}
