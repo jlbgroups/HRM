@@ -11,11 +11,16 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const navigate = useNavigate();
 
   const loginUser = async (e) => {
     e.preventDefault();
+    if (!termsAccepted) {
+      alert("Please accept the Terms and Conditions to continue.");
+      return;
+    }
     setLoading(true);
     try {
       localStorage.clear();
@@ -84,6 +89,7 @@ function Login() {
         .fi1 { animation: slideIn 0.5s  ease both 0.30s; }
         .fi2 { animation: slideIn 0.5s  ease both 0.45s; }
         .fi3 { animation: slideIn 0.5s  ease both 0.60s; }
+        .f5  { animation: fadeUp  0.45s ease both 0.30s; }
 
         .submit-btn:hover:not(:disabled) {
           background: #312E81 !important;
@@ -92,6 +98,23 @@ function Login() {
         }
         .submit-btn:active { transform: translateY(0) !important; }
         .eye-btn:hover { color: #4F46E5 !important; }
+
+        .terms-checkbox-input {
+          width: 16px;
+          height: 16px;
+          accent-color: #4F46E5;
+          cursor: pointer;
+          margin: 0;
+          flex-shrink: 0;
+        }
+        .terms-label:hover { color: #374151; }
+        .terms-link {
+          color: #4F46E5;
+          text-decoration: none;
+          font-weight: 600;
+          cursor: pointer;
+        }
+        .terms-link:hover { text-decoration: underline; }
 
         ::placeholder { color: #CBD5E1; font-size: 0.9rem; }
         input, select { font-family: 'DM Sans', sans-serif; }
@@ -298,6 +321,44 @@ function Login() {
                 <div style={{ textAlign: "right", marginTop: "6px" }}>
                   <span style={s.forgotLink}>Forgot password?</span>
                 </div>
+              </div>
+
+              <div className="f5" style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "10px",
+                marginBottom: "1rem",
+                width: "100%",
+              }}>
+                <input
+                  type="checkbox"
+                  id="terms-checkbox"
+                  className="terms-checkbox-input"
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                  disabled={loading}
+                  style={{ marginTop: "2px" }}
+                />
+                <label
+                  htmlFor="terms-checkbox"
+                  className="terms-label"
+                  style={{
+                    color: "#6B7280",
+                    fontSize: "0.82rem",
+                    lineHeight: "1.5",
+                    cursor: "pointer",
+                    userSelect: "none",
+                  }}
+                >
+                  I agree to the{" "}
+                  <a href="/terms" className="terms-link" target="_blank" rel="noopener noreferrer">
+                    Terms and Conditions
+                  </a>{" "}
+                  and{" "}
+                  <a href="/privacy" className="terms-link" target="_blank" rel="noopener noreferrer">
+                    Privacy Policy
+                  </a>
+                </label>
               </div>
 
               <div className="f4">

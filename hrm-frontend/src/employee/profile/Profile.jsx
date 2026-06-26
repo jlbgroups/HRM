@@ -5,7 +5,7 @@ import axios from "axios";
 import { KeyRound, User, Mail, Phone, Building2, Camera, Trash2, Bell } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 
-const API = "https://hrm-backend-vvqg.onrender.com/api/employee";
+const API = `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/employee`;
 
 const Profile = () => {
   const { isDark } = useTheme();

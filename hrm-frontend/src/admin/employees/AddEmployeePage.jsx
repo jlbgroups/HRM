@@ -176,7 +176,7 @@ function AddEmployee() {
     { label: "Full Name",        id: "field-name",         field: "name",         type: "text",     icon: <UserPlus size={16} aria-hidden="true" style={iconBase} />, placeholder: "John Doe", required: true },
     { label: "Work Email",       id: "field-email",        field: "email",        type: "email",    icon: <Mail size={16} aria-hidden="true" style={iconBase} />,    placeholder: "name@company.com", required: true },
     { label: "Access Password",  id: "field-password",     field: "password",     type: "password", icon: <Lock size={16} aria-hidden="true" style={iconBase} />,    placeholder: "Min. 6 characters", required: true },
-    { label: "Contact Number",   id: "field-phone",        field: "phone",        type: "tel",      icon: <Phone size={16} aria-hidden="true" style={iconBase} />,   placeholder: "+91 98765 43210", required: true },
+    { label: "Contact Number",   id: "field-phone",        field: "phone",        type: "tel",      icon: <Phone size={16} aria-hidden="true" style={iconBase} />,   placeholder: "+91 9703296994", required: true },
     { label: "Joining Date",     id: "field-joining-date", field: "joining_date", type: "date",     icon: <Calendar size={16} aria-hidden="true" style={iconBase} />, placeholder: "", required: true },
     { label: "Salary (₹)",       id: "field-salary",       field: "salary",       type: "number",   icon: <DollarSign size={16} aria-hidden="true" style={iconBase} />, placeholder: "e.g., 50000", required: false },
   ];

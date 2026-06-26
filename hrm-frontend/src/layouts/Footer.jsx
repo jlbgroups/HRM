@@ -4,9 +4,8 @@ import { Mail, Phone, MapPin } from "lucide-react";
 const Footer = () => {
   const companyName = "Levroxen Software Innovations";
   const email = "admin@levroxen.com";
-  const phone1 = "+91 83412 96994";
-  const phone2 = "+91 86884 56559";
-  const address = "Headquartered in USA";
+  const phone1 = "+91 9703296994";
+  const address = "905 N Pershing Ave, Salem, MO 65560-1144, United States";
   const copyright = `© ${new Date().getFullYear()} ${companyName}. All rights reserved.`;
 
   return (
@@ -270,10 +269,6 @@ const Footer = () => {
             <div className="shn-footer-contact-item" style={{ marginBottom: "8px" }}>
               <Phone size={16} className="shn-footer-contact-icon" aria-hidden="true" />
               <span className="shn-footer-contact-text">{phone1}</span>
-            </div>
-            <div className="shn-footer-contact-item">
-              <Phone size={16} className="shn-footer-contact-icon" aria-hidden="true" />
-              <span className="shn-footer-contact-text">{phone2}</span>
             </div>
             <div className="shn-footer-contact-item">
               <MapPin size={16} className="shn-footer-contact-icon" aria-hidden="true" />

@@ -22,16 +22,16 @@ const DEFAULTS = {
   footer: {
     companyName: "Levroxen Software Innovations",
     tagline: "Next-gen HR management for modern businesses.",
-    email: "admin@levroxen.com", phone: "+91 98765 43210",
-    address: "Business Bay, Dubai / Kuppam, India",
+    email: "admin@levroxen.com", phone: "+91 9703296994",
+    address: "905 N Pershing Ave, Salem, MO 65560-1144, United States",
     copyright: "© 2025 Levroxen Software Innovations. All rights reserved.",
     logo: "",
   },
   contact: {
     title: "Get in Touch",
     subtitle: "Have questions about our HR modules? Our team is ready to help.",
-    email: "admin@levroxen.com", phone: "+91 98765 43210",
-    address: "Business Bay, Dubai / Kuppam, India",
+    email: "admin@levroxen.com", phone: "+91 9703296994",
+    address: "905 N Pershing Ave, Salem, MO 65560-1144, United States",
   },
   pricing: {
     title: "Simple, Scalable Pricing",

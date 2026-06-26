@@ -4,7 +4,7 @@ import { Plus, Trash2, Bell, Search, Clock, Briefcase, Building2, X, Check } fro
 import { useTheme } from "./context/ThemeContext";
 
 import Sidebar from "../src/layouts/sidebar";
-import MobileTopBar from "./employee/MobileTopBar";
+const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
 const Designations = () => {
   const [designations, setDesignations] = useState([]);
@@ -21,6 +21,8 @@ const Designations = () => {
   const { isDark } = useTheme();
 
   const name = localStorage.getItem("name") || "Admin";
+  const role = localStorage.getItem("role") || "";
+  const storedCompanyId = localStorage.getItem("company_id") || "";
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
@@ -73,7 +75,7 @@ const Designations = () => {
   const fetchDesignations = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("https://hrm-backend-vvqg.onrender.com/api/designations");
+      const res = await axios.get(`${API}/api/designations`);
       const list = res.data.data || res.data.designations || res.data || [];
       setDesignations(Array.isArray(list) ? list : []);
     } catch (err) {
@@ -88,12 +90,18 @@ const Designations = () => {
 
   const addDesignation = async (e) => {
     e.preventDefault();
-    if (!designationName.trim() || !companyId.trim()) return;
+    const finalCompanyId = (role === "super_admin" || role === "software_owner") ? companyId.trim() : storedCompanyId;
+
+    if (!designationName.trim() || !finalCompanyId) {
+      showToast("Please provide all required fields", "error");
+      return;
+    }
+    
     setIsSubmitting(true);
     try {
-      await axios.post("https://hrm-backend-vvqg.onrender.com/api/designations", {
+      await axios.post(`${API}/api/designations`, {
         designation_name: designationName.trim(),
-        company_id: companyId.trim(),
+        company_id: finalCompanyId,
       });
       setDesignationName("");
       setCompanyId("");
@@ -110,7 +118,7 @@ const Designations = () => {
 
   const deleteDesignation = async (id) => {
     try {
-      await axios.delete(`https://hrm-backend-vvqg.onrender.com/api/designations/${id}`);
+      await axios.delete(`${API}/api/designations/${id}`);
       setDeleteConfirm(null);
       showToast("Designation deleted");
       fetchDesignations();
@@ -383,12 +391,14 @@ const Designations = () => {
                 <label style={{ display: "block", fontSize: "0.82rem", fontWeight: "500", color: t.textSecondary, marginBottom: "6px" }}>Designation Name</label>
                 <input className="form-input" placeholder="e.g. Software Engineer" value={designationName} onChange={(e) => setDesignationName(e.target.value)} required />
               </div>
-              <div style={{ marginBottom: "24px" }}>
-                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: "500", color: t.textSecondary, marginBottom: "6px" }}>Company Object ID</label>
-                <input className="form-input" placeholder="MongoDB ObjectId" value={companyId} onChange={(e) => setCompanyId(e.target.value)} required />
-                <p style={{ fontSize: "0.75rem", color: t.textMuted, margin: "5px 0 0" }}>Enter the company's MongoDB ObjectId</p>
-              </div>
-              <div style={{ display: "flex", gap: "10px" }}>
+              {(role === "super_admin" || role === "software_owner") && (
+                <div style={{ marginBottom: "24px" }}>
+                  <label style={{ display: "block", fontSize: "0.82rem", fontWeight: "500", color: t.textSecondary, marginBottom: "6px" }}>Company Object ID</label>
+                  <input className="form-input" placeholder="MongoDB ObjectId" value={companyId} onChange={(e) => setCompanyId(e.target.value)} required />
+                  <p style={{ fontSize: "0.75rem", color: t.textMuted, margin: "5px 0 0" }}>Enter the company's MongoDB ObjectId</p>
+                </div>
+              )}
+              <div style={{ display: "flex", gap: "10px", marginTop: (role === "super_admin" || role === "software_owner") ? "0" : "16px" }}>
                 <button type="button" onClick={() => setShowModal(false)} style={{ flex: 1, padding: "11px", border: `1.5px solid ${t.inputBorder}`, borderRadius: "10px", background: t.card, fontSize: "0.875rem", fontWeight: "500", color: t.textSecondary, cursor: "pointer", fontFamily: "inherit" }}>Cancel</button>
                 <button type="submit" disabled={isSubmitting} style={{ flex: 1, padding: "11px", border: "none", borderRadius: "10px", background: t.buttonPrimary, fontSize: "0.875rem", fontWeight: "500", color: "#fff", cursor: isSubmitting ? "not-allowed" : "pointer", fontFamily: "inherit", boxShadow: "0 2px 8px rgba(79,70,229,0.25)", opacity: isSubmitting ? 0.7 : 1 }}>
                   {isSubmitting ? "Adding..." : "Add Designation"}

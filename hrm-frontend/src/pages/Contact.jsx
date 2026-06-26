@@ -28,7 +28,7 @@ const Contact = () => {
     {
       icon: Phone,
       label: "Call Support",
-      value: s?.phone || "+91 98765 43210",
+      value: s?.phone || "+91 9703296994",
       color: "#4F46E5",
       bg: "#EEF2FF",
       valueColor: "#059669",
@@ -44,7 +44,7 @@ const Contact = () => {
     {
       icon: MapPin,
       label: "Head Office",
-      value: s?.address || "Business Bay, Dubai / Kuppam, India",
+      value: s?.address || "905 N Pershing Ave, Salem, MO 65560-1144, United States",
       color: "#4F46E5",
       bg: "#EEF2FF",
       valueColor: "#6B7280",
