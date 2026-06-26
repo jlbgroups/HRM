@@ -46,6 +46,12 @@ function Login() {
           localStorage.setItem("employee_id", employee_id);
         }
 
+        if (res.data.trial) {
+          localStorage.setItem("trial_expired", res.data.trial.is_expired ? "true" : "false");
+        } else {
+          localStorage.removeItem("trial_expired");
+        }
+
         switch (role) {
           case "employee":        navigate("/employee-dashboard");   break;
           case "company_admin":   navigate("/dashboard");            break;

@@ -11,7 +11,8 @@ function Register() {
     email: "",
     password: "",
     role: "company_admin",
-    company_id: "6a02fbcf5c2e16b050635ebc",
+    company_name: "",
+    company_id: "",
   });
   const [focusedField, setFocusedField] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -32,11 +33,12 @@ function Register() {
       setError("Password must be at least 6 characters.");
       return;
     }
-    if (
-      (formData.role === "company_admin" || formData.role === "employee") &&
-      !formData.company_id.trim()
-    ) {
-      setError("Company ID is required for this role.");
+    if (formData.role === "company_admin" && !formData.company_name.trim()) {
+      setError("Company Name is required for Company Administrator.");
+      return;
+    }
+    if (formData.role === "employee" && !formData.company_id.trim()) {
+      setError("Company ID is required for Employee.");
       return;
     }
 
@@ -47,8 +49,10 @@ function Register() {
         email: formData.email,
         password: formData.password,
         role: formData.role,
+        company_name:
+          formData.role === "company_admin" ? formData.company_name : undefined,
         company_id:
-          formData.role === "super_admin" ? undefined : formData.company_id,
+          formData.role === "employee" ? formData.company_id : undefined,
       });
 
       alert("Registered successfully! Please log in.");
@@ -72,7 +76,7 @@ function Register() {
   });
 
   const perks = [
-    "Free 14-day trial, no credit card needed",
+    "Free 15-day trial, no credit card needed",
     "Onboarding support included",
     "Cancel anytime, no lock-in",
   ];
@@ -324,9 +328,42 @@ function Register() {
                 >
                   <option value="company_admin">Company Administrator</option>
                   <option value="employee">Employee</option>
-                  <option value="super_admin">Super Admin</option>
                 </select>
               </div>
+
+              {formData.role === "company_admin" && (
+                <div className="rf6" style={s.field}>
+                  <label style={s.label}>Company Name</label>
+                  <input
+                    className="register-input"
+                    type="text"
+                    placeholder="Enter your company name"
+                    value={formData.company_name}
+                    onChange={handleChange("company_name")}
+                    onFocus={() => setFocusedField("company_name")}
+                    onBlur={() => setFocusedField(null)}
+                    required
+                    style={inputStyle("company_name")}
+                  />
+                </div>
+              )}
+
+              {formData.role === "employee" && (
+                <div className="rf6" style={s.field}>
+                  <label style={s.label}>Company ID</label>
+                  <input
+                    className="register-input"
+                    type="text"
+                    placeholder="Enter company ID provided by your admin"
+                    value={formData.company_id}
+                    onChange={handleChange("company_id")}
+                    onFocus={() => setFocusedField("company_id")}
+                    onBlur={() => setFocusedField(null)}
+                    required
+                    style={inputStyle("company_id")}
+                  />
+                </div>
+              )}
 
               <div className="rf7">
                 <button

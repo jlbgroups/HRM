@@ -1,6 +1,10 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import axios from 'axios';
+import { Clock, Mail, Phone } from 'lucide-react';
 import { ThemeProvider } from './context/ThemeContext';
+
+const API = import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com";
 
 const Login                = lazy(() => import("./auth/Login"));
 const Register             = lazy(() => import("./auth/Register"));
@@ -77,15 +81,169 @@ const PageLoader = () => (
   </div>
 );
 
+const TrialExpiredPage = () => {
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = "/login";
+  };
+
+  return (
+    <div style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      minHeight: "100vh",
+      background: "linear-gradient(135deg, #0F1219 0%, #161B27 100%)",
+      fontFamily: "'DM Sans', sans-serif",
+      color: "#F3F4F6",
+      padding: "20px",
+    }}>
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(14px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+      <div style={{
+        maxWidth: "480px",
+        width: "100%",
+        background: "#161B27",
+        borderRadius: "16px",
+        border: "1px solid #1E2535",
+        padding: "40px 32px",
+        textAlign: "center",
+        boxShadow: "0 10px 25px rgba(0,0,0,0.3)",
+        animation: "fadeUp 0.5s ease both",
+      }}>
+        <div style={{
+          width: "64px",
+          height: "64px",
+          borderRadius: "50%",
+          background: "rgba(239, 68, 68, 0.1)",
+          border: "2px solid #EF4444",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "0 auto 24px",
+          color: "#EF4444",
+        }}>
+          <Clock size={32} />
+        </div>
+        <h2 style={{
+          fontSize: "1.75rem",
+          fontWeight: "700",
+          marginBottom: "16px",
+          fontFamily: "'Playfair Display', serif",
+        }}>Trial Period Expired</h2>
+        <p style={{
+          color: "#9CA3AF",
+          fontSize: "0.95rem",
+          lineHeight: "1.6",
+          marginBottom: "28px",
+        }}>
+          Your 15-day trial period has ended. To continue using the HRM portal, please contact our administrator to upgrade your account.
+        </p>
+
+        <div style={{
+          background: "#0F1219",
+          borderRadius: "12px",
+          padding: "20px",
+          marginBottom: "32px",
+          textAlign: "left",
+          border: "1px solid #1E2535",
+        }}>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            marginBottom: "14px",
+          }}>
+            <Mail size={18} style={{ color: "#818CF8" }} />
+            <div>
+              <p style={{ margin: 0, fontSize: "0.75rem", color: "#6B7280", textTransform: "uppercase", fontWeight: 600 }}>Email Address</p>
+              <a href="mailto:lakshman@levroxen.com" style={{ margin: 0, fontSize: "0.9rem", color: "#F3F4F6", textDecoration: "none", fontWeight: 500 }}>lakshman@levroxen.com</a>
+            </div>
+          </div>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+          }}>
+            <Phone size={18} style={{ color: "#818CF8" }} />
+            <div>
+              <p style={{ margin: 0, fontSize: "0.75rem", color: "#6B7280", textTransform: "uppercase", fontWeight: 600 }}>Phone Number</p>
+              <a href="tel:8688456559" style={{ margin: 0, fontSize: "0.9rem", color: "#F3F4F6", textDecoration: "none", fontWeight: 500 }}>8688456559</a>
+            </div>
+          </div>
+        </div>
+
+        <button
+          onClick={handleLogout}
+          style={{
+            width: "100%",
+            padding: "12px",
+            background: "#4F46E5",
+            color: "#fff",
+            border: "none",
+            borderRadius: "10px",
+            fontSize: "0.95rem",
+            fontWeight: "600",
+            cursor: "pointer",
+            transition: "background 0.2s",
+          }}
+          onMouseOver={(e) => e.target.style.background = "#4338CA"}
+          onMouseOut={(e) => e.target.style.background = "#4F46E5"}
+        >
+          Logout / Sign In
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const token = localStorage.getItem("token");
   const role  = localStorage.getItem("role");
+  const [trialExpired, setTrialExpired] = useState(() => {
+    return localStorage.getItem("trial_expired") === "true";
+  });
+
+  useEffect(() => {
+    if (!token || (role !== "company_admin" && role !== "employee")) {
+      return;
+    }
+
+    const checkTrial = async () => {
+      try {
+        const res = await axios.get(`${API}/api/saas/my-trial`, {
+          headers: { "x-auth-token": token }
+        });
+        if (res.data.success && res.data.data) {
+          const expired = res.data.data.is_expired;
+          setTrialExpired(expired);
+          localStorage.setItem("trial_expired", expired ? "true" : "false");
+        }
+      } catch (err) {
+        console.error("Failed to verify trial status", err);
+        if (err.response?.status === 403 && err.response?.data?.code === "TRIAL_EXPIRED") {
+          setTrialExpired(true);
+          localStorage.setItem("trial_expired", "true");
+        }
+      }
+    };
+
+    checkTrial();
+  }, [token, role]);
 
   if (!token) return <Navigate to="/login" replace />;
 
   if (allowedRoles && !allowedRoles.includes(role)) {
     const fallback = role === "employee" ? "/employee-dashboard" : "/dashboard";
     return <Navigate to={fallback} replace />;
+  }
+
+  if ((role === "company_admin" || role === "employee") && trialExpired) {
+    return <TrialExpiredPage />;
   }
 
   return children;
