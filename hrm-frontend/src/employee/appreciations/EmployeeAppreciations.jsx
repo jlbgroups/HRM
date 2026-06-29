@@ -5,7 +5,7 @@ import axios from "axios";
 import { Star, Award, Search, Heart } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 
-const API = "https://hrm-backend-vvqg.onrender.com/api/appreciations";
+const API = `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/appreciations";
 
 const typeColors = {
   general:          { bg: "#FFFBEB", color: "#F59E0B", label: "General", darkBg: "#451A03", darkColor: "#FCD34D" },

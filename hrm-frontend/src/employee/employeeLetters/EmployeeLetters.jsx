@@ -5,7 +5,7 @@ import axios from "axios";
 import { Mail, FileText, Eye, Search, BadgeCheck, X, Download, Bell } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 
-const API = "https://hrm-backend-vvqg.onrender.com/api/letters";
+const API = `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/letters";
 
 const letterTypeLabel = {
   offer:      "Offer Letter",

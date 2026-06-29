@@ -73,7 +73,7 @@ function MarkAttendance() {
   const fetchToday = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("https://hrm-backend-vvqg.onrender.com/api/attendance/today", {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/attendance/today", {
         headers: { "x-auth-token": token },
       });
       const d = res.data;
@@ -96,13 +96,13 @@ function MarkAttendance() {
     setLoading(true);
     try {
       const res = await axios.post(
-        "https://hrm-backend-vvqg.onrender.com/api/attendance/mark",
+        `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/attendance/mark",
         { status: "present" },
         { headers: { "x-auth-token": token } }
       );
       if (res.data.success) await fetchToday();
     } catch (error) {
-      alert(error.response?.data?.msg || "Error marking attendance");
+      alert(error.response?.data?.msg || error.response?.data?.error || "Error marking attendance");
     } finally {
       setLoading(false);
     }

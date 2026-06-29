@@ -5,7 +5,7 @@ import axios from "axios";
 import { ShieldCheck, FileText, Download, Eye, Search, Bell } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 
-const API = "https://hrm-backend-vvqg.onrender.com/api/policies";
+const API = `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/policies";
 const BASE_URL = "https://hrm-backend-vvqg.onrender.com";
 
 const EmployeePolicies = () => {
