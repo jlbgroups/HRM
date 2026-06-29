@@ -12,8 +12,8 @@ import Sidebar from "../../layouts/sidebar";
 import MobileTopBar from "../../employee/MobileTopBar";
 import { useTheme } from "../../context/ThemeContext";
 
-const API = `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/letters";
-const EMP_API = `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/employees";
+const API = `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/letters`;
+const EMP_API = `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/employees`;
 const DEFAULT_LOGO = `${window.location.origin}/logo.png`;
 const DEFAULT_SIGNATURE = `${window.location.origin}/image.png`;
 

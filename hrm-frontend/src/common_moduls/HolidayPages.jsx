@@ -5,7 +5,7 @@ import { Plus, CalendarDays, Bell, Search, Clock, Pencil, Trash2, X, Check } fro
 import axios from "axios";
 import { useTheme } from "../../src/context/ThemeContext";
 
-const API = `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/holidays";
+const API = `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/holidays`;
 
 function Holidays() {
   const [isOpen, setIsOpen] = useState(window.innerWidth > 768);

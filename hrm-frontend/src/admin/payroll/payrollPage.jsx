@@ -92,7 +92,7 @@ function Payroll() {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/payroll", {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/payroll`, {
         headers: { "x-auth-token": token },
       });
       setPayrollData(res.data.data || []);
@@ -106,7 +106,7 @@ function Payroll() {
   const fetchEmployees = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/employees", {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/employees`, {
         headers: { "x-auth-token": token },
       });
       setEmployees(res.data.data || []);
@@ -330,7 +330,7 @@ function Payroll() {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/payroll/generate",
+        `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/payroll/generate`,
         {
           employee_id: selectedEmp,
           salary: parseFloat(salary),

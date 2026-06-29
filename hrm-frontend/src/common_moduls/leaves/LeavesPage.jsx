@@ -72,7 +72,7 @@ const Leaves = () => {
     else setIsRefreshing(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/leaves", {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/leaves`, {
         headers: { "x-auth-token": token },
       });
       setLeaveRequests(res.data.data || []);
@@ -107,7 +107,7 @@ const Leaves = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/leaves/apply",
+        `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/leaves/apply`,
         { leave_type: leaveType, start_date: startDate, end_date: endDate, reason },
         { headers: { "x-auth-token": token } }
       );
