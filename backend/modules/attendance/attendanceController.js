@@ -100,7 +100,7 @@ exports.markAttendance = async (req, res) => {
     res.json({ success: true, action, session });
   } catch (err) {
     console.error("Mark Attendance Error:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ msg: err.message || "Internal server error" });
   }
 };
 
