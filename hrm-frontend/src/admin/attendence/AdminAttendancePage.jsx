@@ -7,6 +7,7 @@ import { useTheme } from "../../context/ThemeContext";
 
 const AdminAttendancePage = () => {
   const [attendance, setAttendance] = useState([]);
+  const [totalEmployees, setTotalEmployees] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
@@ -67,11 +68,19 @@ const AdminAttendancePage = () => {
   const fetchAttendance = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/attendance/all`,
-        { headers: { "x-auth-token": token } }
-      );
-      const raw = res.data;
+      const headers = { "x-auth-token": token };
+      const [attRes, empRes] = await Promise.all([
+        axios.get(
+          `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/attendance/all`,
+          { headers }
+        ),
+        axios.get(
+          `${import.meta.env.VITE_API_URL || "https://hrm-backend-vvqg.onrender.com"}/api/employees`,
+          { headers }
+        )
+      ]);
+
+      const raw = attRes.data;
       let list = [];
       if (Array.isArray(raw)) {
         list = raw;
@@ -81,6 +90,11 @@ const AdminAttendancePage = () => {
         list = raw.attendance;
       }
       setAttendance(list);
+
+      const empData = empRes.data?.data || [];
+      const activeEmps = empData.filter(e => e.status !== "inactive");
+      setTotalEmployees(activeEmps.length);
+
       setError("");
     } catch (err) {
       console.error("Error fetching attendance:", err);
@@ -105,8 +119,20 @@ const AdminAttendancePage = () => {
       item.status?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const presentCount = attendance.filter((a) => a.status === "Present").length;
-  const absentCount = attendance.filter((a) => a.status !== "Present").length;
+  const isToday = (dateVal) => {
+    if (!dateVal) return false;
+    const d = new Date(dateVal);
+    const today = new Date();
+    return d.getDate() === today.getDate() &&
+           d.getMonth() === today.getMonth() &&
+           d.getFullYear() === today.getFullYear();
+  };
+
+  const presentCount = normalized.filter((a) => {
+    return isToday(a.date) && a.status === "Present";
+  }).length;
+
+  const absentCount = Math.max(0, totalEmployees - presentCount);
 
   const sidebarWidth = isMobile ? 0 : isOpen ? 255 : 68;
 

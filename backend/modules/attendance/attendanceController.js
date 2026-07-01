@@ -43,10 +43,13 @@ exports.markAttendance = async (req, res) => {
     }
 
     const now = new Date();
-    const time = now.toTimeString().split(" ")[0];
+    const time = now.toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata", hour12: false });
 
-    const todayStart = new Date();
-    todayStart.setHours(0, 0, 0, 0);
+    const today = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const istTime = new Date(today.getTime() + istOffset);
+    istTime.setUTCHours(0, 0, 0, 0);
+    const todayStart = new Date(istTime.getTime() - istOffset);
 
     let attendance = await Attendance.findOne({
       employee_id: employeeId,
@@ -114,8 +117,11 @@ exports.getToday = async (req, res) => {
 
     if (!employee) return res.json({ marked: false });
 
-    const todayStart = new Date();
-    todayStart.setHours(0, 0, 0, 0);
+    const today = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const istTime = new Date(today.getTime() + istOffset);
+    istTime.setUTCHours(0, 0, 0, 0);
+    const todayStart = new Date(istTime.getTime() - istOffset);
 
     const attendance = await Attendance.findOne({
       employee_id: employee._id,
@@ -164,6 +170,7 @@ exports.getAllAttendance = async (req, res) => {
           status: a.status,
           check_in: a.check_in,
           check_out: a.check_out,
+          date: a.attendance_date,
           sessions,
         };
       })
