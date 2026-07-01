@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
-  Users, Search, Bell, ShieldCheck, UserCheck,
+  Users, Search, Bell, ShieldCheck, UserCheck, Trash2, PauseCircle, PlayCircle,
 } from "lucide-react";
 import Sidebar from "../../layouts/sidebar";
 import MobileTopBar from "../../employee/MobileTopBar";
@@ -82,30 +82,55 @@ function UpdateEmployee() {
     }
   };
 
-  useEffect(() => {
-    fetchEmployees();
-  }, []);
-
-  const handlePositionChange = async (employeeId, newPosition) => {
-    setUpdatingId(employeeId);
+  // Delete employee
+  const handleDeleteEmployee = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this employee?")) return;
+    setUpdatingId(id);
     try {
-      await axios.patch(
-        `${API}/api/employees/${employeeId}/position`,
-        { position: newPosition },
-        { headers }
-      );
-      showToast(`Position updated to ${newPosition} successfully.`);
-      setEmployees((prev) =>
-        prev.map((emp) =>
-          emp._id === employeeId ? { ...emp, position: newPosition } : emp
-        )
-      );
+      await axios.delete(`${API}/api/employees/${id}`, { headers });
+      showToast("Employee deleted successfully.");
+      setEmployees(prev => prev.filter(e => e._id !== id));
     } catch (err) {
-      showToast(err.response?.data?.error || "Failed to update position.", "error");
+      showToast(err.response?.data?.error || "Failed to delete employee.", "error");
     } finally {
       setUpdatingId(null);
     }
   };
+
+  // Toggle activation status
+  const handleToggleStatus = async (id, currentStatus) => {
+    const newStatus = currentStatus === "active" ? "inactive" : "active";
+    setUpdatingId(id);
+    try {
+      await axios.patch(`${API}/api/employees/${id}`, { status: newStatus }, { headers });
+      showToast(`Employee ${newStatus}`);
+      setEmployees(prev => prev.map(e => e._id === id ? { ...e, status: newStatus } : e));
+    } catch (err) {
+      showToast(err.response?.data?.error || "Failed to update status.", "error");
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  // Assign manager
+  const handleAssignManager = async (id, managerId) => {
+    setUpdatingId(id);
+    try {
+      await axios.patch(`${API}/api/employees/${id}`, { manager_id: managerId }, { headers });
+      showToast("Manager assigned successfully.");
+      setEmployees(prev => prev.map(e => e._id === id ? { ...e, manager_id: managerId } : e));
+    } catch (err) {
+      showToast(err.response?.data?.error || "Failed to assign manager.", "error");
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
+  const managers = employees.filter(e => e.position === "manager");
 
   const filtered = employees.filter((emp) =>
     emp.name?.toLowerCase().includes(search.toLowerCase()) ||
@@ -135,6 +160,9 @@ function UpdateEmployee() {
           transition: background 0.15s, opacity 0.15s;
           font-family: 'DM Sans', sans-serif;
           white-space: nowrap;
+          display: flex;
+          align-items: center;
+          gap: 6px;
         }
         .pos-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
@@ -201,21 +229,6 @@ function UpdateEmployee() {
             font-size: 0.74rem;
           }
         }
-
-        @media (max-width: 480px) {
-          .ue-main { padding: 72px 8px 24px !important; }
-          .emp-table { min-width: 580px; }
-          .emp-table th,
-          .emp-table td {
-            padding: 10px 10px;
-            font-size: 0.77rem;
-          }
-        }
-
-        @media (min-width: 769px) and (max-width: 1024px) {
-          .ue-main { padding: 24px 20px 36px !important; }
-          .emp-table { min-width: 680px; }
-        }
       `}</style>
 
       {toast && (
@@ -255,57 +268,33 @@ function UpdateEmployee() {
         }}>
           <div style={{ position: "relative", flex: 1, maxWidth: "380px" }}>
             <Search size={15} aria-hidden="true" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: t.textMuted }} />
-            <label htmlFor="topbar-search" style={{ position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}>Search</label>
             <input
-              id="topbar-search"
               className="ue-search-input"
               type="search"
               placeholder="Search anything..."
               style={{ width: "100%", padding: "8px 12px 8px 36px", border: `1.5px solid ${t.inputBorder}`, borderRadius: "10px", fontSize: "0.875rem", color: t.textPrimary, backgroundColor: t.inputBg }}
             />
           </div>
-          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px" }}>
-            <button className="topbar-btn" aria-label="Notifications" style={{ width: "38px", height: "38px", borderRadius: "10px", border: `1.5px solid ${t.inputBorder}`, background: t.card, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: t.textSecondary, position: "relative" }}>
-              <Bell size={17} aria-hidden="true" />
-              <span aria-label="You have new notifications" style={{ position: "absolute", top: "8px", right: "8px", width: "7px", height: "7px", borderRadius: "50%", background: "#EF4444", border: `1.5px solid ${t.card}` }} />
-            </button>
-            <div aria-label={`Logged in as ${name}`} style={{ display: "flex", alignItems: "center", gap: "9px", padding: "5px 12px 5px 6px", border: `1.5px solid ${t.inputBorder}`, borderRadius: "10px", background: t.card, cursor: "pointer" }}>
-              <div aria-hidden="true" style={{ width: "28px", height: "28px", borderRadius: "50%", background: "linear-gradient(135deg, #4F46E5, #7C3AED)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "0.72rem", fontWeight: "600" }}>
-                {name.slice(0, 2).toUpperCase()}
-              </div>
-              <span style={{ fontSize: "0.83rem", fontWeight: "500", color: t.textPrimary }}>{name}</span>
-            </div>
-          </div>
         </div>
 
         <main className="ue-main" style={{ padding: "28px 28px 40px", flex: 1 }}>
           <div style={{ marginBottom: "28px", animation: "fadeUp 0.4s ease both 0.05s" }}>
-            <p style={{ color: t.textSecondary, fontSize: "0.875rem", margin: "0 0 4px" }}>
-              {greeting}, <strong style={{ color: "#4F46E5" }}>{name}</strong> 👋
-            </p>
-            <h1 className="ue-h1" style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.85rem", fontWeight: "700", color: t.textPrimary, margin: 0, lineHeight: 1.2 }}>
-              Manage Positions
+            <h1 className="ue-h1" style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.85rem", fontWeight: "700", color: t.textPrimary, margin: 0 }}>
+              Manage Employees
             </h1>
-            <p style={{ color: t.textSecondary, fontSize: "0.85rem", margin: "5px 0 0" }}>
-              <time dateTime={new Date().toISOString().split("T")[0]}>
-                {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
-              </time>
-            </p>
           </div>
 
-          <div style={{ backgroundColor: t.card, borderRadius: "16px", border: `1px solid ${t.border}`, boxShadow: isDark ? "0 2px 8px rgba(0,0,0,0.3)" : "0 2px 8px rgba(15,23,42,0.05)", overflow: "hidden", animation: "fadeUp 0.4s ease both 0.15s" }}>
-            <div className="card-header" style={{ padding: "20px 28px", borderBottom: `1px solid ${t.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", flexWrap: "wrap" }}>
+          <div style={{ backgroundColor: t.card, borderRadius: "16px", border: `1px solid ${t.border}`, overflow: "hidden", animation: "fadeUp 0.4s ease both 0.15s" }}>
+            <div className="card-header" style={{ padding: "20px 28px", borderBottom: `1px solid ${t.border}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                <div aria-hidden="true" style={{ width: "40px", height: "40px", borderRadius: "11px", background: t.iconAccentBg, display: "flex", alignItems: "center", justifyContent: "center", color: "#4F46E5", flexShrink: 0 }}>
+                <div aria-hidden="true" style={{ width: "40px", height: "40px", borderRadius: "11px", background: t.iconAccentBg, display: "flex", alignItems: "center", justifyContent: "center", color: "#4F46E5" }}>
                   <Users size={19} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: "1rem", fontWeight: "600", color: t.textPrimary, margin: "0 0 2px" }}>Employee Positions</h2>
-                  <p style={{ fontSize: "0.78rem", color: t.textSecondary, margin: 0 }}>Promote or demote employees between roles</p>
+                  <h2 style={{ fontSize: "1rem", fontWeight: "600", color: t.textPrimary, margin: 0 }}>Employee Directory</h2>
                 </div>
               </div>
               <div className="search-wrap" style={{ position: "relative", minWidth: "220px" }}>
-                <Search size={14} aria-hidden="true" style={{ position: "absolute", left: "11px", top: "50%", transform: "translateY(-50%)", color: t.textMuted }} />
                 <input
                   type="search"
                   className="ue-search-input"
@@ -318,43 +307,33 @@ function UpdateEmployee() {
             </div>
 
             {loading ? (
-              <div style={{ padding: "60px", textAlign: "center", color: t.textMuted, fontSize: "0.9rem" }}>
-                Loading employees...
-              </div>
-            ) : filtered.length === 0 ? (
-              <div style={{ padding: "60px", textAlign: "center", color: t.textMuted, fontSize: "0.9rem" }}>
-                No employees found.
-              </div>
+              <div style={{ padding: "60px", textAlign: "center", color: t.textMuted }}>Loading...</div>
             ) : (
               <div className="table-scroll-wrapper">
                 <table className="emp-table">
                   <thead>
                     <tr>
-                      {["Employee", "Department", "Joined", "Current Position", "Update Position"].map((col) => (
+                      {["Employee", "Department", "Joined", "Current Position", "Manager", "Actions"].map((col) => (
                         <th key={col}>{col}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {filtered.map((emp) => (
-                      <tr key={emp._id} className="emp-row" style={{ transition: "background 0.15s" }}>
+                      <tr key={emp._id} className="emp-row">
                         <td className="emp-name-cell">
                           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                            <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "linear-gradient(135deg, #4F46E5, #7C3AED)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "0.72rem", fontWeight: "600", flexShrink: 0 }}>
+                            <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "linear-gradient(135deg, #4F46E5, #7C3AED)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "0.72rem", fontWeight: "600" }}>
                               {emp.name?.slice(0, 2).toUpperCase()}
                             </div>
-                            <div style={{ minWidth: 0 }}>
-                              <p style={{ margin: 0, fontSize: "0.875rem", fontWeight: "600", color: t.textPrimary, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{emp.name}</p>
-                              <p style={{ margin: 0, fontSize: "0.75rem", color: t.textMuted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "160px" }}>{emp.email}</p>
+                            <div>
+                              <p style={{ margin: 0, fontSize: "0.875rem", fontWeight: "600", color: t.textPrimary }}>{emp.name}</p>
+                              <p style={{ margin: 0, fontSize: "0.75rem", color: t.textMuted }}>{emp.email}</p>
                             </div>
                           </div>
                         </td>
-                        <td style={{ fontSize: "0.85rem", color: t.textSecondary }}>
-                          {emp.department_id?.department_name || "—"}
-                        </td>
-                        <td style={{ fontSize: "0.83rem", color: t.textSecondary }}>
-                          {emp.joining_date ? new Date(emp.joining_date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—"}
-                        </td>
+                        <td style={{ fontSize: "0.85rem", color: t.textSecondary }}>{emp.department_id?.department_name || "—"}</td>
+                        <td style={{ fontSize: "0.83rem", color: t.textSecondary }}>{emp.joining_date ? new Date(emp.joining_date).toLocaleDateString("en-IN") : "—"}</td>
                         <td>
                           <span style={{
                             display: "inline-flex", alignItems: "center", gap: "5px",
@@ -362,33 +341,41 @@ function UpdateEmployee() {
                             background: emp.position === "manager" ? t.managerBadgeBg : t.empBadgeBg,
                             color: emp.position === "manager" ? t.managerBadgeText : t.empBadgeText,
                           }}>
-                            {emp.position === "manager" ? <ShieldCheck size={12} aria-hidden="true" /> : <UserCheck size={12} aria-hidden="true" />}
+                            {emp.position === "manager" ? <ShieldCheck size={12} /> : <UserCheck size={12} />}
                             {emp.position === "manager" ? "Manager" : "Employee"}
                           </span>
                         </td>
+                        <td>
+                          <select
+                            value={emp.manager_id || ""}
+                            onChange={(e) => handleAssignManager(emp._id, e.target.value)}
+                            disabled={updatingId === emp._id}
+                            style={{ ...inputBase, appearance: "none", cursor: updatingId === emp._id ? "not-allowed" : "pointer", color: emp.manager_id ? t.textPrimary : t.textMuted }}
+                          >
+                            <option value="">{emp.manager_id ? "Change manager" : "Assign manager"}</option>
+                            {managers.map(m => (
+                              <option key={m._id} value={m._id}>{m.name}</option>
+                            ))}
+                          </select>
+                        </td>
                         <td className="emp-actions-cell">
-                          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                          <div style={{ display: "flex", gap: "8px" }}>
                             <button
                               className="pos-btn"
-                              disabled={emp.position === "manager" || updatingId === emp._id}
-                              onClick={() => handlePositionChange(emp._id, "manager")}
-                              style={{
-                                background: emp.position === "manager" ? t.disabledBg : t.makeManagerBg,
-                                color: emp.position === "manager" ? t.disabledText : t.makeManagerText,
-                              }}
+                              disabled={updatingId === emp._id}
+                              onClick={() => handleToggleStatus(emp._id, emp.status)}
+                              style={{ background: emp.status === "active" ? t.makeManagerBg : t.removeManagerBg, color: emp.status === "active" ? t.makeManagerText : t.removeManagerText }}
                             >
-                              {updatingId === emp._id ? "Saving..." : "Make Manager"}
+                              {emp.status === "active" ? <PauseCircle size={12} /> : <PlayCircle size={12} />}
+                              {emp.status === "active" ? "Suspend" : "Activate"}
                             </button>
                             <button
                               className="pos-btn"
-                              disabled={emp.position === "employee" || updatingId === emp._id}
-                              onClick={() => handlePositionChange(emp._id, "employee")}
-                              style={{
-                                background: emp.position === "employee" ? t.disabledBg : t.removeManagerBg,
-                                color: emp.position === "employee" ? t.disabledText : t.removeManagerText,
-                              }}
+                              disabled={updatingId === emp._id}
+                              onClick={() => handleDeleteEmployee(emp._id)}
+                              style={{ background: t.removeManagerBg, color: t.removeManagerText }}
                             >
-                              {updatingId === emp._id ? "Saving..." : "Remove Manager"}
+                              <Trash2 size={12} /> Delete
                             </button>
                           </div>
                         </td>
