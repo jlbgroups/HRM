@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Globe, Linkedin, ShieldCheck } from "lucide-react";
 
 const Footer = () => {
   const companyName = "Levroxen Software Innovations";
@@ -270,9 +270,27 @@ const Footer = () => {
               <Phone size={16} className="shn-footer-contact-icon" aria-hidden="true" />
               <span className="shn-footer-contact-text">{phone1}</span>
             </div>
-            <div className="shn-footer-contact-item">
+            <div className="shn-footer-contact-item" style={{ marginBottom: "8px" }}>
               <MapPin size={16} className="shn-footer-contact-icon" aria-hidden="true" />
               <span className="shn-footer-contact-text">{address}</span>
+            </div>
+            <div className="shn-footer-contact-item" style={{ marginBottom: "8px" }}>
+              <Globe size={16} className="shn-footer-contact-icon" aria-hidden="true" />
+              <a href="https://www.levroxen.com/" target="_blank" rel="noopener noreferrer" className="shn-footer-link" style={{ fontSize: "0.9rem" }}>
+                www.levroxen.com
+              </a>
+            </div>
+            <div className="shn-footer-contact-item" style={{ marginBottom: "8px" }}>
+              <Linkedin size={16} className="shn-footer-contact-icon" aria-hidden="true" />
+              <a href="https://www.linkedin.com/company/levroxenllc/" target="_blank" rel="noopener noreferrer" className="shn-footer-link" style={{ fontSize: "0.9rem" }}>
+                LinkedIn
+              </a>
+            </div>
+            <div className="shn-footer-contact-item">
+              <ShieldCheck size={16} className="shn-footer-contact-icon" aria-hidden="true" />
+              <a href="https://assessments.levroxen.com" target="_blank" rel="noopener noreferrer" className="shn-footer-link" style={{ fontSize: "0.9rem" }}>
+                assessments.levroxen.com
+              </a>
             </div>
           </div>
         </div>

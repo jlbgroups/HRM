@@ -54,6 +54,17 @@ function UpdateEmployee() {
     disabledText: isDark ? "#4B5563" : "#9CA3AF",
   };
 
+  const inputBase = {
+    padding: "6px 12px",
+    borderRadius: "8px",
+    border: `1.5px solid ${t.inputBorder}`,
+    backgroundColor: t.inputBg,
+    color: t.textPrimary,
+    fontSize: "0.83rem",
+    outline: "none",
+    fontFamily: "'DM Sans', sans-serif",
+  };
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
