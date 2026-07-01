@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin, Globe, Linkedin, ShieldCheck } from "lucide-react";
+import { Mail, Phone, MapPin, Globe, ShieldCheck } from "lucide-react";
 
 const Footer = () => {
   const companyName = "Levroxen Software Innovations";
@@ -281,7 +281,9 @@ const Footer = () => {
               </a>
             </div>
             <div className="shn-footer-contact-item" style={{ marginBottom: "8px" }}>
-              <Linkedin size={16} className="shn-footer-contact-icon" aria-hidden="true" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="shn-footer-contact-icon" aria-hidden="true">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.125 2.062 2.062 0 0 1 0 4.125zM7.114 20.452H3.558V9h3.556v11.452z" />
+              </svg>
               <a href="https://www.linkedin.com/company/levroxenllc/" target="_blank" rel="noopener noreferrer" className="shn-footer-link" style={{ fontSize: "0.9rem" }}>
                 LinkedIn
               </a>
