@@ -43,7 +43,11 @@ exports.markAttendance = async (req, res) => {
     }
 
     const now = new Date();
-    const time = now.toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata", hour12: false });
+    // Manually compute IST (UTC+5:30) — toLocaleTimeString is unreliable on some Node.js hosts
+    const istNow = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
+    const time = istNow.getUTCHours().toString().padStart(2, '0') + ':' +
+                 istNow.getUTCMinutes().toString().padStart(2, '0') + ':' +
+                 istNow.getUTCSeconds().toString().padStart(2, '0');
 
     const today = new Date();
     const istOffset = 5.5 * 60 * 60 * 1000;
